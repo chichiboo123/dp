@@ -4,623 +4,633 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>디지털 페이퍼</title>
-    
-    <!-- 폰트 및 아이콘 -->
+
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov-dynamic-subset.css');
         @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-        body { 
-            font-family: 'Pretendard GOV', sans-serif; 
-            background-color: #f8fafc; 
-            overflow: hidden; 
-            margin: 0; 
-            padding: 0; 
+        body {
+            font-family: 'Pretendard GOV', sans-serif;
+            background-color: #FAF9F6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            letter-spacing: -0.01em;
+            line-height: 1.55;
+            font-feature-settings: "ss06";
         }
     </style>
 
-    <!-- Tailwind CSS (디자인 시스템) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              warm: '#FAF9F6',
+              pastelBlue: '#BFDBFE',
+              pastelBlueHover: '#93C5FD',
+              pastelBlueText: '#1E40AF',
+              pastelGreen: '#BBF7D0',
+              pastelGreenHover: '#86EFAC',
+              pastelGreenText: '#166534',
+              pastelPink: '#FBCFE8',
+              pastelPinkHover: '#F9A8D4',
+              pastelPinkText: '#9D174D',
+              pastelYellow: '#FEF3C7',
+              pastelYellowHover: '#FDE68A',
+              pastelYellowText: '#92400E',
+              pastelLavender: '#E9D5FF'
+            }
+          }
+        }
+      };
+    </script>
 
-    <!-- React 및 ReactDOM (기능 작동 핵심) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel (브라우저에서 React 문법을 해석) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- PDF.js (문서 렌더링) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-    <!-- Google APIs -->
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="./config.js"></script>
-    
-    <!-- jsPDF (PDF 내보내기용) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div id="root"></div>
+<div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useCallback } = React;
+<script type="text/babel">
+  const { useState, useEffect, useRef, useCallback } = React;
 
-        // --- [보안] 구글 클라우드 콘솔 API 정보 ---
-        // 🚨 주의: 공개된 곳에 코드를 올릴 때는 아래 문자열을 비워두세요.
-        const APP_CONFIG = window.APP_CONFIG || {};
-        const CLIENT_ID = APP_CONFIG.CLIENT_ID || "";
-        const API_KEY = APP_CONFIG.API_KEY || "";
-        const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
+  const APP_CONFIG = window.APP_CONFIG || {};
+  const CLIENT_ID = APP_CONFIG.CLIENT_ID || "";
+  const API_KEY = APP_CONFIG.API_KEY || "";
+  const APP_ID = APP_CONFIG.APP_ID || ((CLIENT_ID.match(/^(\d+)/) || [])[1] || '');
+  const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 
-        // --- 다국어 지원 (i18n) ---
-        const i18n = {
-          ko: { title: '디지털 페이퍼', login: '구글 로그인', select: '드라이브 파일 선택', padletPlaceholder: '패들렛/띵커벨 등 제출함 주소 (선택)', share: '공유 링크 복사', pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤', shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇' }
-        };
+  const i18n = {
+    ko: {
+      title: '디지털 페이퍼', login: '구글 로그인', select: '활동지 불러오기', padletPlaceholder: '패들렛/띵커벨 등 제출함 주소 (선택)', share: '공유 링크 복사',
+      pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지',
+      shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇'
+    }
+  };
 
-        function App() {
-          const [lang] = useState('ko');
-          const t = i18n[lang];
-          
-          const [accessToken, setAccessToken] = useState(null);
-          const [isApiLoaded, setIsApiLoaded] = useState(false);
+  function App() {
+    const [lang] = useState('ko');
+    const t = i18n[lang];
 
-          const [loadedFileId, setLoadedFileId] = useState('');
-          const [padletInput, setPadletInput] = useState('');
-          const [activePadlet, setActivePadlet] = useState('');
-          
-          const [pdfDoc, setPdfDoc] = useState(null);
-          const [currentPage, setCurrentPage] = useState(1);
-          const [totalPages, setTotalPages] = useState(0);
-          
-          const [tool, setTool] = useState('pen');
-          const [userZoom, setUserZoom] = useState(1);
-          const [penColor, setPenColor] = useState('#2563eb');
-          const [penWidth, setPenWidth] = useState(3);
-          const [isLoading, setIsLoading] = useState(false);
-          
-          const [showHelpModal, setShowHelpModal] = useState(false);
-          const [authError, setAuthError] = useState('');
+    const [accessToken, setAccessToken] = useState(null);
+    const [isApiLoaded, setIsApiLoaded] = useState(false);
+    const [isGisLoaded, setIsGisLoaded] = useState(false);
+    const [loadError, setLoadError] = useState('');
 
-          const pdfCanvasRef = useRef(null);
-          const drawCanvasRef = useRef(null);
-          const containerRef = useRef(null);
-          const drawingsRef = useRef({}); 
-          
-          const isDrawing = useRef(false);
-          const scaleRef = useRef(1);
+    const [loadedFileId, setLoadedFileId] = useState('');
+    const [padletInput, setPadletInput] = useState('');
+    const [activePadlet, setActivePadlet] = useState('');
 
-          useEffect(() => {
-            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-            
-            const initGapi = () => {
-              if (window.gapi && window.gapi.client) {
-                window.gapi.load('client:picker', () => {
-                  window.gapi.client.init({ apiKey: API_KEY }).then(() => {
-                    setIsApiLoaded(true);
-                  });
-                });
-              } else {
-                setTimeout(initGapi, 100);
-              }
-            };
-            initGapi();
+    const [pdfDoc, setPdfDoc] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
-            const qp = new URLSearchParams(window.location.search);
-            const urlFileId = qp.get('id');
-            const targetPage = parseInt(qp.get('s'), 10);
-            const urlPadlet = qp.get('padlet');
-            
-            if (urlPadlet) {
-              const decodedPadlet = decodeURIComponent(urlPadlet);
-              setPadletInput(decodedPadlet);
-              setActivePadlet(decodedPadlet);
+    const [tool, setTool] = useState('pen');
+    const [userZoom, setUserZoom] = useState(1);
+    const [penColor, setPenColor] = useState('#1E40AF');
+    const [penWidth, setPenWidth] = useState(3);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [showHelpModal, setShowHelpModal] = useState(false);
+    const [authError, setAuthError] = useState('');
+
+    const pdfCanvasRef = useRef(null);
+    const drawCanvasRef = useRef(null);
+    const containerRef = useRef(null);
+    const drawingsRef = useRef({});
+    const isDrawing = useRef(false);
+    const scaleRef = useRef(1);
+
+    useEffect(() => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const pollLimit = 60;
+      let gapiTry = 0;
+      let gisTry = 0;
+
+      const pollGapi = () => {
+        if (window.gapi && typeof window.gapi.load === 'function') {
+          window.gapi.load('picker', {
+            callback: () => setIsApiLoaded(true),
+            onerror: () => {
+              console.error('[DigitalPaper] gapi picker load error');
+              setLoadError('구글 API 로딩 실패: 광고차단/네트워크를 확인 후 새로고침하세요.');
+            },
+            timeout: 10000,
+            ontimeout: () => {
+              console.error('[DigitalPaper] gapi picker load timeout');
+              setLoadError('구글 API 로딩 시간 초과: 광고차단/네트워크를 확인하세요.');
             }
-            if (urlFileId) {
-              loadPdfFromDriveAPI(urlFileId, targetPage || 1, urlPadlet ? decodeURIComponent(urlPadlet) : '');
+          });
+          return;
+        }
+        gapiTry += 1;
+        if (gapiTry >= pollLimit) {
+          setLoadError('구글 API 스크립트를 불러오지 못했습니다. 광고차단 또는 네트워크 설정을 확인해주세요.');
+          return;
+        }
+        setTimeout(pollGapi, 100);
+      };
+
+      const pollGis = () => {
+        if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+          setIsGisLoaded(true);
+          return;
+        }
+        gisTry += 1;
+        if (gisTry >= pollLimit) {
+          setLoadError(prev => prev || '구글 로그인 라이브러리를 불러오지 못했습니다. 광고차단 또는 네트워크를 확인해주세요.');
+          return;
+        }
+        setTimeout(pollGis, 100);
+      };
+
+      pollGapi();
+      pollGis();
+
+      const qp = new URLSearchParams(window.location.search);
+      const urlFileId = qp.get('id');
+      const targetPage = parseInt(qp.get('s'), 10);
+      const urlPadlet = qp.get('padlet');
+
+      if (urlPadlet) {
+        const decodedPadlet = decodeURIComponent(urlPadlet);
+        setPadletInput(decodedPadlet);
+        setActivePadlet(decodedPadlet);
+      }
+      if (urlFileId) {
+        loadPdfFromDriveAPI(urlFileId, targetPage || 1, urlPadlet ? decodeURIComponent(urlPadlet) : '')
+          .catch(err => console.error('[DigitalPaper] URL PDF load error', err));
+      }
+    }, []);
+
+    const handleAuth = () => {
+      if (!CLIENT_ID || !API_KEY) return alert('관리자가 API 설정을 완료해야 합니다.');
+      if (!isGisLoaded) return alert('구글 로그인 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+
+      try {
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: (response) => {
+            if (response.error) {
+              setAuthError(response.error_description || response.error || 'access_denied');
+              return;
             }
-          }, []);
-
-          const handleAuth = () => {
-            if (!CLIENT_ID || !API_KEY) return alert("관리자가 API 설정을 완료해야 합니다. 잠시 후 다시 시도해주세요.");
-            if(!window.google) return alert("구글 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.");
-            const tokenClient = window.google.accounts.oauth2.initTokenClient({
-              client_id: CLIENT_ID,
-              scope: SCOPES,
-              callback: (response) => {
-                if (response.error) {
-                  setAuthError(response.error_description || response.error || 'access_denied');
-                  return;
-                }
-                if (response.access_token) {
-                  setAuthError('');
-                  setAccessToken(response.access_token);
-                }
-              },
-            });
-            tokenClient.requestAccessToken();
-          };
-
-          const openPicker = () => {
-            if (!CLIENT_ID || !API_KEY) return alert("관리자가 API 설정을 완료해야 합니다.");
-            if (!accessToken || !isApiLoaded) return alert("API 로딩 중이거나 로그인이 필요합니다.");
-
-            const view = new window.google.picker.DocsView(window.google.picker.ViewId.PDFs);
-            view.setMode(window.google.picker.DocsViewMode.LIST);
-            
-            const picker = new window.google.picker.PickerBuilder()
-              .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
-              .setOAuthToken(accessToken)
-              .addView(view)
-              .setDeveloperKey(API_KEY)
-              .setCallback((data) => {
-                if (data.action === window.google.picker.Action.PICKED) {
-                  const fileId = data.docs[0].id;
-                  loadPdfFromDriveAPI(fileId, 1, padletInput);
-                }
-              })
-              .build();
-            picker.setVisible(true);
-          };
-
-          const loadPdfFromDriveAPI = async (fileId, targetPage = 1, padletUrl = padletInput) => {
-            if (!window.pdfjsLib) return;
-            setIsLoading(true);
-            setPdfDoc(null);
-            setUserZoom(1); 
-            drawingsRef.current = {}; 
-            setActivePadlet(padletUrl);
-
-            try {
-              const fetchUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
-              const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
-
-              const response = await fetch(fetchUrl, { headers });
-              
-              if (!response.ok) {
-                if (response.status === 403 || response.status === 404) {
-                  throw new Error('파일에 접근할 수 없습니다. "링크가 있는 모든 사용자 보기" 권한을 확인해주세요.');
-                }
-                throw new Error(`HTTP Error: ${response.status}`);
-              }
-              
-              const arrayBuffer = await response.arrayBuffer();
-              const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
-              const doc = await loadingTask.promise;
-              
-              setPdfDoc(doc);
-              setTotalPages(doc.numPages);
-              setCurrentPage(targetPage);
-              setLoadedFileId(fileId); 
-              
-            } catch (error) {
-              alert("문서 로드 실패: " + error.message);
-              setLoadedFileId('');
-            } finally {
-              setIsLoading(false);
+            if (response.access_token) {
+              setAuthError('');
+              setAccessToken(response.access_token);
             }
-          };
+          }
+        });
+        tokenClient.requestAccessToken();
+      } catch (err) {
+        console.error('[DigitalPaper] auth error', err);
+        setAuthError('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    };
 
-          const handleZoom = (delta) => {
-            if (drawCanvasRef.current) drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
-            setUserZoom(prev => delta === 0 ? 1 : Math.max(0.5, Math.min(4, prev + delta)));
-          };
+    const openPicker = () => {
+      if (!CLIENT_ID || !API_KEY) return alert('API 미설정 상태입니다. 관리자에게 문의하세요.');
+      if (!isApiLoaded) return;
+      if (!accessToken) return handleAuth();
 
-          const changePage = useCallback((delta) => {
-            setCurrentPage(prev => {
-              const newPage = prev + delta;
-              if (newPage < 1 || newPage > totalPages) return prev;
-              if (drawCanvasRef.current) drawingsRef.current[prev] = drawCanvasRef.current.toDataURL();
-              return newPage;
-            });
-          }, [totalPages]);
+      try {
+        const viewId = window.google.picker.ViewId.PDFS || window.google.picker.ViewId.DOCS;
+        const view = new window.google.picker.DocsView(viewId)
+          .setMode(window.google.picker.DocsViewMode.LIST)
+          .setMimeTypes('application/pdf');
 
-          useEffect(() => {
-            if (!pdfDoc) return;
-            const renderPage = async () => {
-              const page = await pdfDoc.getPage(currentPage);
-              const unscaledViewport = page.getViewport({ scale: 1 });
-              let baseScale = 1;
-              
-              if (containerRef.current) {
-                const containerW = containerRef.current.clientWidth - 32; 
-                const containerH = containerRef.current.clientHeight * 0.8 - 32; 
-                const fitW = containerW / unscaledViewport.width;
-                const fitH = containerH / unscaledViewport.height;
-                baseScale = Math.min(fitW, fitH) * 0.98; 
-              }
-
-              const finalScale = baseScale * userZoom;
-              const viewport = page.getViewport({ scale: finalScale });
-              const devicePixelRatio = window.devicePixelRatio || 1;
-              scaleRef.current = devicePixelRatio;
-
-              const pdfCanvas = pdfCanvasRef.current;
-              const drawCanvas = drawCanvasRef.current;
-              if (!pdfCanvas || !drawCanvas) return;
-
-              const ctx = pdfCanvas.getContext('2d');
-              const dCtx = drawCanvas.getContext('2d');
-
-              [pdfCanvas, drawCanvas].forEach(canvas => {
-                canvas.width = Math.floor(viewport.width * devicePixelRatio);
-                canvas.height = Math.floor(viewport.height * devicePixelRatio);
-                canvas.style.width = `${Math.floor(viewport.width)}px`;
-                canvas.style.height = `${Math.floor(viewport.height)}px`;
-              });
-
-              dCtx.setTransform(1, 0, 0, 1, 0, 0);
-              dCtx.scale(devicePixelRatio, devicePixelRatio);
-
-              const renderContext = { canvasContext: ctx, transform: [devicePixelRatio, 0, 0, devicePixelRatio, 0, 0], viewport };
-              await page.render(renderContext).promise;
-
-              dCtx.clearRect(0, 0, viewport.width, viewport.height);
-              const savedDataURL = drawingsRef.current[currentPage];
-              if (savedDataURL) {
-                const img = new Image();
-                img.onload = () => dCtx.drawImage(img, 0, 0, viewport.width, viewport.height);
-                img.src = savedDataURL;
-              }
-            };
-            renderPage();
-          }, [pdfDoc, currentPage, userZoom]); 
-
-          const getPointerPos = (e) => {
-            const canvas = drawCanvasRef.current;
-            const rect = canvas.getBoundingClientRect();
-            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            let clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            const scaleX = (canvas.width / scaleRef.current) / rect.width;
-            const scaleY = (canvas.height / scaleRef.current) / rect.height;
-            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
-          };
-
-          const startDrawing = (e) => {
-            if (tool === 'pan') return;
-            isDrawing.current = true;
-            const ctx = drawCanvasRef.current.getContext('2d');
-            const pos = getPointerPos(e);
-            
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
-            ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : penColor;
-            ctx.lineWidth = tool === 'eraser' ? penWidth * 5 : penWidth;
-            ctx.lineTo(pos.x, pos.y + 0.1);
-            ctx.stroke();
-          };
-
-          const draw = (e) => {
-            if (!isDrawing.current || tool === 'pan') return;
-            const ctx = drawCanvasRef.current.getContext('2d');
-            const pos = getPointerPos(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-          };
-
-          const stopDrawing = () => {
-            if (!isDrawing.current) return;
-            isDrawing.current = false;
-            drawCanvasRef.current.getContext('2d').closePath();
-          };
-
-          const handleShare = () => {
-            if (!loadedFileId) return alert(t.shareError);
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('id', loadedFileId); 
-            currentUrl.searchParams.set('s', currentPage.toString());
-            
-            if (padletInput.trim()) {
-              currentUrl.searchParams.set('padlet', encodeURIComponent(padletInput.trim()));
-              setActivePadlet(padletInput.trim());
-            } else {
-              currentUrl.searchParams.delete('padlet');
+        const pickerBuilder = new window.google.picker.PickerBuilder()
+          .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
+          .setOAuthToken(accessToken)
+          .setOrigin(window.location.protocol + '//' + window.location.host)
+          .addView(view)
+          .setDeveloperKey(API_KEY)
+          .setCallback((data) => {
+            if (data.action === window.google.picker.Action.PICKED) {
+              const fileId = data.docs[0].id;
+              loadPdfFromDriveAPI(fileId, 1, padletInput)
+                .catch(err => console.error('[DigitalPaper] picker file load error', err));
             }
-            
-            navigator.clipboard.writeText(currentUrl.toString())
-              .then(() => alert(t.shareSuccess))
-              .catch(() => alert("복사 실패. 브라우저 설정을 확인하세요."));
-          };
+          });
 
-          const clearCanvas = () => {
-            const canvas = drawCanvasRef.current;
-            if (!canvas) return;
-            canvas.getContext('2d').clearRect(0, 0, canvas.width / scaleRef.current, canvas.height / scaleRef.current);
-            delete drawingsRef.current[currentPage];
-          };
+        if (APP_ID) pickerBuilder.setAppId(APP_ID);
 
-          const exportAsJpg = () => {
-            const bgCanvas = pdfCanvasRef.current;
-            const fgCanvas = drawCanvasRef.current;
-            if (!bgCanvas || !fgCanvas) return;
+        pickerBuilder.build().setVisible(true);
+      } catch (err) {
+        console.error('[DigitalPaper] openPicker error', err);
+        setLoadError('파일 선택기를 열지 못했습니다. 페이지를 새로고침해주세요.');
+      }
+    };
 
-            const exportCanvas = document.createElement('canvas');
-            exportCanvas.width = bgCanvas.width;
-            exportCanvas.height = bgCanvas.height;
-            const ctx = exportCanvas.getContext('2d');
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-            ctx.drawImage(bgCanvas, 0, 0);
-            ctx.drawImage(fgCanvas, 0, 0);
-            
-            const link = document.createElement('a');
-            link.download = `digital-paper-page${currentPage}.jpg`;
-            link.href = exportCanvas.toDataURL('image/jpeg', 0.9);
-            link.click();
-          };
+    const loadPdfFromDriveAPI = async (fileId, targetPage = 1, padletUrl = padletInput) => {
+      if (!window.pdfjsLib) return;
+      setIsLoading(true);
+      setPdfDoc(null);
+      setUserZoom(1);
+      drawingsRef.current = {};
+      setActivePadlet(padletUrl);
 
-          const exportAsPdf = () => {
-            const bgCanvas = pdfCanvasRef.current;
-            const fgCanvas = drawCanvasRef.current;
-            if (!bgCanvas || !fgCanvas) return;
+      try {
+        const fetchUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
+        const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+        const response = await fetch(fetchUrl, { headers }).catch(err => {
+          console.error('[DigitalPaper] Drive fetch failed', err);
+          throw err;
+        });
 
-            const exportCanvas = document.createElement('canvas');
-            exportCanvas.width = bgCanvas.width;
-            exportCanvas.height = bgCanvas.height;
-            const ctx = exportCanvas.getContext('2d');
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-            ctx.drawImage(bgCanvas, 0, 0);
-            ctx.drawImage(fgCanvas, 0, 0);
-            
-            setIsLoading(true);
-            const imgData = exportCanvas.toDataURL('image/jpeg', 0.9);
-            const orientation = exportCanvas.width > exportCanvas.height ? 'landscape' : 'portrait';
-            
-            if (window.jspdf && window.jspdf.jsPDF) {
-               const pdf = new window.jspdf.jsPDF({ orientation, unit: 'px', format: [exportCanvas.width, exportCanvas.height] });
-               pdf.addImage(imgData, 'JPEG', 0, 0, exportCanvas.width, exportCanvas.height);
-               pdf.save(`digital-paper-page${currentPage}.pdf`);
-               setIsLoading(false);
-            }
-          };
-
-          return (
-            <div className="flex flex-col h-screen overflow-hidden">
-              <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex flex-col gap-4 shadow-sm z-10 shrink-0">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="material-icons text-blue-700 text-3xl">edit_document</span>
-                    <div>
-                      <h1 className="text-xl font-bold text-gray-900">{t.title}</h1>
-                      <p className="text-xs text-gray-600 mt-0.5">PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    {!accessToken ? (
-                      <button onClick={handleAuth} className="min-h-[44px] bg-blue-700 hover:bg-blue-800 text-white border border-blue-800 px-4 py-2 rounded-md font-semibold transition-colors flex items-center gap-2 whitespace-nowrap justify-center shadow-sm flex-1 sm:flex-none">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
-                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                            <path fill="none" d="M0 0h48v48H0z"></path>
-                        </svg>
-                        {t.login}
-                      </button>
-                    ) : (
-                      <button onClick={openPicker} className="min-h-[44px] bg-emerald-600 text-white border border-emerald-700 hover:bg-emerald-700 px-4 py-2 rounded-md font-semibold transition-colors flex items-center gap-2 whitespace-nowrap justify-center shadow-sm flex-1 sm:flex-none">
-                        <span className="material-icons text-sm">cloud_queue</span> 활동지 불러오기
-                      </button>
-                    )}
-                    <button onClick={handleShare} className="min-h-[44px] bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold flex items-center gap-2 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
-                      <span className="material-icons text-sm">share</span>{t.share}
-                    </button>
-                    <button onClick={() => setShowHelpModal(true)} className="min-h-[44px] bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md font-semibold flex items-center gap-1 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
-                      <span className="material-icons text-sm">help_outline</span>사용법
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-2 items-start">
-                  <label className="flex flex-col gap-1">
-                    <span className="text-sm font-semibold text-gray-700">제출함 주소 (선택)</span>
-                    <input 
-                      type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
-                    />
-                  </label>
-                  <div className="text-xs rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
-                    {CLIENT_ID && API_KEY ? "API 설정 완료" : "API 미설정: GitHub Secrets 필요"}
-                  </div>
-                </div>
-              </header>
-
-              <main className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden">
-                {authError && (
-                  <div className="mx-4 mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-                    <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
-                    <p>현재 오류: {authError}</p>
-                    <p className="mt-1">Google Cloud OAuth 동의화면 게시 상태, 승인된 도메인(dp.chichiboo.link), 테스트 사용자 등록 여부를 확인하세요.</p>
-                  </div>
-                )}
-                {isLoading && (
-                  <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-50">
-                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
-                  </div>
-                )}
-
-                {pdfDoc && (
-                  <div className="bg-white border-b border-gray-200 px-4 py-2 flex flex-wrap items-center justify-center gap-4 shadow-sm z-10 shrink-0">
-                    <div className="flex gap-1">
-                      <button onClick={() => setTool('pen')} className={`p-2 rounded-lg flex flex-col items-center gap-1 min-w-[50px] ${tool === 'pen' ? 'bg-blue-100 text-blue-700 border border-blue-300' : 'text-gray-600 hover:bg-gray-100'}`}>
-                        <span className="material-icons text-sm">edit</span><span className="text-[10px] font-medium">{t.pen}</span>
-                      </button>
-                      <button onClick={() => setTool('eraser')} className={`p-2 rounded-lg flex flex-col items-center gap-1 min-w-[50px] ${tool === 'eraser' ? 'bg-pink-100 text-pink-700 border border-pink-300' : 'text-gray-600 hover:bg-gray-100'}`}>
-                        <span className="material-icons text-sm">healing</span><span className="text-[10px] font-medium">{t.eraser}</span>
-                      </button>
-                      <button onClick={() => setTool('pan')} className={`p-2 rounded-lg flex flex-col items-center gap-1 min-w-[50px] ${tool === 'pan' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' : 'text-gray-600 hover:bg-gray-100'}`}>
-                        <span className="material-icons text-sm">pan_tool</span><span className="text-[10px] font-medium">{t.pan}</span>
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
-                      <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-6 h-6 rounded cursor-pointer border-0 p-0" />
-                      <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value))} className="w-20 accent-blue-500" />
-                    </div>
-
-                    <div className="flex gap-2 border-l border-gray-200 pl-4">
-                      <button onClick={exportAsJpg} className="px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded text-sm hover:bg-yellow-200 font-medium flex items-center gap-1 border border-yellow-300 shadow-sm">
-                        <span className="material-icons text-sm">image</span> {t.exportJpg}
-                      </button>
-                      <button onClick={exportAsPdf} className="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded text-sm hover:bg-emerald-200 font-medium flex items-center gap-1 border border-emerald-300 shadow-sm">
-                        <span className="material-icons text-sm">picture_as_pdf</span> {t.exportPdf}
-                      </button>
-                      <button onClick={clearCanvas} className="px-3 py-1.5 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors ml-1 border border-gray-300 rounded text-sm flex items-center gap-1">
-                        <span className="material-icons text-sm">delete_outline</span> {t.clear}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex-1 overflow-auto p-4 flex flex-col items-center bg-[#e2e8f0]" ref={containerRef}>
-                  {!pdfDoc && !isLoading && (
-                    <div className="text-center text-gray-400 mt-20">
-                      <span className="material-icons text-6xl mb-4 block text-gray-300">cloud_done</span>
-                      <p className="text-lg mb-2 text-gray-600">디지털 페이퍼 구동 준비 완료!</p>
-                      <p className="text-sm">상단의 [구글 로그인] 후 활동지(PDF)를 선택해주세요.</p>
-                    </div>
-                  )}
-
-                  {pdfDoc && (
-                    <div className="relative shadow-xl border border-gray-300 bg-white mb-6" style={{ touchAction: tool === 'pan' ? 'auto' : 'none' }}>
-                      <canvas ref={pdfCanvasRef} className="block" />
-                      <canvas 
-                        ref={drawCanvasRef} 
-                        className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
-                        onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
-                        onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing} onTouchCancel={stopDrawing}
-                      />
-                      
-                      <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur px-4 py-2 rounded-full shadow-md border border-gray-200 flex items-center gap-4 z-20">
-                        <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-blue-600 p-1"><span className="material-icons">chevron_left</span></button>
-                        <span className="text-sm font-medium text-gray-700 min-w-[80px] text-center">{t.page} {currentPage} / {totalPages}</span>
-                        <button onClick={() => changePage(1)} disabled={currentPage >= totalPages} className="text-gray-600 disabled:text-gray-300 hover:text-blue-600 p-1"><span className="material-icons">chevron_right</span></button>
-                      </div>
-                    </div>
-                  )}
-
-                  {activePadlet && pdfDoc && (
-                    <div className="w-full max-w-4xl mt-12 mb-8 flex flex-col items-center animate-fade-in">
-                      <div className="bg-pink-100 text-pink-800 font-bold px-6 py-3 rounded-t-xl border border-pink-200 shadow-sm flex items-center gap-2">
-                        <span className="material-icons">upload_file</span>
-                        {t.submitGuide}
-                      </div>
-                      <iframe 
-                        src={activePadlet} 
-                        className="w-full h-[600px] border-2 border-pink-200 shadow-lg rounded-b-xl rounded-t-none bg-white"
-                        allow="camera;microphone;geolocation"
-                        title="Submission Area"
-                      />
-                    </div>
-                  )}
-                </div>
-              </main>
-
-              <footer className="bg-white border-t border-gray-200 py-2 text-center shrink-0 z-10">
-                <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600 text-xs font-medium transition-colors inline-block">
-                  Created by. 교육뮤지컬 꿈꾸는 치수쌤
-                </a>
-              </footer>
-
-              {showHelpModal && (
-                <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-                  <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col relative overflow-hidden">
-                    
-                    <div className="bg-blue-50 border-b border-blue-100 px-6 py-4 flex items-center justify-between shrink-0">
-                      <h2 className="text-xl font-bold text-blue-800 flex items-center gap-2">
-                        <span className="material-icons">menu_book</span> 
-                        디지털 페이퍼 사용법 및 안전성
-                      </h2>
-                      <button onClick={() => setShowHelpModal(false)} className="text-gray-400 hover:text-gray-700 transition-colors p-1">
-                        <span className="material-icons">close</span>
-                      </button>
-                    </div>
-
-                    <div className="p-6 overflow-y-auto space-y-8 flex-1">
-                      
-                      <section>
-                        <h3 className="text-lg font-bold text-blue-700 bg-blue-100/50 px-3 py-1.5 rounded-md inline-flex items-center gap-2 mb-3">
-                          👨‍🏫 선생님은 이렇게 쓰세요!
-                        </h3>
-                        <ol className="list-decimal list-inside space-y-2 text-gray-700 text-[15px] ml-1">
-                          <li>상단의 <strong>[구글 로그인]</strong> 버튼을 눌러 계정을 연결합니다.</li>
-                          <li><strong>[드라이브 파일 선택]</strong>을 눌러 배부할 활동지(PDF)를 고릅니다. <br/>
-                            <span className="text-sm text-red-500 bg-red-50 px-2 py-1 rounded inline-block mt-1 ml-5">
-                              *주의: 학생이 보려면 해당 파일이 드라이브에서 '링크가 있는 모든 사용자 보기' 권한이어야 합니다.
-                            </span>
-                          </li>
-                          <li>(선택) 학생들이 과제를 제출할 <strong>패들렛이나 띵커벨 보드 주소</strong>를 우측 칸에 넣습니다.</li>
-                          <li><strong>[공유 링크 복사]</strong>를 눌러 학생들(클래스팅, 카톡 등)에게 링크를 전달합니다.</li>
-                        </ol>
-                      </section>
-
-                      <section>
-                        <h3 className="text-lg font-bold text-green-700 bg-green-100/50 px-3 py-1.5 rounded-md inline-flex items-center gap-2 mb-3">
-                          👦👧 학생들은 이렇게 써요!
-                        </h3>
-                        <ol className="list-decimal list-inside space-y-2 text-gray-700 text-[15px] ml-1">
-                          <li>선생님이 주신 링크를 누르면 별도의 <strong>로그인 없이 활동지가 즉시</strong> 열립니다.</li>
-                          <li>화면 상단의 <strong>펜과 지우개</strong> 도구를 이용해 화면에 직접 풀고 그립니다. (두 손가락으로 화면 이동 및 확대/축소 가능)</li>
-                          <li>다 풀면 상단의 <strong>[JPG 저장]</strong> 버튼을 눌러 내 태블릿이나 PC에 사진으로 저장합니다.</li>
-                          <li>화면 스크롤을 내려 <strong>제출함(패들렛, 띵커벨 등)</strong>에 방금 저장한 사진을 올려 제출합니다.</li>
-                        </ol>
-                      </section>
-
-                      <hr className="border-gray-200" />
-
-                      <section className="bg-gray-50 p-5 rounded-xl border border-gray-200">
-                        <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2 mb-3">
-                          <span className="material-icons text-purple-600">verified_user</span> 
-                          개인정보 처리방침 (보안 및 안전성)
-                        </h3>
-                        <p className="text-sm text-gray-600 leading-relaxed mb-3">
-                          디지털 페이퍼는 학생들과 선생님의 소중한 데이터를 철저히 보호하며, 교육 현장의 보안 지침을 준수합니다.
-                        </p>
-                        <ul className="space-y-3 text-[14px] text-gray-700">
-                          <li className="flex items-start gap-2">
-                            <span className="material-icons text-green-500 text-lg mt-0.5">check_circle</span>
-                            <div>
-                              <strong>서버 없는 100% 안전한 도구:</strong> 이 앱은 별도의 데이터베이스나 서버를 운영하지 않습니다. 모든 통신은 선생님의 기기와 구글 서버 사이에서 직접 안전하게 이루어집니다.
-                            </div>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <span className="material-icons text-green-500 text-lg mt-0.5">check_circle</span>
-                            <div>
-                              <strong>개인정보 및 활동 데이터 수집 제로 (0):</strong> 구글 로그인 정보, 학생들의 필기 내용, 업로드한 활동지 파일 등 어떠한 정보도 제3자에게 전송되거나 수집되지 않습니다. 필기한 내용은 오직 사용 중인 기기 메모리 내에서만 처리됩니다.
-                            </div>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <span className="material-icons text-green-500 text-lg mt-0.5">check_circle</span>
-                            <div>
-                              <strong>학생 회원가입 및 로그인 불필요:</strong> 학생들은 별도의 계정 생성이나 개인정보 식별 정보 입력 없이, 선생님이 공유한 링크만으로 즉시 안전하게 활동에 참여할 수 있습니다.
-                            </div>
-                          </li>
-                        </ul>
-                      </section>
-
-                    </div>
-                    
-                    <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex justify-end shrink-0">
-                      <button onClick={() => setShowHelpModal(false)} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold transition-colors shadow-sm">
-                        확인했습니다
-                      </button>
-                    </div>
-
-                  </div>
-                </div>
-              )}
-
-            </div>
-          );
+        if (!response.ok) {
+          if (response.status === 401) {
+            setAccessToken(null);
+            throw new Error('인증이 만료되었습니다. 다시 로그인 후 시도해주세요.');
+          }
+          if (response.status === 403 || response.status === 404) {
+            throw new Error('파일에 접근할 수 없습니다. "링크가 있는 모든 사용자 보기" 권한을 확인해주세요.');
+          }
+          throw new Error(`HTTP Error: ${response.status}`);
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+        const arrayBuffer = await response.arrayBuffer();
+        const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+        const doc = await loadingTask.promise.catch(err => {
+          console.error('[DigitalPaper] PDF parse error', err);
+          throw err;
+        });
+
+        setPdfDoc(doc);
+        setTotalPages(doc.numPages);
+        setCurrentPage(targetPage);
+        setLoadedFileId(fileId);
+      } catch (error) {
+        console.error('[DigitalPaper] loadPdfFromDriveAPI error', error);
+        alert('문서 로드 실패: ' + error.message);
+        setLoadedFileId('');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const handleZoom = (delta) => {
+      if (drawCanvasRef.current) drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
+      setUserZoom(prev => delta === 0 ? 1 : Math.max(0.5, Math.min(4, prev + delta)));
+    };
+
+    const changePage = useCallback((delta) => {
+      setCurrentPage(prev => {
+        const newPage = prev + delta;
+        if (newPage < 1 || newPage > totalPages) return prev;
+        if (drawCanvasRef.current) drawingsRef.current[prev] = drawCanvasRef.current.toDataURL();
+        return newPage;
+      });
+    }, [totalPages]);
+
+    useEffect(() => {
+      if (!pdfDoc) return;
+      const renderPage = async () => {
+        const page = await pdfDoc.getPage(currentPage).catch(err => {
+          console.error('[DigitalPaper] getPage error', err);
+          throw err;
+        });
+        const unscaledViewport = page.getViewport({ scale: 1 });
+        let baseScale = 1;
+
+        if (containerRef.current) {
+          const containerW = containerRef.current.clientWidth - 32;
+          const containerH = containerRef.current.clientHeight * 0.8 - 32;
+          const fitW = containerW / unscaledViewport.width;
+          const fitH = containerH / unscaledViewport.height;
+          baseScale = Math.min(fitW, fitH) * 0.98;
+        }
+
+        const finalScale = baseScale * userZoom;
+        const viewport = page.getViewport({ scale: finalScale });
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        scaleRef.current = devicePixelRatio;
+
+        const pdfCanvas = pdfCanvasRef.current;
+        const drawCanvas = drawCanvasRef.current;
+        if (!pdfCanvas || !drawCanvas) return;
+
+        const ctx = pdfCanvas.getContext('2d');
+        const dCtx = drawCanvas.getContext('2d');
+
+        [pdfCanvas, drawCanvas].forEach(canvas => {
+          canvas.width = Math.floor(viewport.width * devicePixelRatio);
+          canvas.height = Math.floor(viewport.height * devicePixelRatio);
+          canvas.style.width = `${Math.floor(viewport.width)}px`;
+          canvas.style.height = `${Math.floor(viewport.height)}px`;
+        });
+
+        dCtx.setTransform(1, 0, 0, 1, 0, 0);
+        dCtx.scale(devicePixelRatio, devicePixelRatio);
+
+        const renderContext = { canvasContext: ctx, transform: [devicePixelRatio, 0, 0, devicePixelRatio, 0, 0], viewport };
+        await page.render(renderContext).promise.catch(err => {
+          console.error('[DigitalPaper] render error', err);
+          throw err;
+        });
+
+        dCtx.clearRect(0, 0, viewport.width, viewport.height);
+        const savedDataURL = drawingsRef.current[currentPage];
+        if (savedDataURL) {
+          const img = new Image();
+          img.onload = () => dCtx.drawImage(img, 0, 0, viewport.width, viewport.height);
+          img.src = savedDataURL;
+        }
+      };
+      renderPage().catch(err => console.error('[DigitalPaper] renderPage chain error', err));
+    }, [pdfDoc, currentPage, userZoom]);
+
+    const getPointerPos = (e) => {
+      const canvas = drawCanvasRef.current;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const scaleX = (canvas.width / scaleRef.current) / rect.width;
+      const scaleY = (canvas.height / scaleRef.current) / rect.height;
+      return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+    };
+
+    const startDrawing = (e) => {
+      if (tool === 'pan') return;
+      isDrawing.current = true;
+      const ctx = drawCanvasRef.current.getContext('2d');
+      const pos = getPointerPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
+      ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : penColor;
+      ctx.lineWidth = tool === 'eraser' ? penWidth * 5 : penWidth;
+      ctx.lineTo(pos.x, pos.y + 0.1);
+      ctx.stroke();
+    };
+
+    const draw = (e) => {
+      if (!isDrawing.current || tool === 'pan') return;
+      const ctx = drawCanvasRef.current.getContext('2d');
+      const pos = getPointerPos(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    };
+
+    const stopDrawing = () => {
+      if (!isDrawing.current) return;
+      isDrawing.current = false;
+      drawCanvasRef.current.getContext('2d').closePath();
+    };
+
+    const handleShare = () => {
+      if (!loadedFileId) return alert(t.shareError);
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('id', loadedFileId);
+      currentUrl.searchParams.set('s', currentPage.toString());
+      if (padletInput.trim()) {
+        currentUrl.searchParams.set('padlet', encodeURIComponent(padletInput.trim()));
+        setActivePadlet(padletInput.trim());
+      } else {
+        currentUrl.searchParams.delete('padlet');
+      }
+      navigator.clipboard.writeText(currentUrl.toString())
+        .then(() => alert(t.shareSuccess))
+        .catch((err) => console.error('[DigitalPaper] share copy error', err));
+    };
+
+    const clearCanvas = () => {
+      const canvas = drawCanvasRef.current;
+      if (!canvas) return;
+      canvas.getContext('2d').clearRect(0, 0, canvas.width / scaleRef.current, canvas.height / scaleRef.current);
+      delete drawingsRef.current[currentPage];
+    };
+
+    const exportAsJpg = () => {
+      const bgCanvas = pdfCanvasRef.current;
+      const fgCanvas = drawCanvasRef.current;
+      if (!bgCanvas || !fgCanvas) return;
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = bgCanvas.width;
+      exportCanvas.height = bgCanvas.height;
+      const ctx = exportCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      ctx.drawImage(bgCanvas, 0, 0);
+      ctx.drawImage(fgCanvas, 0, 0);
+      const link = document.createElement('a');
+      link.download = `digital-paper-page${currentPage}.jpg`;
+      link.href = exportCanvas.toDataURL('image/jpeg', 0.9);
+      link.click();
+    };
+
+    const exportAsPdf = () => {
+      const bgCanvas = pdfCanvasRef.current;
+      const fgCanvas = drawCanvasRef.current;
+      if (!bgCanvas || !fgCanvas) return;
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = bgCanvas.width;
+      exportCanvas.height = bgCanvas.height;
+      const ctx = exportCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      ctx.drawImage(bgCanvas, 0, 0);
+      ctx.drawImage(fgCanvas, 0, 0);
+      setIsLoading(true);
+      const imgData = exportCanvas.toDataURL('image/jpeg', 0.9);
+      const orientation = exportCanvas.width > exportCanvas.height ? 'landscape' : 'portrait';
+      if (window.jspdf && window.jspdf.jsPDF) {
+        const pdf = new window.jspdf.jsPDF({ orientation, unit: 'px', format: [exportCanvas.width, exportCanvas.height] });
+        pdf.addImage(imgData, 'JPEG', 0, 0, exportCanvas.width, exportCanvas.height);
+        pdf.save(`digital-paper-page${currentPage}.pdf`);
+        setIsLoading(false);
+      }
+    };
+
+    const primaryButton = 'min-h-[44px] rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-2 justify-center whitespace-nowrap shadow-[0_4px_20px_-6px_rgba(99,102,241,0.15)]';
+
+    return (
+      <div className="flex flex-col h-screen overflow-hidden bg-warm text-gray-700">
+        <header className="bg-white/80 backdrop-blur-md border-b border-pink-100 px-4 sm:px-6 py-4 flex flex-col gap-3 shadow-[0_4px_20px_-6px_rgba(99,102,241,0.15)] z-10 shrink-0">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="material-icons text-pastelBlueText text-3xl">edit_document</span>
+              <div>
+                <h1 className="text-[22px] leading-tight font-bold tracking-[-0.02em] text-gray-900">{t.title}</h1>
+                <p className="text-xs font-medium text-gray-500">PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              {!accessToken ? (
+                <button onClick={handleAuth} disabled={!isGisLoaded} className={`${primaryButton} bg-pastelBlue hover:bg-pastelBlueHover text-pastelBlueText border border-blue-200 disabled:opacity-60 disabled:cursor-not-allowed`}>
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
+                  <span className="material-icons text-base">account_circle</span>{t.login}
+                </button>
+              ) : (
+                <button onClick={openPicker} disabled={!isApiLoaded} className={`${primaryButton} bg-pastelGreen hover:bg-pastelGreenHover text-pastelGreenText border border-green-200 disabled:opacity-60 disabled:cursor-not-allowed`}>
+                  <span className="material-icons text-base">folder_open</span>{t.select}
+                </button>
+              )}
+              <button onClick={handleShare} className={`${primaryButton} bg-pastelPink hover:bg-pastelPinkHover text-pastelPinkText border border-pink-200`}>
+                <span className="material-icons text-base">ios_share</span>{t.share}
+              </button>
+              <button onClick={() => setShowHelpModal(true)} className={`${primaryButton} bg-pastelYellow hover:bg-pastelYellowHover text-pastelYellowText border border-amber-200`}>
+                <span className="material-icons text-base">lightbulb</span>사용법
+              </button>
+            </div>
+          </div>
+
+          {!isApiLoaded && <p className="text-xs font-medium text-gray-500">구글 라이브러리 로딩 중...</p>}
+          {loadError && <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700">{loadError}</div>}
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-2 items-start">
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-semibold text-gray-700">제출함 주소 (선택)</span>
+              <input type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 border border-pink-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pastelPink"/>
+            </label>
+            <div className={`text-xs rounded-xl border px-3 py-2 font-semibold ${CLIENT_ID && API_KEY ? 'border-green-200 bg-green-50 text-green-700' : 'border-red-300 bg-red-50 text-red-700'}`}>
+              {CLIENT_ID && API_KEY ? 'API 설정 완료' : 'API 미설정'}
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 flex flex-col bg-[#f7f5ff] relative overflow-hidden">
+          {authError && (
+            <div className="mx-4 mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+              <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
+              <p>현재 오류: {authError}</p>
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-50">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-pastelBlue border-t-pastelPink"></div>
+            </div>
+          )}
+
+          {pdfDoc && (
+            <div className="bg-white/90 border-b border-pink-100 px-4 py-2 flex flex-wrap items-center justify-center gap-4 shadow-[0_4px_20px_-6px_rgba(99,102,241,0.15)] z-10 shrink-0">
+              <div className="flex gap-2">
+                <button onClick={() => setTool('pen')} className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-semibold transition-all flex flex-col items-center gap-1 ${tool === 'pen' ? 'bg-pastelBlue text-pastelBlueText border border-blue-200 shadow-inner' : 'text-gray-500 bg-gray-100 border border-gray-200'}`}><span className="material-icons text-sm">draw</span>{t.pen}</button>
+                <button onClick={() => setTool('eraser')} className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-semibold transition-all flex flex-col items-center gap-1 ${tool === 'eraser' ? 'bg-pastelPink text-pastelPinkText border border-pink-200 shadow-inner' : 'text-gray-500 bg-gray-100 border border-gray-200'}`}><span className="material-icons text-sm">ink_eraser</span>{t.eraser}</button>
+                <button onClick={() => setTool('pan')} className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-semibold transition-all flex flex-col items-center gap-1 ${tool === 'pan' ? 'bg-pastelYellow text-pastelYellowText border border-yellow-200 shadow-inner' : 'text-gray-500 bg-gray-100 border border-gray-200'}`}><span className="material-icons text-sm">back_hand</span>{t.pan}</button>
+              </div>
+
+              <div className="flex items-center gap-3 border-l border-pink-100 pl-4">
+                <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-7 h-7 rounded-full cursor-pointer border-0 p-0"/>
+                <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="w-20 accent-blue-500"/>
+                <div className="rounded-full border border-gray-300 bg-white" style={{ width: `${Math.max(10, penWidth + 6)}px`, height: `${Math.max(10, penWidth + 6)}px` }}></div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 border-l border-pink-100 pl-4">
+                <button onClick={exportAsJpg} className={`${primaryButton} bg-pastelYellow text-pastelYellowText border border-yellow-200`}><span className="material-icons text-sm">image</span>{t.exportJpg}</button>
+                <button onClick={exportAsPdf} className={`${primaryButton} bg-pastelGreen text-pastelGreenText border border-green-200`}><span className="material-icons text-sm">picture_as_pdf</span>{t.exportPdf}</button>
+                <button onClick={clearCanvas} className={`${primaryButton} bg-white text-gray-600 border border-gray-200`}><span className="material-icons text-sm">restart_alt</span>{t.clear}</button>
+                <button onClick={() => handleZoom(0.1)} className={`${primaryButton} bg-white text-gray-600 border border-gray-200`}>+</button>
+                <button onClick={() => handleZoom(-0.1)} className={`${primaryButton} bg-white text-gray-600 border border-gray-200`}>-</button>
+                <button onClick={() => handleZoom(0)} className={`${primaryButton} bg-pastelLavender text-purple-700 border border-purple-200`}>맞춤</button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex-1 overflow-auto p-4 flex flex-col items-center bg-gradient-to-b from-[#f8f7ff] to-[#eef2ff]" ref={containerRef}>
+            {!pdfDoc && !isLoading && (
+              <div className="text-center text-gray-500 mt-20">
+                <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-gradient-to-br from-pastelBlue to-pastelPink flex items-center justify-center"><span className="material-icons text-6xl text-white">auto_stories</span></div>
+                <p className="text-lg font-semibold mb-2 text-gray-700">디지털 페이퍼 구동 준비 완료!</p>
+                <p className="text-sm font-medium">상단의 [구글 로그인] 후 활동지(PDF)를 선택해주세요.</p>
+              </div>
+            )}
+
+            {pdfDoc && (
+              <div className="relative shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white mb-6 rounded-2xl overflow-hidden" style={{ touchAction: tool === 'pan' ? 'auto' : 'none' }}>
+                <canvas ref={pdfCanvasRef} className="block" />
+                <canvas
+                  ref={drawCanvasRef}
+                  className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
+                  onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing} onTouchCancel={stopDrawing}
+                />
+                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white border border-pink-200 px-4 py-2 rounded-full shadow-md flex items-center gap-4 z-20">
+                  <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_left</span></button>
+                  <span className="text-sm font-semibold text-gray-700 min-w-[92px] text-center">{t.page} {currentPage} / {totalPages}</span>
+                  <button onClick={() => changePage(1)} disabled={currentPage >= totalPages} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_right</span></button>
+                </div>
+              </div>
+            )}
+
+            {activePadlet && pdfDoc && (
+              <div className="w-full max-w-4xl mt-12 mb-8 flex flex-col items-center">
+                <div className="bg-gradient-to-r from-pastelPink to-pastelYellow text-pastelPinkText font-bold px-6 py-3 rounded-t-xl border border-pink-200 shadow-sm flex items-center gap-2">
+                  <span className="material-icons">upload_file</span>{t.submitGuide}
+                </div>
+                <iframe src={activePadlet} className="w-full h-[600px] border-2 border-pink-200 shadow-lg rounded-b-xl rounded-t-none bg-white" allow="camera;microphone;geolocation" title="Submission Area"/>
+              </div>
+            )}
+          </div>
+        </main>
+
+        <footer className="bg-white/90 border-t border-pink-100 py-2 text-center shrink-0 z-10">
+          <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pastelBlueText text-xs font-medium transition-colors inline-block">Created by. 교육뮤지컬 꿈꾸는 치수쌤</a>
+        </footer>
+
+        {showHelpModal && (
+          <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-100 to-pink-100 border-b border-blue-100 px-6 py-4 flex items-center justify-between shrink-0">
+                <h2 className="text-[18px] font-bold text-gray-800 flex items-center gap-2"><span className="material-icons">lightbulb</span>디지털 페이퍼 사용법 및 안전성</h2>
+                <button onClick={() => setShowHelpModal(false)} className="text-gray-400 hover:text-gray-700 transition-colors p-1"><span className="material-icons">close</span></button>
+              </div>
+
+              <div className="p-6 overflow-y-auto space-y-8 flex-1 text-[15px]">
+                <section>
+                  <h3 className="text-[18px] font-bold text-pastelBlueText bg-blue-100/50 px-3 py-1.5 rounded-md inline-flex items-center gap-2 mb-3"><span className="material-icons">school</span>선생님은 이렇게 쓰세요!</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700 ml-1">
+                    <li>상단의 <strong>[구글 로그인]</strong> 버튼을 눌러 계정을 연결합니다.</li>
+                    <li><strong>[활동지 불러오기]</strong>를 눌러 배부할 활동지(PDF)를 고릅니다.</li>
+                    <li>(선택) 제출함 주소를 입력합니다.</li>
+                    <li><strong>[공유 링크 복사]</strong>를 눌러 학생들에게 전달합니다.</li>
+                  </ol>
+                </section>
+
+                <section>
+                  <h3 className="text-[18px] font-bold text-pastelGreenText bg-green-100/50 px-3 py-1.5 rounded-md inline-flex items-center gap-2 mb-3"><span className="material-icons">face</span>학생들은 이렇게 써요!</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700 ml-1">
+                    <li>선생님 링크를 열면 활동지가 바로 열립니다.</li>
+                    <li>펜/지우개로 풀이하고 수정합니다.</li>
+                    <li>완성 후 JPG/PDF로 저장합니다.</li>
+                    <li>제출함에 파일을 업로드합니다.</li>
+                  </ol>
+                </section>
+
+                <section className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                  <h3 className="text-[18px] font-bold text-gray-800 flex items-center gap-2 mb-3"><span className="material-icons text-purple-600">shield</span>개인정보 및 안전성</h3>
+                  <ul className="space-y-3 text-[14px] text-gray-700">
+                    <li>서버 저장 없이 브라우저와 구글 서버 간 직접 통신합니다.</li>
+                    <li>학생 필기 데이터와 개인정보를 별도로 수집하지 않습니다.</li>
+                    <li>학생 로그인 없이 공유 링크로 참여 가능합니다.</li>
+                  </ul>
+                </section>
+              </div>
+
+              <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex justify-end shrink-0">
+                <button onClick={() => setShowHelpModal(false)} className="min-h-[44px] rounded-xl px-6 py-2 bg-pastelBlue hover:bg-pastelBlueHover text-pastelBlueText font-bold transition-all hover:-translate-y-0.5 hover:shadow-md">확인했습니다</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(<App />);
+</script>
 </body>
 </html>
