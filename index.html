@@ -70,13 +70,13 @@
   const i18n = {
     ko: {
       title: '디지털 페이퍼', subtitle: 'PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.', login: '구글 로그인', select: '활동지 불러오기',
-      padletPlaceholder: '패들렛/띵커벨 등 제출함 주소 (선택)', share: '공유 링크 복사', guide: '사용법', language: '언어',
-      pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤',
+      padletPlaceholder: '제출 링크', share: '공유 링크 복사', guide: '사용법', language: '언어', applyLink: '삽입', canvaBlocked: 'Canva 편집/업로드는 보안 정책(CSP)으로 iframe에서 제한됩니다.', openLink: 'Canva에서 수정하기', tryEmbed: '임베드 보기 시도',
+      pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', undo: '실행취소', redo: '다시실행', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤',
       googleLoading: '구글 라이브러리 로딩 중...', apiReady: 'API 설정 완료', apiMissing: 'API 미설정',
       shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.',
       submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇',
       emptyTitle: '디지털 페이퍼 구동 준비 완료!', emptyDesc: '상단의 [구글 로그인] 후 활동지(PDF)를 선택해주세요.',
-      padletLabel: '제출함 주소 (선택)', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '확인했습니다',
+      padletLabel: '제출 링크', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '확인했습니다',
       teacherGuide: '선생님은 이렇게 쓰세요!', studentGuide: '학생들은 이렇게 써요!', securityTitle: '개인정보 및 안전성',
       teacherSteps: ['상단의 [구글 로그인] 버튼을 눌러 계정을 연결합니다.', '[활동지 불러오기]를 눌러 배부할 활동지(PDF)를 고릅니다.', '(선택) 제출함 주소를 입력합니다.', '[공유 링크 복사]를 눌러 학생들에게 전달합니다.'],
       studentSteps: ['선생님 링크를 열면 활동지가 바로 열립니다.', '펜/지우개로 풀이하고 수정합니다.', '완성 후 JPG/PDF로 저장합니다.', '제출함에 파일을 업로드합니다.'],
@@ -84,13 +84,13 @@
     },
     en: {
       title: 'Digital Paper', subtitle: 'Load PDF worksheets, annotate, and submit as JPG/PDF.', login: 'Sign in with Google', select: 'Open Worksheet',
-      padletPlaceholder: 'Padlet/Thinkerbell submission URL (optional)', share: 'Copy Share Link', guide: 'Guide', language: 'Language',
-      pen: 'Pen', eraser: 'Eraser', pan: 'Pan', clear: 'Clear', exportJpg: 'Save JPG', exportPdf: 'Save PDF', page: 'Page', fit: 'Fit',
+      padletPlaceholder: 'Submission link', share: 'Copy Share Link', guide: 'Guide', language: 'Language', applyLink: 'Insert', canvaBlocked: 'Canva editing/upload is restricted in iframes by CSP.', openLink: 'Open Canva editor', tryEmbed: 'Try embed view',
+      pen: 'Pen', eraser: 'Eraser', pan: 'Pan', clear: 'Clear', undo: 'Undo', redo: 'Redo', exportJpg: 'Save JPG', exportPdf: 'Save PDF', page: 'Page', fit: 'Fit',
       googleLoading: 'Loading Google libraries...', apiReady: 'API configured', apiMissing: 'API not configured',
       shareSuccess: 'Share link copied.', shareError: 'Please select a file first.',
       submitGuide: '👇 Save your worksheet as JPG and submit below 👇',
       emptyTitle: 'Digital Paper is ready!', emptyDesc: 'Sign in with Google and choose a PDF worksheet.',
-      padletLabel: 'Submission URL (optional)', helpTitle: 'How to use & safety', confirm: 'Got it',
+      padletLabel: 'Submission link', helpTitle: 'How to use & safety', confirm: 'Got it',
       teacherGuide: 'For Teachers', studentGuide: 'For Students', securityTitle: 'Privacy & Security',
       teacherSteps: ['Click [Sign in with Google] to connect your account.', 'Click [Open Worksheet] and pick a PDF file.', '(Optional) Enter your submission board URL.', 'Click [Copy Share Link] and send it to students.'],
       studentSteps: ['Open the shared link from your teacher.', 'Solve with pen/eraser tools on screen.', 'Save your work as JPG/PDF.', 'Upload the saved file to the submission board.'],
@@ -98,13 +98,13 @@
     },
     ja: {
       title: 'デジタルペーパー', subtitle: 'PDFを読み込み、書き込み後にJPG/PDFで保存して提出できます。', login: 'Googleでログイン', select: 'ワークシートを開く',
-      padletPlaceholder: 'Padlet/Thinkerbell 提出先URL（任意）', share: '共有リンクをコピー', guide: '使い方', language: '言語',
-      pen: 'ペン', eraser: '消しゴム', pan: '移動', clear: 'リセット', exportJpg: 'JPG保存', exportPdf: 'PDF保存', page: 'ページ', fit: 'フィット',
+      padletPlaceholder: '提出リンク', share: '共有リンクをコピー', guide: '使い方', language: '言語', applyLink: '挿入', canvaBlocked: 'Canvaの編集/アップロードはCSPによりiframeで制限されます。', openLink: 'Canvaで編集', tryEmbed: '埋め込み表示を試す',
+      pen: 'ペン', eraser: '消しゴム', pan: '移動', clear: 'リセット', undo: '元に戻す', redo: 'やり直し', exportJpg: 'JPG保存', exportPdf: 'PDF保存', page: 'ページ', fit: 'フィット',
       googleLoading: 'Googleライブラリを読み込み中...', apiReady: 'API設定済み', apiMissing: 'API未設定',
       shareSuccess: '共有リンクをコピーしました。', shareError: '先にファイルを選択してください。',
       submitGuide: '👇 作成したワークシートをJPG保存して下から提出してください 👇',
       emptyTitle: 'デジタルペーパーの準備完了！', emptyDesc: '上部のGoogleログイン後、PDFワークシートを選択してください。',
-      padletLabel: '提出先URL（任意）', helpTitle: '使い方と安全性', confirm: '確認しました',
+      padletLabel: '提出リンク', helpTitle: '使い方と安全性', confirm: '確認しました',
       teacherGuide: '先生向けガイド', studentGuide: '生徒向けガイド', securityTitle: '個人情報と安全性',
       teacherSteps: ['上部の[Googleでログイン]でアカウントを連携します。', '[ワークシートを開く]からPDF教材を選択します。', '（任意）提出先URLを入力します。', '[共有リンクをコピー]で生徒に配布します。'],
       studentSteps: ['先生から受け取ったリンクを開きます。', 'ペン/消しゴムで書き込みます。', '完了したらJPG/PDFで保存します。', '提出先に保存したファイルをアップロードします。'],
@@ -116,6 +116,11 @@
     const browserLang = (navigator.language || 'ko').slice(0, 2);
     const [lang, setLang] = useState(i18n[browserLang] ? browserLang : 'ko');
     const t = i18n[lang];
+    const languageOptions = [
+      { value: 'ko', label: '한국어' },
+      { value: 'en', label: 'English' },
+      { value: 'ja', label: '日本語' }
+    ];
 
     const [accessToken, setAccessToken] = useState(null);
     const [isApiLoaded, setIsApiLoaded] = useState(false);
@@ -125,6 +130,10 @@
     const [loadedFileId, setLoadedFileId] = useState('');
     const [padletInput, setPadletInput] = useState('');
     const [activePadlet, setActivePadlet] = useState('');
+    const [embedMeta, setEmbedMeta] = useState({ type: '', url: '', fallbackUrl: '' });
+    const [embedFailed, setEmbedFailed] = useState(false);
+    const [canvaEmbedAttempt, setCanvaEmbedAttempt] = useState(false);
+    const [historyTick, setHistoryTick] = useState(0);
 
     const [pdfDoc, setPdfDoc] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -132,9 +141,11 @@
 
     const [tool, setTool] = useState('pen');
     const [userZoom, setUserZoom] = useState(1);
-    const [penColor, setPenColor] = useState('#1E40AF');
-    const [penWidth, setPenWidth] = useState(3);
+    const [penColor, setPenColor] = useState('#000000');
+    const [penWidth, setPenWidth] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [isToolbarMinimized, setIsToolbarMinimized] = useState(false);
+    const [isSharedView, setIsSharedView] = useState(() => new URLSearchParams(window.location.search).has('id'));
 
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [authError, setAuthError] = useState('');
@@ -143,8 +154,10 @@
     const drawCanvasRef = useRef(null);
     const containerRef = useRef(null);
     const drawingsRef = useRef({});
+    const historyRef = useRef({});
     const isDrawing = useRef(false);
     const scaleRef = useRef(1);
+    const panState = useRef({ active: false, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 });
 
     useEffect(() => {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -201,7 +214,11 @@
         const decodedPadlet = decodeURIComponent(urlPadlet);
         setPadletInput(decodedPadlet);
         setActivePadlet(decodedPadlet);
+        setEmbedMeta(getEmbeddedUrl(decodedPadlet));
+        setEmbedFailed(false);
+        setCanvaEmbedAttempt(false);
       }
+      setIsSharedView(Boolean(urlFileId));
       if (urlFileId) {
         loadPdfFromDriveAPI(urlFileId, targetPage || 1, urlPadlet ? decodeURIComponent(urlPadlet) : '')
           .catch(err => console.error('[DigitalPaper] URL PDF load error', err));
@@ -274,7 +291,12 @@
       setPdfDoc(null);
       setUserZoom(1);
       drawingsRef.current = {};
+      historyRef.current = {};
+      setHistoryTick(prev => prev + 1);
       setActivePadlet(padletUrl);
+      setEmbedMeta(getEmbeddedUrl(padletUrl));
+      setEmbedFailed(false);
+      setCanvaEmbedAttempt(false);
 
       try {
         const fetchUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
@@ -386,6 +408,47 @@
       renderPage().catch(err => console.error('[DigitalPaper] renderPage chain error', err));
     }, [pdfDoc, currentPage, userZoom]);
 
+    const ensureHistory = (pageNumber) => {
+      if (!historyRef.current[pageNumber]) {
+        historyRef.current[pageNumber] = { undo: [], redo: [] };
+      }
+      return historyRef.current[pageNumber];
+    };
+
+    const getCanvasSnapshot = () => {
+      const canvas = drawCanvasRef.current;
+      if (!canvas) return null;
+      const data = canvas.toDataURL();
+      return data;
+    };
+
+    const restoreCanvasSnapshot = (snapshot) => {
+      const canvas = drawCanvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width / scaleRef.current;
+      const height = canvas.height / scaleRef.current;
+      ctx.clearRect(0, 0, width, height);
+      if (!snapshot) {
+        delete drawingsRef.current[currentPage];
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, width, height);
+        drawingsRef.current[currentPage] = snapshot;
+      };
+      img.src = snapshot;
+    };
+
+    const pushUndoSnapshot = () => {
+      const history = ensureHistory(currentPage);
+      history.undo.push(getCanvasSnapshot());
+      if (history.undo.length > 60) history.undo.shift();
+      history.redo = [];
+      setHistoryTick(prev => prev + 1);
+    };
+
     const getPointerPos = (e) => {
       const canvas = drawCanvasRef.current;
       const rect = canvas.getBoundingClientRect();
@@ -398,6 +461,7 @@
 
     const startDrawing = (e) => {
       if (tool === 'pan') return;
+      pushUndoSnapshot();
       isDrawing.current = true;
       const ctx = drawCanvasRef.current.getContext('2d');
       const pos = getPointerPos(e);
@@ -424,6 +488,91 @@
       if (!isDrawing.current) return;
       isDrawing.current = false;
       drawCanvasRef.current.getContext('2d').closePath();
+      drawingsRef.current[currentPage] = getCanvasSnapshot();
+      setHistoryTick(prev => prev + 1);
+    };
+
+    const startPan = (clientX, clientY) => {
+      if (tool !== 'pan' || !containerRef.current) return;
+      panState.current = {
+        active: true,
+        startX: clientX,
+        startY: clientY,
+        scrollLeft: containerRef.current.scrollLeft,
+        scrollTop: containerRef.current.scrollTop
+      };
+    };
+
+    const movePan = (clientX, clientY) => {
+      if (!panState.current.active || !containerRef.current) return;
+      const dx = clientX - panState.current.startX;
+      const dy = clientY - panState.current.startY;
+      containerRef.current.scrollLeft = panState.current.scrollLeft - dx;
+      containerRef.current.scrollTop = panState.current.scrollTop - dy;
+    };
+
+    const endPan = () => {
+      panState.current.active = false;
+    };
+
+    const handleCanvasMouseDown = (e) => {
+      if (tool === 'pan') {
+        e.preventDefault();
+        startPan(e.clientX, e.clientY);
+        return;
+      }
+      startDrawing(e);
+    };
+
+    const handleCanvasMouseMove = (e) => {
+      if (tool === 'pan') {
+        movePan(e.clientX, e.clientY);
+        return;
+      }
+      draw(e);
+    };
+
+    const handleCanvasTouchStart = (e) => {
+      if (!e.touches || !e.touches.length) return;
+      if (tool === 'pan') {
+        startPan(e.touches[0].clientX, e.touches[0].clientY);
+        return;
+      }
+      startDrawing(e);
+    };
+
+    const handleCanvasTouchMove = (e) => {
+      if (!e.touches || !e.touches.length) return;
+      if (tool === 'pan') {
+        e.preventDefault();
+        movePan(e.touches[0].clientX, e.touches[0].clientY);
+        return;
+      }
+      draw(e);
+    };
+
+    const handleWheelZoom = (e) => {
+      if (!pdfDoc) return;
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.1 : -0.1;
+      handleZoom(delta);
+    };
+
+    const handleApplySubmissionLink = () => {
+      const trimmed = padletInput.trim();
+      if (!trimmed) {
+        setActivePadlet('');
+        setEmbedMeta({ type: '', url: '', fallbackUrl: '' });
+        setEmbedFailed(false);
+        setCanvaEmbedAttempt(false);
+        return;
+      }
+      const resolved = getEmbeddedUrl(trimmed);
+      setActivePadlet(trimmed);
+      setEmbedMeta(resolved);
+      setEmbedFailed(false);
+      setCanvaEmbedAttempt(false);
     };
 
     const handleShare = () => {
@@ -434,6 +583,9 @@
       if (padletInput.trim()) {
         currentUrl.searchParams.set('padlet', encodeURIComponent(padletInput.trim()));
         setActivePadlet(padletInput.trim());
+        setEmbedMeta(getEmbeddedUrl(padletInput.trim()));
+        setEmbedFailed(false);
+        setCanvaEmbedAttempt(false);
       } else {
         currentUrl.searchParams.delete('padlet');
       }
@@ -445,8 +597,27 @@
     const clearCanvas = () => {
       const canvas = drawCanvasRef.current;
       if (!canvas) return;
+      pushUndoSnapshot();
       canvas.getContext('2d').clearRect(0, 0, canvas.width / scaleRef.current, canvas.height / scaleRef.current);
       delete drawingsRef.current[currentPage];
+    };
+
+    const undoDrawing = () => {
+      const history = ensureHistory(currentPage);
+      if (!history.undo.length) return;
+      history.redo.push(getCanvasSnapshot());
+      const previous = history.undo.pop();
+      restoreCanvasSnapshot(previous);
+      setHistoryTick(prev => prev + 1);
+    };
+
+    const redoDrawing = () => {
+      const history = ensureHistory(currentPage);
+      if (!history.redo.length) return;
+      history.undo.push(getCanvasSnapshot());
+      const next = history.redo.pop();
+      restoreCanvasSnapshot(next);
+      setHistoryTick(prev => prev + 1);
     };
 
     const exportAsJpg = () => {
@@ -490,43 +661,78 @@
       }
     };
 
-    const primaryButton = 'min-h-[44px] rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-2 justify-center whitespace-nowrap shadow-[0_4px_20px_-6px_rgba(15,23,42,0.15)]';
-    const subtleButton = 'min-h-[44px] rounded-xl px-3 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2 border';
+
+    const getEmbeddedUrl = (rawUrl) => {
+      if (!rawUrl) return { type: '', url: '', fallbackUrl: '' };
+      let normalized = rawUrl.trim();
+      if (!/^https?:\/\//i.test(normalized)) normalized = `https://${normalized}`;
+
+      try {
+        const url = new URL(normalized);
+        const host = url.hostname.replace(/^www\./, '');
+
+        if (host.includes('canva.com') || host.includes('canva.link')) {
+          let embedUrl = url.toString();
+
+          if (host.includes('canva.com') && url.pathname.includes('/design/')) {
+            embedUrl = url.toString().replace('/edit', '/view');
+            const embedParsed = new URL(embedUrl);
+            embedParsed.searchParams.set('embed', '1');
+            embedUrl = embedParsed.toString();
+          }
+
+          return { type: 'canva', url: embedUrl, fallbackUrl: url.toString() };
+        }
+
+        if (host.includes('padlet.com') || host.includes('thinkerbell.co.kr') || host.includes('thinkerbell.com')) {
+          return { type: 'iframe', url: url.toString(), fallbackUrl: url.toString() };
+        }
+
+        return { type: 'iframe', url: url.toString(), fallbackUrl: url.toString() };
+      } catch (error) {
+        return { type: 'invalid', url: normalized, fallbackUrl: normalized };
+      }
+    };
+
+    const primaryButton = 'min-h-[40px] rounded-xl px-3 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-2 justify-center whitespace-nowrap shadow-[0_4px_20px_-6px_rgba(15,23,42,0.15)]';
+
+    const pageHistory = historyRef.current[currentPage] || { undo: [], redo: [] };
+    const canUndo = pageHistory.undo.length > 0;
+    const canRedo = pageHistory.redo.length > 0;
 
     return (
       <div className="flex flex-col h-screen overflow-hidden bg-warm text-gray-700">
-        <header className="bg-white/80 backdrop-blur-md border-b border-pink-100 px-4 sm:px-6 py-4 flex flex-col gap-3 shadow-[0_4px_20px_-6px_rgba(99,102,241,0.15)] z-10 shrink-0">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+        <header className="bg-white/90 backdrop-blur-md border-b border-pink-100 px-4 sm:px-6 py-2.5 flex flex-col gap-2 shadow-[0_4px_20px_-6px_rgba(99,102,241,0.15)] z-20 shrink-0">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3">
-              <span className="material-icons text-pastelBlueText text-3xl">edit_document</span>
-              <div>
-                <h1 className="text-[22px] leading-tight font-bold tracking-[-0.02em] text-gray-900">{t.title}</h1>
-                <p className="text-xs font-medium text-gray-500">{t.subtitle}</p>
-              </div>
+              <span className="material-icons text-pastelBlueText text-2xl">edit_document</span>
+              <h1 className="text-[19px] leading-tight font-bold tracking-[-0.02em] text-gray-900">{t.title}</h1>
             </div>
 
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:justify-end">
-              <label className="flex items-center gap-2 text-xs font-semibold text-gray-600 rounded-xl border border-slate-200 bg-white px-2 py-1.5">
-                <span>{t.language}</span>
-                <select value={lang} onChange={(e) => setLang(e.target.value)} className="bg-transparent text-xs font-semibold focus:outline-none">
-                  <option value="ko">한국어</option>
-                  <option value="en">English</option>
-                  <option value="ja">日本語</option>
+              <div className="relative w-[170px] h-10 rounded-xl border border-slate-300 bg-white shadow-sm">
+                <span className="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-base text-slate-500 pointer-events-none">language</span>
+                <select value={lang} onChange={(e) => setLang(e.target.value)} className="w-full h-full appearance-none bg-transparent text-sm font-semibold text-slate-700 pl-10 pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200">
+                  {languageOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-              </label>
-              {!accessToken ? (
+                <span className="material-icons absolute right-2 top-1/2 -translate-y-1/2 text-base text-slate-400 pointer-events-none">arrow_drop_down</span>
+              </div>
+              {!isSharedView && (!accessToken ? (
                 <button onClick={handleAuth} disabled={!isGisLoaded} className={`${primaryButton} bg-[#1D4ED8] hover:bg-[#1E40AF] text-white border border-[#1E40AF] disabled:opacity-60 disabled:cursor-not-allowed flex-1 sm:flex-none`}>
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
                   <span className="material-icons text-base">account_circle</span>{t.login}
                 </button>
               ) : (
                 <button onClick={openPicker} disabled={!isApiLoaded} className={`${primaryButton} bg-[#047857] hover:bg-[#065F46] text-white border border-[#065F46] disabled:opacity-60 disabled:cursor-not-allowed flex-1 sm:flex-none`}>
                   <span className="material-icons text-base">folder_open</span>{t.select}
                 </button>
+              ))}
+              {!isSharedView && (
+                <button onClick={handleShare} className={`${primaryButton} bg-[#374151] hover:bg-[#1F2937] text-white border border-[#111827] flex-1 sm:flex-none`}>
+                  <span className="material-icons text-base">ios_share</span>{t.share}
+                </button>
               )}
-              <button onClick={handleShare} className={`${primaryButton} bg-[#374151] hover:bg-[#1F2937] text-white border border-[#111827] flex-1 sm:flex-none`}>
-                <span className="material-icons text-base">ios_share</span>{t.share}
-              </button>
               <button onClick={() => setShowHelpModal(true)} className={`${primaryButton} bg-white hover:bg-gray-50 text-[#1E40AF] border border-[#93C5FD] flex-1 sm:flex-none`}>
                 <span className="material-icons text-base">lightbulb</span>{t.guide}
               </button>
@@ -535,19 +741,18 @@
 
           {!isApiLoaded && <p className="text-xs font-medium text-gray-500">{t.googleLoading}</p>}
           {loadError && <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700">{loadError}</div>}
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-2 items-start">
-            <label className="flex flex-col gap-1">
-              <span className="text-sm font-semibold text-gray-700">{t.padletLabel}</span>
-              <input type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 border border-pink-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pastelPink"/>
-            </label>
-            <div className={`text-xs rounded-xl border px-3 py-2 font-semibold ${CLIENT_ID && API_KEY ? 'border-green-200 bg-green-50 text-green-700' : 'border-red-300 bg-red-50 text-red-700'}`}>
-              {CLIENT_ID && API_KEY ? t.apiReady : t.apiMissing}
-            </div>
-          </div>
         </header>
 
         <main className="flex-1 flex flex-col bg-[#f7f5ff] relative overflow-hidden">
+          {!isSharedView && (
+            <div className="px-4 sm:px-6 pt-3">
+              <div className="w-full sm:w-auto sm:min-w-[420px] sm:max-w-[560px] rounded-xl border border-slate-300 bg-white flex items-center gap-2 px-2 py-1">
+                <span className="material-icons text-slate-500 text-base pl-1">link</span>
+                <input type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 min-w-0 h-9 px-2 text-sm bg-transparent focus:outline-none"/>
+                <button onClick={handleApplySubmissionLink} className="h-9 px-3 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold whitespace-nowrap">{t.applyLink}</button>
+              </div>
+            </div>
+          )}
           {authError && (
             <div className="mx-4 mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
               <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
@@ -561,32 +766,7 @@
             </div>
           )}
 
-          {pdfDoc && (
-            <div className="bg-white/90 border-b border-pink-100 px-3 sm:px-4 py-2 flex flex-col gap-3 shadow-[0_4px_20px_-6px_rgba(99,102,241,0.15)] z-10 shrink-0">
-              <div className="grid grid-cols-3 gap-2">
-                <button onClick={() => setTool('pen')} className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-semibold transition-all flex flex-col items-center gap-1 ${tool === 'pen' ? 'bg-[#DBEAFE] text-[#1E3A8A] border border-[#93C5FD] shadow-inner' : 'text-gray-600 bg-gray-100 border border-gray-200'}`}><span className="material-icons text-sm">draw</span>{t.pen}</button>
-                <button onClick={() => setTool('eraser')} className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-semibold transition-all flex flex-col items-center gap-1 ${tool === 'eraser' ? 'bg-[#FCE7F3] text-[#9D174D] border border-[#F9A8D4] shadow-inner' : 'text-gray-600 bg-gray-100 border border-gray-200'}`}><span className="material-icons text-sm">ink_eraser</span>{t.eraser}</button>
-                <button onClick={() => setTool('pan')} className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-semibold transition-all flex flex-col items-center gap-1 ${tool === 'pan' ? 'bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D] shadow-inner' : 'text-gray-600 bg-gray-100 border border-gray-200'}`}><span className="material-icons text-sm">back_hand</span>{t.pan}</button>
-              </div>
-
-              <div className="flex items-center gap-3 sm:border-l sm:border-pink-100 sm:pl-4">
-                <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-7 h-7 rounded-full cursor-pointer border-0 p-0"/>
-                <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="flex-1 accent-blue-500"/>
-                <div className="rounded-full border border-gray-300 bg-white" style={{ width: `${Math.max(10, penWidth + 6)}px`, height: `${Math.max(10, penWidth + 6)}px` }}></div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 sm:border-l sm:border-pink-100 sm:pl-4">
-                <button onClick={exportAsJpg} className={`${subtleButton} bg-[#FFF7ED] text-[#9A3412] border-[#FDBA74]`}><span className="material-icons text-sm">image</span>{t.exportJpg}</button>
-                <button onClick={exportAsPdf} className={`${subtleButton} bg-[#ECFDF5] text-[#166534] border-[#86EFAC]`}><span className="material-icons text-sm">picture_as_pdf</span>{t.exportPdf}</button>
-                <button onClick={clearCanvas} className={`${subtleButton} bg-white text-gray-700 border-gray-300`}><span className="material-icons text-sm">restart_alt</span>{t.clear}</button>
-                <button onClick={() => handleZoom(0.1)} className={`${subtleButton} bg-white text-gray-700 border-gray-300`}>+</button>
-                <button onClick={() => handleZoom(-0.1)} className={`${subtleButton} bg-white text-gray-700 border-gray-300`}>-</button>
-                <button onClick={() => handleZoom(0)} className={`${subtleButton} bg-[#EEF2FF] text-[#3730A3] border-[#C7D2FE]`}>{t.fit}</button>
-              </div>
-            </div>
-          )}
-
-          <div className="flex-1 overflow-auto p-4 flex flex-col items-center bg-gradient-to-b from-[#f8f7ff] to-[#eef2ff]" ref={containerRef}>
+          <div data-history={historyTick} className="flex-1 overflow-auto p-4 sm:p-6 pb-40 flex flex-col items-center bg-gradient-to-b from-[#f8f7ff] to-[#eef2ff]" ref={containerRef} onWheel={handleWheelZoom}>
             {!pdfDoc && !isLoading && (
               <div className="text-center text-gray-500 mt-20">
                 <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-gradient-to-br from-pastelBlue to-pastelPink flex items-center justify-center"><span className="material-icons text-6xl text-white">auto_stories</span></div>
@@ -596,13 +776,13 @@
             )}
 
             {pdfDoc && (
-              <div className="relative shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white mb-6 rounded-2xl overflow-hidden" style={{ touchAction: tool === 'pan' ? 'auto' : 'none' }}>
+              <div className="relative flex-shrink-0 shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white mb-6 rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
                 <canvas ref={pdfCanvasRef} className="block" />
                 <canvas
                   ref={drawCanvasRef}
                   className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
-                  onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
-                  onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing} onTouchCancel={stopDrawing}
+                  onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
+                  onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={tool === 'pan' ? endPan : stopDrawing} onTouchCancel={tool === 'pan' ? endPan : stopDrawing}
                 />
                 <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white border border-pink-200 px-4 py-2 rounded-full shadow-md flex items-center gap-4 z-20">
                   <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_left</span></button>
@@ -617,10 +797,61 @@
                 <div className="bg-gradient-to-r from-pastelPink to-pastelYellow text-pastelPinkText font-bold px-6 py-3 rounded-t-xl border border-pink-200 shadow-sm flex items-center gap-2">
                   <span className="material-icons">upload_file</span>{t.submitGuide}
                 </div>
-                <iframe src={activePadlet} className="w-full h-[600px] border-2 border-pink-200 shadow-lg rounded-b-xl rounded-t-none bg-white" allow="camera;microphone;geolocation" title="Submission Area"/>
+                {((embedMeta.type === 'canva' && !canvaEmbedAttempt) || (embedMeta.type === 'canva' && embedFailed) || embedMeta.type === 'invalid') ? (
+                  <div className="w-full border-2 border-pink-200 shadow-lg rounded-b-xl rounded-t-none bg-white p-8 text-center">
+                    <p className="text-sm text-gray-700 font-semibold mb-3">{t.canvaBlocked}</p>
+                    {embedMeta.type === 'canva' && !embedFailed && (
+                      <button onClick={() => setCanvaEmbedAttempt(true)} className="mr-2 inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
+                        <span className="material-icons text-base">slideshow</span>{t.tryEmbed}
+                      </button>
+                    )}
+                    <a href={embedMeta.fallbackUrl || embedMeta.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-blue-300 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                      <span className="material-icons text-base">open_in_new</span>{t.openLink}
+                    </a>
+                  </div>
+                ) : (
+                  <iframe src={embedMeta.url || activePadlet} onError={() => setEmbedFailed(true)} className="w-full h-[600px] border-2 border-pink-200 shadow-lg rounded-b-xl rounded-t-none bg-white" allow="camera;microphone;geolocation" title="Submission Area"/>
+                )}
               </div>
             )}
           </div>
+
+          {pdfDoc && (
+            <>
+              <div className="fixed left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 z-40 w-[calc(100%-1.5rem)] sm:w-auto">
+                <div className="rounded-2xl border border-slate-200 bg-white/90 backdrop-blur-md shadow-lg px-2 py-2 flex items-center justify-center gap-1.5">
+                  <button onClick={() => setIsToolbarMinimized(prev => !prev)} className="h-9 w-9 rounded-lg border border-slate-200 text-slate-600 bg-white hover:bg-slate-50" title="Toggle toolbar">
+                    <span className="material-icons text-base">{isToolbarMinimized ? 'expand_less' : 'expand_more'}</span>
+                  </button>
+
+                  {!isToolbarMinimized && (
+                    <>
+                      <button title={t.pen} onClick={() => setTool('pen')} className={`h-9 w-9 rounded-lg border flex items-center justify-center ${tool === 'pen' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-base">draw</span></button>
+                      <button title={t.eraser} onClick={() => setTool('eraser')} className={`h-9 w-9 rounded-lg border flex items-center justify-center ${tool === 'eraser' ? 'bg-pink-100 text-pink-800 border-pink-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-base">cleaning_services</span></button>
+                      <button title={t.pan} onClick={() => setTool('pan')} className={`h-9 w-9 rounded-lg border flex items-center justify-center ${tool === 'pan' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-base">back_hand</span></button>
+                      <div className="hidden md:flex items-center gap-2 px-2 border-l border-slate-200">
+                        <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-7 h-7 rounded-md cursor-pointer border-0 p-0"/>
+                        <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="w-24 accent-blue-500"/>
+                      </div>
+                      <button onClick={undoDrawing} disabled={!canUndo} className="h-9 w-9 rounded-lg border border-gray-300 bg-white text-gray-700 disabled:opacity-40" title={t.undo}><span className="material-icons text-base">undo</span></button>
+                      <button onClick={redoDrawing} disabled={!canRedo} className="h-9 w-9 rounded-lg border border-gray-300 bg-white text-gray-700 disabled:opacity-40" title={t.redo}><span className="material-icons text-base">redo</span></button>
+                      <button onClick={clearCanvas} className="h-9 px-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-xs font-semibold">{t.clear}</button>
+                      <button onClick={exportAsJpg} className="h-9 px-2 rounded-lg border border-[#FDBA74] bg-[#FFF7ED] text-[#9A3412] text-xs font-semibold">{t.exportJpg}</button>
+                      <button onClick={exportAsPdf} className="h-9 px-2 rounded-lg border border-[#86EFAC] bg-[#ECFDF5] text-[#166534] text-xs font-semibold">{t.exportPdf}</button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="fixed right-4 bottom-32 sm:bottom-8 z-40">
+                <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl px-2 py-2 flex flex-col items-center gap-2">
+                  <button onClick={() => handleZoom(0.1)} className="h-10 w-10 rounded-xl border border-gray-200 text-lg font-bold text-gray-700 hover:bg-gray-50">+</button>
+                  <button onClick={() => handleZoom(-0.1)} className="h-10 w-10 rounded-xl border border-gray-200 text-lg font-bold text-gray-700 hover:bg-gray-50">-</button>
+                  <button onClick={() => handleZoom(0)} className="h-10 min-w-10 px-2 rounded-xl border border-indigo-200 text-xs font-bold text-indigo-700 bg-indigo-50">{t.fit}</button>
+                </div>
+              </div>
+            </>
+          )}
         </main>
 
         <footer className="bg-white/90 border-t border-pink-100 py-2 text-center shrink-0 z-10">
