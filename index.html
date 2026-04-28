@@ -744,15 +744,6 @@
         </header>
 
         <main className="flex-1 flex flex-col bg-[#f7f5ff] relative overflow-hidden">
-          {!isSharedView && (
-            <div className="px-4 sm:px-6 pt-3">
-              <div className="w-full sm:w-auto sm:min-w-[420px] sm:max-w-[560px] rounded-xl border border-slate-300 bg-white flex items-center gap-2 px-2 py-1">
-                <span className="material-icons text-slate-500 text-base pl-1">link</span>
-                <input type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 min-w-0 h-9 px-2 text-sm bg-transparent focus:outline-none"/>
-                <button onClick={handleApplySubmissionLink} className="h-9 px-3 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold whitespace-nowrap">{t.applyLink}</button>
-              </div>
-            </div>
-          )}
           {authError && (
             <div className="mx-4 mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
               <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
@@ -776,14 +767,16 @@
             )}
 
             {pdfDoc && (
-              <div className="relative flex-shrink-0 shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white mb-6 rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
-                <canvas ref={pdfCanvasRef} className="block" />
-                <canvas
-                  ref={drawCanvasRef}
-                  className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
-                  onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
-                  onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={tool === 'pan' ? endPan : stopDrawing} onTouchCancel={tool === 'pan' ? endPan : stopDrawing}
-                />
+              <div className="relative flex-shrink-0 mb-16">
+                <div className="relative shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
+                  <canvas ref={pdfCanvasRef} className="block" />
+                  <canvas
+                    ref={drawCanvasRef}
+                    className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
+                    onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
+                    onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={tool === 'pan' ? endPan : stopDrawing} onTouchCancel={tool === 'pan' ? endPan : stopDrawing}
+                  />
+                </div>
                 <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white border border-pink-200 px-4 py-2 rounded-full shadow-md flex items-center gap-4 z-20">
                   <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_left</span></button>
                   <span className="text-sm font-semibold text-gray-700 min-w-[92px] text-center">{t.page} {currentPage} / {totalPages}</span>
@@ -821,7 +814,7 @@
               <div className="fixed left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 z-40 w-[calc(100%-1.5rem)] sm:w-auto">
                 <div className="rounded-2xl border border-slate-200 bg-white/90 backdrop-blur-md shadow-lg px-2 py-2 flex items-center justify-center gap-1.5">
                   <button onClick={() => setIsToolbarMinimized(prev => !prev)} className="h-9 w-9 rounded-lg border border-slate-200 text-slate-600 bg-white hover:bg-slate-50" title="Toggle toolbar">
-                    <span className="material-icons text-base">{isToolbarMinimized ? 'expand_less' : 'expand_more'}</span>
+                    <span className="material-icons text-base">{isToolbarMinimized ? 'expand_more' : 'expand_less'}</span>
                   </button>
 
                   {!isToolbarMinimized && (
@@ -848,6 +841,30 @@
                   <button onClick={() => handleZoom(0.1)} className="h-10 w-10 rounded-xl border border-gray-200 text-lg font-bold text-gray-700 hover:bg-gray-50">+</button>
                   <button onClick={() => handleZoom(-0.1)} className="h-10 w-10 rounded-xl border border-gray-200 text-lg font-bold text-gray-700 hover:bg-gray-50">-</button>
                   <button onClick={() => handleZoom(0)} className="h-10 min-w-10 px-2 rounded-xl border border-indigo-200 text-xs font-bold text-indigo-700 bg-indigo-50">{t.fit}</button>
+                  {!isSharedView && (
+                    <>
+                      <div className="w-full border-t border-slate-200 my-0.5"/>
+                      <div className="flex flex-col gap-1.5 w-full" style={{minWidth:'160px'}}>
+                        <div className="flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2 py-1.5">
+                          <span className="material-icons text-slate-400" style={{fontSize:'15px'}}>link</span>
+                          <input
+                            type="text"
+                            value={padletInput}
+                            onChange={(e) => setPadletInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleApplySubmissionLink()}
+                            placeholder={t.padletPlaceholder}
+                            className="flex-1 min-w-0 w-28 text-xs bg-transparent focus:outline-none text-gray-700 placeholder-slate-400"
+                          />
+                        </div>
+                        <button
+                          onClick={handleApplySubmissionLink}
+                          className="w-full py-1.5 rounded-lg bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs font-semibold transition-colors"
+                        >
+                          {t.applyLink}
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </>
