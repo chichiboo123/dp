@@ -77,7 +77,7 @@
       shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', exporting: '저장 준비 중입니다...',
       submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇',
       emptyTitle: '디지털 페이퍼 구동 준비 완료!', emptyDesc: '상단의 [구글 로그인] 후 활동지(PDF)를 선택해주세요.',
-      padletLabel: '제출 링크', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '확인했습니다',
+      padletLabel: '제출 링크', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '닫기',
       teacherGuide: '선생님은 이렇게 쓰세요!', studentGuide: '학생들은 이렇게 써요!', securityTitle: '개인정보 및 안전성',
       teacherSteps: ['상단의 [구글 로그인] 버튼을 눌러 계정을 연결합니다.', '[불러오기]를 눌러 배부할 활동지(PDF)를 고릅니다.', '(선택) [제출링크]를 눌러 제출함 주소를 입력합니다.', '[공유]를 눌러 학생들에게 링크를 전달합니다.'],
       studentSteps: ['선생님 링크를 열면 활동지가 바로 열립니다.', '펜/지우개로 풀이하고 수정합니다. 손가락 두 개로 확대/축소도 가능합니다.', '완성 후 JPG/PDF로 저장합니다. 여러 쪽 문서는 PDF로 한 번에 저장돼요.', '제출함에 파일을 업로드합니다.'],
@@ -92,7 +92,7 @@
       shareSuccess: 'Share link copied.', shareError: 'Please select a file first.', exporting: 'Preparing export...',
       submitGuide: '👇 Save your worksheet as JPG and submit below 👇',
       emptyTitle: 'Digital Paper is ready!', emptyDesc: 'Sign in with Google and choose a PDF worksheet.',
-      padletLabel: 'Submission link', helpTitle: 'How to use & safety', confirm: 'Got it',
+      padletLabel: 'Submission link', helpTitle: 'How to use & safety', confirm: 'Close',
       teacherGuide: 'For Teachers', studentGuide: 'For Students', securityTitle: 'Privacy & Security',
       teacherSteps: ['Click [Sign in with Google] to connect your account.', 'Click [Open] and pick a PDF file.', '(Optional) Click [Submission] to enter your submission board URL.', 'Click [Share] and send the link to students.'],
       studentSteps: ['Open the shared link from your teacher.', 'Solve with pen/eraser tools. Pinch with two fingers to zoom.', 'Save your work as JPG/PDF. Multi-page worksheets are saved as a single PDF.', 'Upload the saved file to the submission board.'],
@@ -107,7 +107,7 @@
       shareSuccess: '共有リンクをコピーしました。', shareError: '先にファイルを選択してください。', exporting: '保存の準備中...',
       submitGuide: '👇 作成したワークシートをJPG保存して下から提出してください 👇',
       emptyTitle: 'デジタルペーパーの準備完了！', emptyDesc: '上部のGoogleログイン後、PDFワークシートを選択してください。',
-      padletLabel: '提出リンク', helpTitle: '使い方と安全性', confirm: '確認しました',
+      padletLabel: '提出リンク', helpTitle: '使い方と安全性', confirm: '閉じる',
       teacherGuide: '先生向けガイド', studentGuide: '生徒向けガイド', securityTitle: '個人情報と安全性',
       teacherSteps: ['上部の[Googleでログイン]でアカウントを連携します。', '[開く]からPDF教材を選択します。', '（任意）[提出リンク]を押して提出先URLを入力します。', '[共有]で生徒にリンクを配布します。'],
       studentSteps: ['先生から受け取ったリンクを開きます。', 'ペン/消しゴムで書き込みます。指2本で拡大・縮小もできます。', '完了したらJPG/PDFで保存します。複数ページの文書は1つのPDFにまとめて保存されます。', '提出先に保存したファイルをアップロードします。'],
@@ -161,7 +161,6 @@
 
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [showSubmitLinkModal, setShowSubmitLinkModal] = useState(false);
-    const [showLangMenu, setShowLangMenu] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [exportProgress, setExportProgress] = useState({ active: false, current: 0, total: 0 });
     const [authError, setAuthError] = useState('');
@@ -171,7 +170,6 @@
     const pdfCanvasRef = useRef(null);
     const drawCanvasRef = useRef(null);
     const containerRef = useRef(null);
-    const langMenuRef = useRef(null);
     const moreMenuRef = useRef(null);
     const drawingsRef = useRef({});
     const historyRef = useRef({});
@@ -295,21 +293,6 @@
         setAuthError('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     };
-
-    useEffect(() => {
-      if (!showLangMenu) return;
-      const onDocClick = (event) => {
-        if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
-          setShowLangMenu(false);
-        }
-      };
-      document.addEventListener('mousedown', onDocClick);
-      document.addEventListener('touchstart', onDocClick);
-      return () => {
-        document.removeEventListener('mousedown', onDocClick);
-        document.removeEventListener('touchstart', onDocClick);
-      };
-    }, [showLangMenu]);
 
     useEffect(() => {
       if (!showMoreMenu) return;
@@ -892,41 +875,7 @@
                 <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.share}</span>
               </button>
             )}
-            {!isSharedView && (
-              <button onClick={() => setShowSubmitLinkModal(true)} title={t.submitLink} className={`hidden sm:flex h-10 sm:w-auto sm:px-3 rounded-xl items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md border ${activePadlet ? 'bg-[#DBEAFE] border-[#93C5FD] text-[#1E40AF]' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'}`}>
-                <span className="material-icons text-base">link</span>
-                <span className="text-sm font-semibold whitespace-nowrap">{t.submitLink}</span>
-              </button>
-            )}
-            <div ref={langMenuRef} className="relative shrink-0 hidden sm:block">
-              <button onClick={() => setShowLangMenu(prev => !prev)} title={t.language} className="h-10 w-10 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all hover:-translate-y-0.5 hover:shadow-md">
-                <span className="material-icons text-base">language</span>
-              </button>
-              {showLangMenu && (
-                <div className="absolute right-0 top-full mt-1 min-w-[140px] rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden z-30">
-                  {languageOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => { setLang(option.value); setShowLangMenu(false); }}
-                      className={`w-full px-3 py-2 text-left text-sm transition-colors ${lang === option.value ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button onClick={() => setShowHelpModal(true)} className="hidden sm:flex h-10 sm:w-auto sm:px-3 rounded-xl bg-white hover:bg-gray-50 text-[#1E40AF] border border-[#93C5FD] items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
-              <span className="material-icons text-base">lightbulb</span>
-              <span className="text-sm font-semibold whitespace-nowrap">{t.guide}</span>
-            </button>
-            {!isSharedView && accessToken && (
-              <button onClick={handleLogout} title={t.logout} className="hidden sm:flex h-10 sm:w-auto sm:px-3 rounded-xl bg-white hover:bg-red-50 text-red-700 border border-red-200 items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
-                <span className="material-icons text-base">logout</span>
-                <span className="text-sm font-semibold whitespace-nowrap">{t.logout}</span>
-              </button>
-            )}
-            <div ref={moreMenuRef} className="relative shrink-0 sm:hidden">
+            <div ref={moreMenuRef} className="relative shrink-0">
               <button onClick={() => setShowMoreMenu(prev => !prev)} title="More" aria-label="More options" className="h-9 w-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all">
                 <span className="material-icons text-base">more_vert</span>
               </button>
