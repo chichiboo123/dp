@@ -145,6 +145,7 @@
     const [penWidth, setPenWidth] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [isToolbarMinimized, setIsToolbarMinimized] = useState(false);
+    const [isSharedView, setIsSharedView] = useState(() => new URLSearchParams(window.location.search).has('id'));
 
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [authError, setAuthError] = useState('');
@@ -217,6 +218,7 @@
         setEmbedFailed(false);
         setCanvaEmbedAttempt(false);
       }
+      setIsSharedView(Boolean(urlFileId));
       if (urlFileId) {
         loadPdfFromDriveAPI(urlFileId, targetPage || 1, urlPadlet ? decodeURIComponent(urlPadlet) : '')
           .catch(err => console.error('[DigitalPaper] URL PDF load error', err));
@@ -573,87 +575,6 @@
       setCanvaEmbedAttempt(false);
     };
 
-    const startPan = (clientX, clientY) => {
-      if (tool !== 'pan' || !containerRef.current) return;
-      panState.current = {
-        active: true,
-        startX: clientX,
-        startY: clientY,
-        scrollLeft: containerRef.current.scrollLeft,
-        scrollTop: containerRef.current.scrollTop
-      };
-    };
-
-    const movePan = (clientX, clientY) => {
-      if (!panState.current.active || !containerRef.current) return;
-      const dx = clientX - panState.current.startX;
-      const dy = clientY - panState.current.startY;
-      containerRef.current.scrollLeft = panState.current.scrollLeft - dx;
-      containerRef.current.scrollTop = panState.current.scrollTop - dy;
-    };
-
-    const endPan = () => {
-      panState.current.active = false;
-    };
-
-    const handleCanvasMouseDown = (e) => {
-      if (tool === 'pan') {
-        e.preventDefault();
-        startPan(e.clientX, e.clientY);
-        return;
-      }
-      startDrawing(e);
-    };
-
-    const handleCanvasMouseMove = (e) => {
-      if (tool === 'pan') {
-        movePan(e.clientX, e.clientY);
-        return;
-      }
-      draw(e);
-    };
-
-    const handleCanvasTouchStart = (e) => {
-      if (!e.touches || !e.touches.length) return;
-      if (tool === 'pan') {
-        startPan(e.touches[0].clientX, e.touches[0].clientY);
-        return;
-      }
-      startDrawing(e);
-    };
-
-    const handleCanvasTouchMove = (e) => {
-      if (!e.touches || !e.touches.length) return;
-      if (tool === 'pan') {
-        e.preventDefault();
-        movePan(e.touches[0].clientX, e.touches[0].clientY);
-        return;
-      }
-      draw(e);
-    };
-
-    const handleWheelZoom = (e) => {
-      if (!pdfDoc) return;
-      if (!(e.ctrlKey || e.metaKey)) return;
-      e.preventDefault();
-      const delta = e.deltaY < 0 ? 0.1 : -0.1;
-      handleZoom(delta);
-    };
-
-    const handleApplySubmissionLink = () => {
-      const trimmed = padletInput.trim();
-      if (!trimmed) {
-        setActivePadlet('');
-        setEmbedMeta({ type: '', url: '', fallbackUrl: '' });
-        setEmbedFailed(false);
-        return;
-      }
-      const resolved = getEmbeddedUrl(trimmed);
-      setActivePadlet(trimmed);
-      setEmbedMeta(resolved);
-      setEmbedFailed(false);
-    };
-
     const handleShare = () => {
       if (!loadedFileId) return alert(t.shareError);
       const currentUrl = new URL(window.location.href);
@@ -798,7 +719,7 @@
                 </select>
                 <span className="material-icons absolute right-2 top-1/2 -translate-y-1/2 text-base text-slate-400 pointer-events-none">arrow_drop_down</span>
               </div>
-              {!accessToken ? (
+              {!isSharedView && (!accessToken ? (
                 <button onClick={handleAuth} disabled={!isGisLoaded} className={`${primaryButton} bg-[#1D4ED8] hover:bg-[#1E40AF] text-white border border-[#1E40AF] disabled:opacity-60 disabled:cursor-not-allowed flex-1 sm:flex-none`}>
                   <span className="material-icons text-base">account_circle</span>{t.login}
                 </button>
@@ -806,10 +727,12 @@
                 <button onClick={openPicker} disabled={!isApiLoaded} className={`${primaryButton} bg-[#047857] hover:bg-[#065F46] text-white border border-[#065F46] disabled:opacity-60 disabled:cursor-not-allowed flex-1 sm:flex-none`}>
                   <span className="material-icons text-base">folder_open</span>{t.select}
                 </button>
+              ))}
+              {!isSharedView && (
+                <button onClick={handleShare} className={`${primaryButton} bg-[#374151] hover:bg-[#1F2937] text-white border border-[#111827] flex-1 sm:flex-none`}>
+                  <span className="material-icons text-base">ios_share</span>{t.share}
+                </button>
               )}
-              <button onClick={handleShare} className={`${primaryButton} bg-[#374151] hover:bg-[#1F2937] text-white border border-[#111827] flex-1 sm:flex-none`}>
-                <span className="material-icons text-base">ios_share</span>{t.share}
-              </button>
               <button onClick={() => setShowHelpModal(true)} className={`${primaryButton} bg-white hover:bg-gray-50 text-[#1E40AF] border border-[#93C5FD] flex-1 sm:flex-none`}>
                 <span className="material-icons text-base">lightbulb</span>{t.guide}
               </button>
@@ -818,16 +741,18 @@
 
           {!isApiLoaded && <p className="text-xs font-medium text-gray-500">{t.googleLoading}</p>}
           {loadError && <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700">{loadError}</div>}
-          <div className="w-full flex justify-end">
-            <div className="w-full sm:w-auto sm:min-w-[420px] sm:max-w-[560px] rounded-xl border border-slate-300 bg-white flex items-center gap-2 px-2 py-1">
-              <span className="material-icons text-slate-500 text-base pl-1">link</span>
-              <input type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 min-w-0 h-9 px-2 text-sm bg-transparent focus:outline-none"/>
-              <button onClick={handleApplySubmissionLink} className="h-9 px-3 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold whitespace-nowrap">{t.applyLink}</button>
-            </div>
-          </div>
         </header>
 
         <main className="flex-1 flex flex-col bg-[#f7f5ff] relative overflow-hidden">
+          {!isSharedView && (
+            <div className="px-4 sm:px-6 pt-3">
+              <div className="w-full sm:w-auto sm:min-w-[420px] sm:max-w-[560px] rounded-xl border border-slate-300 bg-white flex items-center gap-2 px-2 py-1">
+                <span className="material-icons text-slate-500 text-base pl-1">link</span>
+                <input type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 min-w-0 h-9 px-2 text-sm bg-transparent focus:outline-none"/>
+                <button onClick={handleApplySubmissionLink} className="h-9 px-3 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold whitespace-nowrap">{t.applyLink}</button>
+              </div>
+            </div>
+          )}
           {authError && (
             <div className="mx-4 mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
               <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
