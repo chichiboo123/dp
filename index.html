@@ -79,6 +79,7 @@
           const [isLoading, setIsLoading] = useState(false);
           
           const [showHelpModal, setShowHelpModal] = useState(false);
+          const [authError, setAuthError] = useState('');
 
           const pdfCanvasRef = useRef(null);
           const drawCanvasRef = useRef(null);
@@ -126,7 +127,14 @@
               client_id: CLIENT_ID,
               scope: SCOPES,
               callback: (response) => {
-                if (response.access_token) setAccessToken(response.access_token);
+                if (response.error) {
+                  setAuthError(response.error_description || response.error || 'access_denied');
+                  return;
+                }
+                if (response.access_token) {
+                  setAuthError('');
+                  setAccessToken(response.access_token);
+                }
               },
             });
             tokenClient.requestAccessToken();
@@ -141,7 +149,6 @@
             
             const picker = new window.google.picker.PickerBuilder()
               .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
-              .setAppId(CLIENT_ID)
               .setOAuthToken(accessToken)
               .addView(view)
               .setDeveloperKey(API_KEY)
@@ -374,16 +381,19 @@
 
           return (
             <div className="flex flex-col h-screen overflow-hidden">
-              <header className="bg-white border-b border-gray-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-sm z-10 shrink-0">
-                <div className="flex items-center gap-3">
-                  <span className="material-icons text-blue-600 text-3xl">edit_document</span>
-                  <h1 className="text-xl font-bold text-gray-800">{t.title}</h1>
-                </div>
-                
-                <div className="flex flex-1 max-w-4xl gap-3 flex-col sm:flex-row items-center">
-                  <div className="flex gap-2 w-full sm:w-auto">
+              <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex flex-col gap-4 shadow-sm z-10 shrink-0">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="material-icons text-blue-700 text-3xl">edit_document</span>
+                    <div>
+                      <h1 className="text-xl font-bold text-gray-900">{t.title}</h1>
+                      <p className="text-xs text-gray-600 mt-0.5">PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
                     {!accessToken ? (
-                      <button onClick={handleAuth} className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-3 whitespace-nowrap w-full justify-center shadow-sm">
+                      <button onClick={handleAuth} className="min-h-[44px] bg-blue-700 hover:bg-blue-800 text-white border border-blue-800 px-4 py-2 rounded-md font-semibold transition-colors flex items-center gap-2 whitespace-nowrap justify-center shadow-sm flex-1 sm:flex-none">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
                             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
                             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
@@ -394,33 +404,40 @@
                         {t.login}
                       </button>
                     ) : (
-                      <button onClick={openPicker} className="bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200 px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 whitespace-nowrap w-full justify-center shadow-sm">
-                        <span className="material-icons text-sm">cloud_queue</span> {t.select}
+                      <button onClick={openPicker} className="min-h-[44px] bg-emerald-600 text-white border border-emerald-700 hover:bg-emerald-700 px-4 py-2 rounded-md font-semibold transition-colors flex items-center gap-2 whitespace-nowrap justify-center shadow-sm flex-1 sm:flex-none">
+                        <span className="material-icons text-sm">cloud_queue</span> 활동지 불러오기
                       </button>
                     )}
-                  </div>
-                  
-                  <div className="text-gray-300 hidden sm:block">|</div>
-
-                  <div className="flex flex-1 gap-2 w-full">
-                    <span className="bg-pink-50 text-pink-700 px-3 py-2 rounded-md border border-pink-200 text-sm whitespace-nowrap hidden md:flex items-center">제출함 연동</span>
-                    <input 
-                      type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
-                    />
+                    <button onClick={handleShare} className="min-h-[44px] bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold flex items-center gap-2 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
+                      <span className="material-icons text-sm">share</span>{t.share}
+                    </button>
+                    <button onClick={() => setShowHelpModal(true)} className="min-h-[44px] bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md font-semibold flex items-center gap-1 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
+                      <span className="material-icons text-sm">help_outline</span>사용법
+                    </button>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <button onClick={handleShare} className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md font-bold flex items-center gap-2 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
-                    <span className="material-icons text-sm">share</span>{t.share}
-                  </button>
-                  <button onClick={() => setShowHelpModal(true)} className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-bold flex items-center gap-1 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
-                    <span className="material-icons text-sm">help_outline</span>사용법
-                  </button>
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-2 items-start">
+                  <label className="flex flex-col gap-1">
+                    <span className="text-sm font-semibold text-gray-700">제출함 주소 (선택)</span>
+                    <input 
+                      type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
+                    />
+                  </label>
+                  <div className="text-xs rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
+                    {CLIENT_ID && API_KEY ? "API 설정 완료" : "API 미설정: GitHub Secrets 필요"}
+                  </div>
                 </div>
               </header>
 
               <main className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden">
+                {authError && (
+                  <div className="mx-4 mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
+                    <p>현재 오류: {authError}</p>
+                    <p className="mt-1">Google Cloud OAuth 동의화면 게시 상태, 승인된 도메인(dp.chichiboo.link), 테스트 사용자 등록 여부를 확인하세요.</p>
+                  </div>
+                )}
                 {isLoading && (
                   <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-50">
                     <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
