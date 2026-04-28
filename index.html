@@ -1,16 +1,4 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><style>body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', Arial, sans-serif;
-  padding: 20px;
-  background: #eaf3ff;
-  text-align: center;
-}
-h1{ color:#1e40af }
-button{
-  background:#2563eb; color:white; border:0; padding:10px 18px; border-radius:10px;
-}
-button:hover{ filter:brightness(.95) }</style></head>
-<body><!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -46,6 +34,7 @@ button:hover{ filter:brightness(.95) }</style></head>
     <!-- Google APIs -->
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="./config.js"></script>
     
     <!-- jsPDF (PDF 내보내기용) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -58,8 +47,9 @@ button:hover{ filter:brightness(.95) }</style></head>
 
         // --- [보안] 구글 클라우드 콘솔 API 정보 ---
         // 🚨 주의: 공개된 곳에 코드를 올릴 때는 아래 문자열을 비워두세요.
-        const CLIENT_ID = ""; 
-        const API_KEY = "";
+        const APP_CONFIG = window.APP_CONFIG || {};
+        const CLIENT_ID = APP_CONFIG.CLIENT_ID || "";
+        const API_KEY = APP_CONFIG.API_KEY || "";
         const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 
         // --- 다국어 지원 (i18n) ---
@@ -130,6 +120,7 @@ button:hover{ filter:brightness(.95) }</style></head>
           }, []);
 
           const handleAuth = () => {
+            if (!CLIENT_ID || !API_KEY) return alert("관리자가 API 설정을 완료해야 합니다. 잠시 후 다시 시도해주세요.");
             if(!window.google) return alert("구글 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.");
             const tokenClient = window.google.accounts.oauth2.initTokenClient({
               client_id: CLIENT_ID,
@@ -142,6 +133,7 @@ button:hover{ filter:brightness(.95) }</style></head>
           };
 
           const openPicker = () => {
+            if (!CLIENT_ID || !API_KEY) return alert("관리자가 API 설정을 완료해야 합니다.");
             if (!accessToken || !isApiLoaded) return alert("API 로딩 중이거나 로그인이 필요합니다.");
 
             const view = new window.google.picker.DocsView(window.google.picker.ViewId.PDFs);
@@ -614,10 +606,4 @@ button:hover{ filter:brightness(.95) }</style></head>
         root.render(<App />);
     </script>
 </body>
-</html><script>function showAlert(){
-  const box = document.createElement('div');
-  box.textContent = '버튼이 클릭되었습니다! ' + new Date().toLocaleTimeString();
-  box.style.cssText = 'margin-top:20px;padding:12px;border:1px solid #93c5fd;background:#dbeafe;border-radius:10px;color:#1e40af';
-  document.body.appendChild(box);
-}
-console.log('콘솔 테스트: 정상 동작');</script></body></html>
+</html>
