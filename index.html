@@ -69,45 +69,48 @@
 
   const i18n = {
     ko: {
-      title: '디지털 페이퍼', subtitle: 'PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.', login: '구글 로그인', select: '활동지 불러오기',
-      padletPlaceholder: '제출 링크', share: '공유 링크 복사', guide: '사용법', language: '언어', applyLink: '삽입', canvaBlocked: 'Canva 편집/업로드는 보안 정책(CSP)으로 iframe에서 제한됩니다.', openLink: 'Canva에서 수정하기', tryEmbed: '임베드 보기 시도',
+      title: '디지털 페이퍼', subtitle: 'PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.', login: '구글 로그인', logout: '로그아웃', select: '불러오기',
+      padletPlaceholder: '제출 링크 URL을 입력하세요', share: '공유', submitLink: '제출링크', submitLinkTitle: '제출 링크 설정', submitLinkDesc: '학생이 결과물을 업로드할 제출함 URL을 입력해주세요. 입력 후 [공유]를 누르면 학생에게 함께 전달됩니다.', save: '저장', cancel: '취소', remove: '삭제',
+      guide: '사용법', language: '언어', applyLink: '삽입', canvaBlocked: 'Canva 편집/업로드는 보안 정책(CSP)으로 iframe에서 제한됩니다.', openLink: 'Canva에서 수정하기', tryEmbed: '임베드 보기 시도',
       pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', undo: '실행취소', redo: '다시실행', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤',
       googleLoading: '구글 라이브러리 로딩 중...', apiReady: 'API 설정 완료', apiMissing: 'API 미설정',
-      shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.',
+      shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', exporting: '저장 준비 중입니다...',
       submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇',
       emptyTitle: '디지털 페이퍼 구동 준비 완료!', emptyDesc: '상단의 [구글 로그인] 후 활동지(PDF)를 선택해주세요.',
       padletLabel: '제출 링크', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '확인했습니다',
       teacherGuide: '선생님은 이렇게 쓰세요!', studentGuide: '학생들은 이렇게 써요!', securityTitle: '개인정보 및 안전성',
-      teacherSteps: ['상단의 [구글 로그인] 버튼을 눌러 계정을 연결합니다.', '[활동지 불러오기]를 눌러 배부할 활동지(PDF)를 고릅니다.', '(선택) 제출함 주소를 입력합니다.', '[공유 링크 복사]를 눌러 학생들에게 전달합니다.'],
-      studentSteps: ['선생님 링크를 열면 활동지가 바로 열립니다.', '펜/지우개로 풀이하고 수정합니다.', '완성 후 JPG/PDF로 저장합니다.', '제출함에 파일을 업로드합니다.'],
+      teacherSteps: ['상단의 [구글 로그인] 버튼을 눌러 계정을 연결합니다.', '[불러오기]를 눌러 배부할 활동지(PDF)를 고릅니다.', '(선택) [제출링크]를 눌러 제출함 주소를 입력합니다.', '[공유]를 눌러 학생들에게 링크를 전달합니다.'],
+      studentSteps: ['선생님 링크를 열면 활동지가 바로 열립니다.', '펜/지우개로 풀이하고 수정합니다. 손가락 두 개로 확대/축소도 가능합니다.', '완성 후 JPG/PDF로 저장합니다. 여러 쪽 문서는 PDF로 한 번에 저장돼요.', '제출함에 파일을 업로드합니다.'],
       securitySteps: ['서버 저장 없이 브라우저와 구글 서버 간 직접 통신합니다.', '학생 필기 데이터와 개인정보를 별도로 수집하지 않습니다.', '학생 로그인 없이 공유 링크로 참여 가능합니다.']
     },
     en: {
-      title: 'Digital Paper', subtitle: 'Load PDF worksheets, annotate, and submit as JPG/PDF.', login: 'Sign in with Google', select: 'Open Worksheet',
-      padletPlaceholder: 'Submission link', share: 'Copy Share Link', guide: 'Guide', language: 'Language', applyLink: 'Insert', canvaBlocked: 'Canva editing/upload is restricted in iframes by CSP.', openLink: 'Open Canva editor', tryEmbed: 'Try embed view',
+      title: 'Digital Paper', subtitle: 'Load PDF worksheets, annotate, and submit as JPG/PDF.', login: 'Sign in with Google', logout: 'Sign out', select: 'Open',
+      padletPlaceholder: 'Enter submission link URL', share: 'Share', submitLink: 'Submission', submitLinkTitle: 'Set submission link', submitLinkDesc: 'Enter the URL where students will upload their finished worksheet. It will be shared with students when you click [Share].', save: 'Save', cancel: 'Cancel', remove: 'Remove',
+      guide: 'Guide', language: 'Language', applyLink: 'Insert', canvaBlocked: 'Canva editing/upload is restricted in iframes by CSP.', openLink: 'Open Canva editor', tryEmbed: 'Try embed view',
       pen: 'Pen', eraser: 'Eraser', pan: 'Pan', clear: 'Clear', undo: 'Undo', redo: 'Redo', exportJpg: 'Save JPG', exportPdf: 'Save PDF', page: 'Page', fit: 'Fit',
       googleLoading: 'Loading Google libraries...', apiReady: 'API configured', apiMissing: 'API not configured',
-      shareSuccess: 'Share link copied.', shareError: 'Please select a file first.',
+      shareSuccess: 'Share link copied.', shareError: 'Please select a file first.', exporting: 'Preparing export...',
       submitGuide: '👇 Save your worksheet as JPG and submit below 👇',
       emptyTitle: 'Digital Paper is ready!', emptyDesc: 'Sign in with Google and choose a PDF worksheet.',
       padletLabel: 'Submission link', helpTitle: 'How to use & safety', confirm: 'Got it',
       teacherGuide: 'For Teachers', studentGuide: 'For Students', securityTitle: 'Privacy & Security',
-      teacherSteps: ['Click [Sign in with Google] to connect your account.', 'Click [Open Worksheet] and pick a PDF file.', '(Optional) Enter your submission board URL.', 'Click [Copy Share Link] and send it to students.'],
-      studentSteps: ['Open the shared link from your teacher.', 'Solve with pen/eraser tools on screen.', 'Save your work as JPG/PDF.', 'Upload the saved file to the submission board.'],
+      teacherSteps: ['Click [Sign in with Google] to connect your account.', 'Click [Open] and pick a PDF file.', '(Optional) Click [Submission] to enter your submission board URL.', 'Click [Share] and send the link to students.'],
+      studentSteps: ['Open the shared link from your teacher.', 'Solve with pen/eraser tools. Pinch with two fingers to zoom.', 'Save your work as JPG/PDF. Multi-page worksheets are saved as a single PDF.', 'Upload the saved file to the submission board.'],
       securitySteps: ['No separate app server stores your worksheet data.', 'Personal data and handwriting are not collected by this app.', 'Students can participate without creating a new account.']
     },
     ja: {
-      title: 'デジタルペーパー', subtitle: 'PDFを読み込み、書き込み後にJPG/PDFで保存して提出できます。', login: 'Googleでログイン', select: 'ワークシートを開く',
-      padletPlaceholder: '提出リンク', share: '共有リンクをコピー', guide: '使い方', language: '言語', applyLink: '挿入', canvaBlocked: 'Canvaの編集/アップロードはCSPによりiframeで制限されます。', openLink: 'Canvaで編集', tryEmbed: '埋め込み表示を試す',
+      title: 'デジタルペーパー', subtitle: 'PDFを読み込み、書き込み後にJPG/PDFで保存して提出できます。', login: 'Googleでログイン', logout: 'ログアウト', select: '開く',
+      padletPlaceholder: '提出リンクのURLを入力', share: '共有', submitLink: '提出リンク', submitLinkTitle: '提出リンクを設定', submitLinkDesc: '生徒が成果物をアップロードする提出先URLを入力してください。[共有]を押すと生徒にも一緒に届きます。', save: '保存', cancel: 'キャンセル', remove: '削除',
+      guide: '使い方', language: '言語', applyLink: '挿入', canvaBlocked: 'Canvaの編集/アップロードはCSPによりiframeで制限されます。', openLink: 'Canvaで編集', tryEmbed: '埋め込み表示を試す',
       pen: 'ペン', eraser: '消しゴム', pan: '移動', clear: 'リセット', undo: '元に戻す', redo: 'やり直し', exportJpg: 'JPG保存', exportPdf: 'PDF保存', page: 'ページ', fit: 'フィット',
       googleLoading: 'Googleライブラリを読み込み中...', apiReady: 'API設定済み', apiMissing: 'API未設定',
-      shareSuccess: '共有リンクをコピーしました。', shareError: '先にファイルを選択してください。',
+      shareSuccess: '共有リンクをコピーしました。', shareError: '先にファイルを選択してください。', exporting: '保存の準備中...',
       submitGuide: '👇 作成したワークシートをJPG保存して下から提出してください 👇',
       emptyTitle: 'デジタルペーパーの準備完了！', emptyDesc: '上部のGoogleログイン後、PDFワークシートを選択してください。',
       padletLabel: '提出リンク', helpTitle: '使い方と安全性', confirm: '確認しました',
       teacherGuide: '先生向けガイド', studentGuide: '生徒向けガイド', securityTitle: '個人情報と安全性',
-      teacherSteps: ['上部の[Googleでログイン]でアカウントを連携します。', '[ワークシートを開く]からPDF教材を選択します。', '（任意）提出先URLを入力します。', '[共有リンクをコピー]で生徒に配布します。'],
-      studentSteps: ['先生から受け取ったリンクを開きます。', 'ペン/消しゴムで書き込みます。', '完了したらJPG/PDFで保存します。', '提出先に保存したファイルをアップロードします。'],
+      teacherSteps: ['上部の[Googleでログイン]でアカウントを連携します。', '[開く]からPDF教材を選択します。', '（任意）[提出リンク]を押して提出先URLを入力します。', '[共有]で生徒にリンクを配布します。'],
+      studentSteps: ['先生から受け取ったリンクを開きます。', 'ペン/消しゴムで書き込みます。指2本で拡大・縮小もできます。', '完了したらJPG/PDFで保存します。複数ページの文書は1つのPDFにまとめて保存されます。', '提出先に保存したファイルをアップロードします。'],
       securitySteps: ['専用サーバーに学習データを保存しません。', '個人情報や手書き内容を収集しません。', '生徒は新規アカウント作成なしで利用できます。']
     }
   };
@@ -157,20 +160,41 @@
     const [isSharedView, setIsSharedView] = useState(() => new URLSearchParams(window.location.search).has('id'));
 
     const [showHelpModal, setShowHelpModal] = useState(false);
-    const [showLinkPanel, setShowLinkPanel] = useState(false);
+    const [showSubmitLinkModal, setShowSubmitLinkModal] = useState(false);
+    const [showLangMenu, setShowLangMenu] = useState(false);
+    const [exportProgress, setExportProgress] = useState({ active: false, current: 0, total: 0 });
     const [authError, setAuthError] = useState('');
+
+    const TOKEN_STORAGE_KEY = 'dp_google_token_v1';
 
     const pdfCanvasRef = useRef(null);
     const drawCanvasRef = useRef(null);
     const containerRef = useRef(null);
+    const langMenuRef = useRef(null);
     const drawingsRef = useRef({});
     const historyRef = useRef({});
     const isDrawing = useRef(false);
     const scaleRef = useRef(1);
     const panState = useRef({ active: false, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 });
+    const pinchState = useRef({ active: false, initialDist: 0, initialZoom: 1 });
 
     useEffect(() => {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+      try {
+        const stored = localStorage.getItem(TOKEN_STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.token && parsed.expiresAt && parsed.expiresAt > Date.now() + 60_000) {
+            setAccessToken(parsed.token);
+          } else {
+            localStorage.removeItem(TOKEN_STORAGE_KEY);
+          }
+        }
+      } catch (err) {
+        console.warn('[DigitalPaper] token restore error', err);
+      }
+
       const pollLimit = 60;
       let gapiTry = 0;
       let gisTry = 0;
@@ -251,6 +275,15 @@
             if (response.access_token) {
               setAuthError('');
               setAccessToken(response.access_token);
+              const lifetimeMs = (parseInt(response.expires_in, 10) || 3600) * 1000;
+              try {
+                localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify({
+                  token: response.access_token,
+                  expiresAt: Date.now() + lifetimeMs
+                }));
+              } catch (storeErr) {
+                console.warn('[DigitalPaper] token persist error', storeErr);
+              }
             }
           }
         });
@@ -258,6 +291,36 @@
       } catch (err) {
         console.error('[DigitalPaper] auth error', err);
         setAuthError('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    };
+
+    useEffect(() => {
+      if (!showLangMenu) return;
+      const onDocClick = (event) => {
+        if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
+          setShowLangMenu(false);
+        }
+      };
+      document.addEventListener('mousedown', onDocClick);
+      document.addEventListener('touchstart', onDocClick);
+      return () => {
+        document.removeEventListener('mousedown', onDocClick);
+        document.removeEventListener('touchstart', onDocClick);
+      };
+    }, [showLangMenu]);
+
+    const handleLogout = () => {
+      const tokenToRevoke = accessToken;
+      setAccessToken(null);
+      setLoadedFileId('');
+      setPdfDoc(null);
+      setTotalPages(0);
+      setCurrentPage(1);
+      drawingsRef.current = {};
+      historyRef.current = {};
+      try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch (_) {}
+      if (tokenToRevoke && window.google?.accounts?.oauth2?.revoke) {
+        try { window.google.accounts.oauth2.revoke(tokenToRevoke, () => {}); } catch (_) {}
       }
     };
 
@@ -319,6 +382,7 @@
         if (!response.ok) {
           if (response.status === 401) {
             setAccessToken(null);
+            try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch (_) {}
             throw new Error('인증이 만료되었습니다. 다시 로그인 후 시도해주세요.');
           }
           if (response.status === 403 || response.status === 404) {
@@ -542,8 +606,28 @@
       draw(e);
     };
 
+    const getTouchDistance = (touches) => {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+
     const handleCanvasTouchStart = (e) => {
       if (!e.touches || !e.touches.length) return;
+      if (e.touches.length >= 2) {
+        e.preventDefault();
+        if (isDrawing.current) {
+          isDrawing.current = false;
+          drawCanvasRef.current?.getContext('2d').closePath();
+        }
+        if (drawCanvasRef.current) drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
+        pinchState.current = {
+          active: true,
+          initialDist: getTouchDistance(e.touches),
+          initialZoom: userZoom
+        };
+        return;
+      }
       if (tool === 'pan') {
         startPan(e.touches[0].clientX, e.touches[0].clientY);
         return;
@@ -553,12 +637,35 @@
 
     const handleCanvasTouchMove = (e) => {
       if (!e.touches || !e.touches.length) return;
+      if (pinchState.current.active && e.touches.length >= 2) {
+        e.preventDefault();
+        const newDist = getTouchDistance(e.touches);
+        if (!pinchState.current.initialDist) return;
+        const ratio = newDist / pinchState.current.initialDist;
+        const newZoom = Math.max(0.5, Math.min(4, pinchState.current.initialZoom * ratio));
+        setUserZoom(newZoom);
+        return;
+      }
       if (tool === 'pan') {
         e.preventDefault();
         movePan(e.touches[0].clientX, e.touches[0].clientY);
         return;
       }
       draw(e);
+    };
+
+    const handleCanvasTouchEnd = (e) => {
+      if (pinchState.current.active) {
+        if (!e.touches || e.touches.length < 2) {
+          pinchState.current.active = false;
+        }
+        return;
+      }
+      if (tool === 'pan') {
+        endPan();
+        return;
+      }
+      stopDrawing();
     };
 
     const handleWheelZoom = (e) => {
@@ -648,25 +755,62 @@
       link.click();
     };
 
-    const exportAsPdf = () => {
-      const bgCanvas = pdfCanvasRef.current;
-      const fgCanvas = drawCanvasRef.current;
-      if (!bgCanvas || !fgCanvas) return;
-      const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = bgCanvas.width;
-      exportCanvas.height = bgCanvas.height;
-      const ctx = exportCanvas.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-      ctx.drawImage(bgCanvas, 0, 0);
-      ctx.drawImage(fgCanvas, 0, 0);
+    const drawAnnotationOnto = (ctx, snapshot, width, height) => new Promise((resolve) => {
+      if (!snapshot) { resolve(); return; }
+      const img = new Image();
+      img.onload = () => { ctx.drawImage(img, 0, 0, width, height); resolve(); };
+      img.onerror = () => resolve();
+      img.src = snapshot;
+    });
+
+    const exportAsPdf = async () => {
+      if (!pdfDoc || !window.jspdf || !window.jspdf.jsPDF) return;
+
+      if (drawCanvasRef.current) {
+        drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
+      }
+
       setIsLoading(true);
-      const imgData = exportCanvas.toDataURL('image/jpeg', 0.9);
-      const orientation = exportCanvas.width > exportCanvas.height ? 'landscape' : 'portrait';
-      if (window.jspdf && window.jspdf.jsPDF) {
-        const pdf = new window.jspdf.jsPDF({ orientation, unit: 'px', format: [exportCanvas.width, exportCanvas.height] });
-        pdf.addImage(imgData, 'JPEG', 0, 0, exportCanvas.width, exportCanvas.height);
-        pdf.save(`digital-paper-page${currentPage}.pdf`);
+      setExportProgress({ active: true, current: 0, total: totalPages });
+
+      try {
+        const exportScale = 2;
+        let pdf = null;
+
+        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+          setExportProgress({ active: true, current: pageNum, total: totalPages });
+
+          const page = await pdfDoc.getPage(pageNum);
+          const viewport = page.getViewport({ scale: exportScale });
+          const pageCanvas = document.createElement('canvas');
+          pageCanvas.width = Math.floor(viewport.width);
+          pageCanvas.height = Math.floor(viewport.height);
+          const pageCtx = pageCanvas.getContext('2d');
+          pageCtx.fillStyle = '#ffffff';
+          pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+
+          await page.render({ canvasContext: pageCtx, viewport }).promise;
+
+          await drawAnnotationOnto(pageCtx, drawingsRef.current[pageNum], pageCanvas.width, pageCanvas.height);
+
+          const orientation = pageCanvas.width > pageCanvas.height ? 'landscape' : 'portrait';
+          const imgData = pageCanvas.toDataURL('image/jpeg', 0.9);
+
+          if (!pdf) {
+            pdf = new window.jspdf.jsPDF({ orientation, unit: 'px', format: [pageCanvas.width, pageCanvas.height] });
+          } else {
+            pdf.addPage([pageCanvas.width, pageCanvas.height], orientation);
+          }
+          pdf.addImage(imgData, 'JPEG', 0, 0, pageCanvas.width, pageCanvas.height);
+        }
+
+        const filename = totalPages > 1 ? 'digital-paper.pdf' : `digital-paper-page${currentPage}.pdf`;
+        pdf.save(filename);
+      } catch (err) {
+        console.error('[DigitalPaper] PDF export error', err);
+        alert('PDF 저장 실패: ' + (err && err.message ? err.message : err));
+      } finally {
+        setExportProgress({ active: false, current: 0, total: 0 });
         setIsLoading(false);
       }
     };
@@ -714,15 +858,6 @@
           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
             <span className="material-icons text-pastelBlueText text-xl sm:text-2xl shrink-0">edit_document</span>
             <h1 className="text-[14px] sm:text-[18px] leading-tight font-bold tracking-[-0.02em] text-gray-900 mr-auto shrink-0">{t.title}</h1>
-            <div className="relative w-[70px] sm:w-[170px] h-9 sm:h-10 rounded-xl border border-slate-300 bg-white shadow-sm shrink-0">
-              <span className="material-icons absolute left-2 top-1/2 -translate-y-1/2 text-sm text-slate-500 pointer-events-none">language</span>
-              <select value={lang} onChange={(e) => setLang(e.target.value)} className="w-full h-full appearance-none bg-transparent text-xs sm:text-sm font-semibold text-slate-700 pl-7 sm:pl-10 pr-0 sm:pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200">
-                {languageOptions.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <span className="material-icons absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 text-xs sm:text-base text-slate-400 pointer-events-none hidden sm:block">arrow_drop_down</span>
-            </div>
             {!isSharedView && (!accessToken ? (
               <button onClick={handleAuth} disabled={!isGisLoaded} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white border border-[#1E40AF] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
                 <GoogleIcon />
@@ -740,10 +875,40 @@
                 <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.share}</span>
               </button>
             )}
+            {!isSharedView && (
+              <button onClick={() => setShowSubmitLinkModal(true)} title={t.submitLink} className={`h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md border ${activePadlet ? 'bg-[#DBEAFE] border-[#93C5FD] text-[#1E40AF]' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'}`}>
+                <span className="material-icons text-base">link</span>
+                <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.submitLink}</span>
+              </button>
+            )}
+            <div ref={langMenuRef} className="relative shrink-0">
+              <button onClick={() => setShowLangMenu(prev => !prev)} title={t.language} className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all hover:-translate-y-0.5 hover:shadow-md">
+                <span className="material-icons text-base">language</span>
+              </button>
+              {showLangMenu && (
+                <div className="absolute right-0 top-full mt-1 min-w-[140px] rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden z-30">
+                  {languageOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => { setLang(option.value); setShowLangMenu(false); }}
+                      className={`w-full px-3 py-2 text-left text-sm transition-colors ${lang === option.value ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button onClick={() => setShowHelpModal(true)} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-white hover:bg-gray-50 text-[#1E40AF] border border-[#93C5FD] flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
               <span className="material-icons text-base">lightbulb</span>
               <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.guide}</span>
             </button>
+            {!isSharedView && accessToken && (
+              <button onClick={handleLogout} title={t.logout} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-white hover:bg-red-50 text-red-700 border border-red-200 flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
+                <span className="material-icons text-base">logout</span>
+                <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.logout}</span>
+              </button>
+            )}
           </div>
           {!isApiLoaded && <p className="text-xs font-medium text-gray-500 px-1">{t.googleLoading}</p>}
           {loadError && <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700">{loadError}</div>}
@@ -758,8 +923,11 @@
           )}
 
           {isLoading && (
-            <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-50">
+            <div className="absolute inset-0 bg-white/70 flex flex-col items-center justify-center z-50 gap-3">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-pastelBlue border-t-pastelPink"></div>
+              {exportProgress.active && (
+                <p className="text-sm font-semibold text-gray-700">{t.exporting} ({exportProgress.current}/{exportProgress.total})</p>
+              )}
             </div>
           )}
 
@@ -772,21 +940,24 @@
               </div>
             )}
 
+            {pdfDoc && totalPages > 1 && (
+              <div className="mb-4 bg-white border border-pink-200 px-4 py-1.5 rounded-full shadow-md flex items-center gap-3">
+                <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_left</span></button>
+                <span className="text-sm font-semibold text-gray-700 min-w-[80px] text-center">{t.page} {currentPage} / {totalPages}</span>
+                <button onClick={() => changePage(1)} disabled={currentPage >= totalPages} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_right</span></button>
+              </div>
+            )}
+
             {pdfDoc && (
-              <div className="relative flex-shrink-0 mb-16">
+              <div className="relative flex-shrink-0 mb-8">
                 <div className="relative shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
                   <canvas ref={pdfCanvasRef} className="block" />
                   <canvas
                     ref={drawCanvasRef}
                     className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
                     onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
-                    onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={tool === 'pan' ? endPan : stopDrawing} onTouchCancel={tool === 'pan' ? endPan : stopDrawing}
+                    onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={handleCanvasTouchEnd} onTouchCancel={handleCanvasTouchEnd}
                   />
-                </div>
-                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white border border-pink-200 px-4 py-2 rounded-full shadow-md flex items-center gap-4 z-20">
-                  <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_left</span></button>
-                  <span className="text-sm font-semibold text-gray-700 min-w-[92px] text-center">{t.page} {currentPage} / {totalPages}</span>
-                  <button onClick={() => changePage(1)} disabled={currentPage >= totalPages} className="text-gray-600 disabled:text-gray-300 hover:text-pastelBlueText p-1"><span className="material-icons">chevron_right</span></button>
                 </div>
               </div>
             )}
@@ -859,45 +1030,6 @@
                 </div>
               </div>
 
-              {!isSharedView && (
-                <div className="fixed left-3 bottom-[72px] sm:bottom-8 z-40">
-                  <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl px-2 py-2 flex flex-col items-center gap-2">
-                    <button
-                      onClick={() => setShowLinkPanel(prev => !prev)}
-                      className={`h-11 w-11 rounded-xl border flex items-center justify-center transition-all ${activePadlet ? 'border-blue-300 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-slate-500 hover:bg-gray-50'}`}
-                      title={t.padletLabel}
-                    >
-                      <span className="material-icons text-[20px]">link</span>
-                    </button>
-                    {showLinkPanel && (
-                      <div className="flex flex-col gap-1.5 w-full" style={{minWidth:'168px'}}>
-                        <div className="flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2 py-1.5">
-                          <input
-                            type="text"
-                            value={padletInput}
-                            onChange={(e) => setPadletInput(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === 'Enter') { handleApplySubmissionLink(); setShowLinkPanel(false); } }}
-                            placeholder={t.padletPlaceholder}
-                            className="flex-1 min-w-0 text-xs bg-transparent focus:outline-none text-gray-700 placeholder-slate-400"
-                            autoFocus
-                          />
-                          {padletInput && (
-                            <button onClick={() => { setPadletInput(''); setActivePadlet(''); setEmbedMeta({ type: '', url: '', fallbackUrl: '' }); }} className="text-slate-400 hover:text-slate-600 shrink-0">
-                              <span className="material-icons" style={{fontSize:'14px'}}>close</span>
-                            </button>
-                          )}
-                        </div>
-                        <button
-                          onClick={() => { handleApplySubmissionLink(); setShowLinkPanel(false); }}
-                          className="w-full py-1.5 rounded-lg bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs font-semibold transition-colors"
-                        >
-                          {t.applyLink}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </>
           )}
         </main>
@@ -939,6 +1071,41 @@
 
               <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex justify-end shrink-0">
                 <button onClick={() => setShowHelpModal(false)} className="min-h-[44px] rounded-xl px-6 py-2 bg-pastelBlue hover:bg-pastelBlueHover text-pastelBlueText font-bold transition-all hover:-translate-y-0.5 hover:shadow-md">{t.confirm}</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showSubmitLinkModal && (
+          <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowSubmitLinkModal(false)}>
+            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-gradient-to-r from-blue-100 to-pink-100 border-b border-blue-100 px-6 py-4 flex items-center justify-between">
+                <h2 className="text-[18px] font-bold text-gray-800 flex items-center gap-2"><span className="material-icons">link</span>{t.submitLinkTitle}</h2>
+                <button onClick={() => setShowSubmitLinkModal(false)} className="text-gray-400 hover:text-gray-700 transition-colors p-1"><span className="material-icons">close</span></button>
+              </div>
+              <div className="p-6 space-y-4">
+                <p className="text-sm text-gray-600 leading-relaxed">{t.submitLinkDesc}</p>
+                <input
+                  type="text"
+                  value={padletInput}
+                  onChange={(e) => setPadletInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { handleApplySubmissionLink(); setShowSubmitLinkModal(false); } }}
+                  placeholder={t.padletPlaceholder}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-gray-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  autoFocus
+                />
+              </div>
+              <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex flex-wrap justify-end gap-2">
+                {padletInput && (
+                  <button
+                    onClick={() => { setPadletInput(''); setActivePadlet(''); setEmbedMeta({ type: '', url: '', fallbackUrl: '' }); setEmbedFailed(false); setCanvaEmbedAttempt(false); setShowSubmitLinkModal(false); }}
+                    className="min-h-[40px] rounded-xl px-4 py-2 bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm font-semibold transition-colors"
+                  >
+                    {t.remove}
+                  </button>
+                )}
+                <button onClick={() => setShowSubmitLinkModal(false)} className="min-h-[40px] rounded-xl px-4 py-2 bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm font-semibold transition-colors">{t.cancel}</button>
+                <button onClick={() => { handleApplySubmissionLink(); setShowSubmitLinkModal(false); }} className="min-h-[40px] rounded-xl px-5 py-2 bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-sm font-bold transition-colors">{t.save}</button>
               </div>
             </div>
           </div>
