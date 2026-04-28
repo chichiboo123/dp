@@ -1,0 +1,60 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        env:
+          CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          if [ -z "$CLIENT_ID" ] || [ -z "$API_KEY" ]; then
+            echo "GOOGLE_CLIENT_ID / GOOGLE_API_KEY secrets are required." >&2
+            exit 1
+          fi
+
+      - name: Inject runtime config
+        env:
+          CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          cat > config.js <<EOF_CONFIG
+          window.APP_CONFIG = {
+            CLIENT_ID: "$CLIENT_ID",
+            API_KEY: "$API_KEY",
+          };
+          EOF_CONFIG
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
