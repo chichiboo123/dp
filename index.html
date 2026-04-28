@@ -573,6 +573,87 @@
       setCanvaEmbedAttempt(false);
     };
 
+    const startPan = (clientX, clientY) => {
+      if (tool !== 'pan' || !containerRef.current) return;
+      panState.current = {
+        active: true,
+        startX: clientX,
+        startY: clientY,
+        scrollLeft: containerRef.current.scrollLeft,
+        scrollTop: containerRef.current.scrollTop
+      };
+    };
+
+    const movePan = (clientX, clientY) => {
+      if (!panState.current.active || !containerRef.current) return;
+      const dx = clientX - panState.current.startX;
+      const dy = clientY - panState.current.startY;
+      containerRef.current.scrollLeft = panState.current.scrollLeft - dx;
+      containerRef.current.scrollTop = panState.current.scrollTop - dy;
+    };
+
+    const endPan = () => {
+      panState.current.active = false;
+    };
+
+    const handleCanvasMouseDown = (e) => {
+      if (tool === 'pan') {
+        e.preventDefault();
+        startPan(e.clientX, e.clientY);
+        return;
+      }
+      startDrawing(e);
+    };
+
+    const handleCanvasMouseMove = (e) => {
+      if (tool === 'pan') {
+        movePan(e.clientX, e.clientY);
+        return;
+      }
+      draw(e);
+    };
+
+    const handleCanvasTouchStart = (e) => {
+      if (!e.touches || !e.touches.length) return;
+      if (tool === 'pan') {
+        startPan(e.touches[0].clientX, e.touches[0].clientY);
+        return;
+      }
+      startDrawing(e);
+    };
+
+    const handleCanvasTouchMove = (e) => {
+      if (!e.touches || !e.touches.length) return;
+      if (tool === 'pan') {
+        e.preventDefault();
+        movePan(e.touches[0].clientX, e.touches[0].clientY);
+        return;
+      }
+      draw(e);
+    };
+
+    const handleWheelZoom = (e) => {
+      if (!pdfDoc) return;
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.1 : -0.1;
+      handleZoom(delta);
+    };
+
+    const handleApplySubmissionLink = () => {
+      const trimmed = padletInput.trim();
+      if (!trimmed) {
+        setActivePadlet('');
+        setEmbedMeta({ type: '', url: '', fallbackUrl: '' });
+        setEmbedFailed(false);
+        return;
+      }
+      const resolved = getEmbeddedUrl(trimmed);
+      setActivePadlet(trimmed);
+      setEmbedMeta(resolved);
+      setEmbedFailed(false);
+    };
+
     const handleShare = () => {
       if (!loadedFileId) return alert(t.shareError);
       const currentUrl = new URL(window.location.href);
