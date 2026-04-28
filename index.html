@@ -1,0 +1,623 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', Arial, sans-serif;
+  padding: 20px;
+  background: #eaf3ff;
+  text-align: center;
+}
+h1{ color:#1e40af }
+button{
+  background:#2563eb; color:white; border:0; padding:10px 18px; border-radius:10px;
+}
+button:hover{ filter:brightness(.95) }</style></head>
+<body><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>디지털 페이퍼</title>
+    
+    <!-- 폰트 및 아이콘 -->
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov-dynamic-subset.css');
+        @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+        body { 
+            font-family: 'Pretendard GOV', sans-serif; 
+            background-color: #f8fafc; 
+            overflow: hidden; 
+            margin: 0; 
+            padding: 0; 
+        }
+    </style>
+
+    <!-- Tailwind CSS (디자인 시스템) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React 및 ReactDOM (기능 작동 핵심) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel (브라우저에서 React 문법을 해석) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- PDF.js (문서 렌더링) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- Google APIs -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    
+    <!-- jsPDF (PDF 내보내기용) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // --- [보안] 구글 클라우드 콘솔 API 정보 ---
+        // 🚨 주의: 공개된 곳에 코드를 올릴 때는 아래 문자열을 비워두세요.
+        const CLIENT_ID = "1018386870549-42uu4elc8p60n7qc7u9g51pkjpv03j7v.apps.googleusercontent.com"; 
+        const API_KEY = "AIzaSyDWfDTMoG6FLmLwDoOnpyxSPEL7Plw4I7w";
+        const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
+
+        // --- 다국어 지원 (i18n) ---
+        const i18n = {
+          ko: { title: '디지털 페이퍼', login: '구글 로그인', select: '드라이브 파일 선택', padletPlaceholder: '패들렛/띵커벨 등 제출함 주소 (선택)', share: '공유 링크 복사', pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤', shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇' }
+        };
+
+        function App() {
+          const [lang] = useState('ko');
+          const t = i18n[lang];
+          
+          const [accessToken, setAccessToken] = useState(null);
+          const [isApiLoaded, setIsApiLoaded] = useState(false);
+
+          const [loadedFileId, setLoadedFileId] = useState('');
+          const [padletInput, setPadletInput] = useState('');
+          const [activePadlet, setActivePadlet] = useState('');
+          
+          const [pdfDoc, setPdfDoc] = useState(null);
+          const [currentPage, setCurrentPage] = useState(1);
+          const [totalPages, setTotalPages] = useState(0);
+          
+          const [tool, setTool] = useState('pen');
+          const [userZoom, setUserZoom] = useState(1);
+          const [penColor, setPenColor] = useState('#2563eb');
+          const [penWidth, setPenWidth] = useState(3);
+          const [isLoading, setIsLoading] = useState(false);
+          
+          const [showHelpModal, setShowHelpModal] = useState(false);
+
+          const pdfCanvasRef = useRef(null);
+          const drawCanvasRef = useRef(null);
+          const containerRef = useRef(null);
+          const drawingsRef = useRef({}); 
+          
+          const isDrawing = useRef(false);
+          const scaleRef = useRef(1);
+
+          useEffect(() => {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            
+            const initGapi = () => {
+              if (window.gapi && window.gapi.client) {
+                window.gapi.load('client:picker', () => {
+                  window.gapi.client.init({ apiKey: API_KEY }).then(() => {
+                    setIsApiLoaded(true);
+                  });
+                });
+              } else {
+                setTimeout(initGapi, 100);
+              }
+            };
+            initGapi();
+
+            const qp = new URLSearchParams(window.location.search);
+            const urlFileId = qp.get('id');
+            const targetPage = parseInt(qp.get('s'), 10);
+            const urlPadlet = qp.get('padlet');
+            
+            if (urlPadlet) {
+              const decodedPadlet = decodeURIComponent(urlPadlet);
+              setPadletInput(decodedPadlet);
+              setActivePadlet(decodedPadlet);
+            }
+            if (urlFileId) {
+              loadPdfFromDriveAPI(urlFileId, targetPage || 1, urlPadlet ? decodeURIComponent(urlPadlet) : '');
+            }
+          }, []);
+
+          const handleAuth = () => {
+            if(!window.google) return alert("구글 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.");
+            const tokenClient = window.google.accounts.oauth2.initTokenClient({
+              client_id: CLIENT_ID,
+              scope: SCOPES,
+              callback: (response) => {
+                if (response.access_token) setAccessToken(response.access_token);
+              },
+            });
+            tokenClient.requestAccessToken();
+          };
+
+          const openPicker = () => {
+            if (!accessToken || !isApiLoaded) return alert("API 로딩 중이거나 로그인이 필요합니다.");
+
+            const view = new window.google.picker.DocsView(window.google.picker.ViewId.PDFs);
+            view.setMode(window.google.picker.DocsViewMode.LIST);
+            
+            const picker = new window.google.picker.PickerBuilder()
+              .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
+              .setAppId(CLIENT_ID)
+              .setOAuthToken(accessToken)
+              .addView(view)
+              .setDeveloperKey(API_KEY)
+              .setCallback((data) => {
+                if (data.action === window.google.picker.Action.PICKED) {
+                  const fileId = data.docs[0].id;
+                  loadPdfFromDriveAPI(fileId, 1, padletInput);
+                }
+              })
+              .build();
+            picker.setVisible(true);
+          };
+
+          const loadPdfFromDriveAPI = async (fileId, targetPage = 1, padletUrl = padletInput) => {
+            if (!window.pdfjsLib) return;
+            setIsLoading(true);
+            setPdfDoc(null);
+            setUserZoom(1); 
+            drawingsRef.current = {}; 
+            setActivePadlet(padletUrl);
+
+            try {
+              const fetchUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
+              const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+
+              const response = await fetch(fetchUrl, { headers });
+              
+              if (!response.ok) {
+                if (response.status === 403 || response.status === 404) {
+                  throw new Error('파일에 접근할 수 없습니다. "링크가 있는 모든 사용자 보기" 권한을 확인해주세요.');
+                }
+                throw new Error(`HTTP Error: ${response.status}`);
+              }
+              
+              const arrayBuffer = await response.arrayBuffer();
+              const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+              const doc = await loadingTask.promise;
+              
+              setPdfDoc(doc);
+              setTotalPages(doc.numPages);
+              setCurrentPage(targetPage);
+              setLoadedFileId(fileId); 
+              
+            } catch (error) {
+              alert("문서 로드 실패: " + error.message);
+              setLoadedFileId('');
+            } finally {
+              setIsLoading(false);
+            }
+          };
+
+          const handleZoom = (delta) => {
+            if (drawCanvasRef.current) drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
+            setUserZoom(prev => delta === 0 ? 1 : Math.max(0.5, Math.min(4, prev + delta)));
+          };
+
+          const changePage = useCallback((delta) => {
+            setCurrentPage(prev => {
+              const newPage = prev + delta;
+              if (newPage < 1 || newPage > totalPages) return prev;
+              if (drawCanvasRef.current) drawingsRef.current[prev] = drawCanvasRef.current.toDataURL();
+              return newPage;
+            });
+          }, [totalPages]);
+
+          useEffect(() => {
+            if (!pdfDoc) return;
+            const renderPage = async () => {
+              const page = await pdfDoc.getPage(currentPage);
+              const unscaledViewport = page.getViewport({ scale: 1 });
+              let baseScale = 1;
+              
+              if (containerRef.current) {
+                const containerW = containerRef.current.clientWidth - 32; 
+                const containerH = containerRef.current.clientHeight * 0.8 - 32; 
+                const fitW = containerW / unscaledViewport.width;
+                const fitH = containerH / unscaledViewport.height;
+                baseScale = Math.min(fitW, fitH) * 0.98; 
+              }
+
+              const finalScale = baseScale * userZoom;
+              const viewport = page.getViewport({ scale: finalScale });
+              const devicePixelRatio = window.devicePixelRatio || 1;
+              scaleRef.current = devicePixelRatio;
+
+              const pdfCanvas = pdfCanvasRef.current;
+              const drawCanvas = drawCanvasRef.current;
+              if (!pdfCanvas || !drawCanvas) return;
+
+              const ctx = pdfCanvas.getContext('2d');
+              const dCtx = drawCanvas.getContext('2d');
+
+              [pdfCanvas, drawCanvas].forEach(canvas => {
+                canvas.width = Math.floor(viewport.width * devicePixelRatio);
+                canvas.height = Math.floor(viewport.height * devicePixelRatio);
+                canvas.style.width = `${Math.floor(viewport.width)}px`;
+                canvas.style.height = `${Math.floor(viewport.height)}px`;
+              });
+
+              dCtx.setTransform(1, 0, 0, 1, 0, 0);
+              dCtx.scale(devicePixelRatio, devicePixelRatio);
+
+              const renderContext = { canvasContext: ctx, transform: [devicePixelRatio, 0, 0, devicePixelRatio, 0, 0], viewport };
+              await page.render(renderContext).promise;
+
+              dCtx.clearRect(0, 0, viewport.width, viewport.height);
+              const savedDataURL = drawingsRef.current[currentPage];
+              if (savedDataURL) {
+                const img = new Image();
+                img.onload = () => dCtx.drawImage(img, 0, 0, viewport.width, viewport.height);
+                img.src = savedDataURL;
+              }
+            };
+            renderPage();
+          }, [pdfDoc, currentPage, userZoom]); 
+
+          const getPointerPos = (e) => {
+            const canvas = drawCanvasRef.current;
+            const rect = canvas.getBoundingClientRect();
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const scaleX = (canvas.width / scaleRef.current) / rect.width;
+            const scaleY = (canvas.height / scaleRef.current) / rect.height;
+            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+          };
+
+          const startDrawing = (e) => {
+            if (tool === 'pan') return;
+            isDrawing.current = true;
+            const ctx = drawCanvasRef.current.getContext('2d');
+            const pos = getPointerPos(e);
+            
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
+            ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : penColor;
+            ctx.lineWidth = tool === 'eraser' ? penWidth * 5 : penWidth;
+            ctx.lineTo(pos.x, pos.y + 0.1);
+            ctx.stroke();
+          };
+
+          const draw = (e) => {
+            if (!isDrawing.current || tool === 'pan') return;
+            const ctx = drawCanvasRef.current.getContext('2d');
+            const pos = getPointerPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+          };
+
+          const stopDrawing = () => {
+            if (!isDrawing.current) return;
+            isDrawing.current = false;
+            drawCanvasRef.current.getContext('2d').closePath();
+          };
+
+          const handleShare = () => {
+            if (!loadedFileId) return alert(t.shareError);
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('id', loadedFileId); 
+            currentUrl.searchParams.set('s', currentPage.toString());
+            
+            if (padletInput.trim()) {
+              currentUrl.searchParams.set('padlet', encodeURIComponent(padletInput.trim()));
+              setActivePadlet(padletInput.trim());
+            } else {
+              currentUrl.searchParams.delete('padlet');
+            }
+            
+            navigator.clipboard.writeText(currentUrl.toString())
+              .then(() => alert(t.shareSuccess))
+              .catch(() => alert("복사 실패. 브라우저 설정을 확인하세요."));
+          };
+
+          const clearCanvas = () => {
+            const canvas = drawCanvasRef.current;
+            if (!canvas) return;
+            canvas.getContext('2d').clearRect(0, 0, canvas.width / scaleRef.current, canvas.height / scaleRef.current);
+            delete drawingsRef.current[currentPage];
+          };
+
+          const exportAsJpg = () => {
+            const bgCanvas = pdfCanvasRef.current;
+            const fgCanvas = drawCanvasRef.current;
+            if (!bgCanvas || !fgCanvas) return;
+
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = bgCanvas.width;
+            exportCanvas.height = bgCanvas.height;
+            const ctx = exportCanvas.getContext('2d');
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            ctx.drawImage(bgCanvas, 0, 0);
+            ctx.drawImage(fgCanvas, 0, 0);
+            
+            const link = document.createElement('a');
+            link.download = `digital-paper-page${currentPage}.jpg`;
+            link.href = exportCanvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+          };
+
+          const exportAsPdf = () => {
+            const bgCanvas = pdfCanvasRef.current;
+            const fgCanvas = drawCanvasRef.current;
+            if (!bgCanvas || !fgCanvas) return;
+
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = bgCanvas.width;
+            exportCanvas.height = bgCanvas.height;
+            const ctx = exportCanvas.getContext('2d');
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            ctx.drawImage(bgCanvas, 0, 0);
+            ctx.drawImage(fgCanvas, 0, 0);
+            
+            setIsLoading(true);
+            const imgData = exportCanvas.toDataURL('image/jpeg', 0.9);
+            const orientation = exportCanvas.width > exportCanvas.height ? 'landscape' : 'portrait';
+            
+            if (window.jspdf && window.jspdf.jsPDF) {
+               const pdf = new window.jspdf.jsPDF({ orientation, unit: 'px', format: [exportCanvas.width, exportCanvas.height] });
+               pdf.addImage(imgData, 'JPEG', 0, 0, exportCanvas.width, exportCanvas.height);
+               pdf.save(`digital-paper-page${currentPage}.pdf`);
+               setIsLoading(false);
+            }
+          };
+
+          return (
+            <div className="flex flex-col h-screen overflow-hidden">
+              <header className="bg-white border-b border-gray-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-sm z-10 shrink-0">
+                <div className="flex items-center gap-3">
+                  <span className="material-icons text-blue-600 text-3xl">edit_document</span>
+                  <h1 className="text-xl font-bold text-gray-800">{t.title}</h1>
+                </div>
+                
+                <div className="flex flex-1 max-w-4xl gap-3 flex-col sm:flex-row items-center">
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    {!accessToken ? (
+                      <button onClick={handleAuth} className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-3 whitespace-nowrap w-full justify-center shadow-sm">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                            <path fill="none" d="M0 0h48v48H0z"></path>
+                        </svg>
+                        {t.login}
+                      </button>
+                    ) : (
+                      <button onClick={openPicker} className="bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200 px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 whitespace-nowrap w-full justify-center shadow-sm">
+                        <span className="material-icons text-sm">cloud_queue</span> {t.select}
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="text-gray-300 hidden sm:block">|</div>
+
+                  <div className="flex flex-1 gap-2 w-full">
+                    <span className="bg-pink-50 text-pink-700 px-3 py-2 rounded-md border border-pink-200 text-sm whitespace-nowrap hidden md:flex items-center">제출함 연동</span>
+                    <input 
+                      type="text" value={padletInput} onChange={(e) => setPadletInput(e.target.value)} placeholder={t.padletPlaceholder} className="flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button onClick={handleShare} className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md font-bold flex items-center gap-2 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
+                    <span className="material-icons text-sm">share</span>{t.share}
+                  </button>
+                  <button onClick={() => setShowHelpModal(true)} className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-bold flex items-center gap-1 transition-colors text-sm shadow-sm whitespace-nowrap justify-center flex-1 sm:flex-none">
+                    <span className="material-icons text-sm">help_outline</span>사용법
+                  </button>
+                </div>
+              </header>
+
+              <main className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden">
+                {isLoading && (
+                  <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-50">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+                  </div>
+                )}
+
+                {pdfDoc && (
+                  <div className="bg-white border-b border-gray-200 px-4 py-2 flex flex-wrap items-center justify-center gap-4 shadow-sm z-10 shrink-0">
+                    <div className="flex gap-1">
+                      <button onClick={() => setTool('pen')} className={`p-2 rounded-lg flex flex-col items-center gap-1 min-w-[50px] ${tool === 'pen' ? 'bg-blue-100 text-blue-700 border border-blue-300' : 'text-gray-600 hover:bg-gray-100'}`}>
+                        <span className="material-icons text-sm">edit</span><span className="text-[10px] font-medium">{t.pen}</span>
+                      </button>
+                      <button onClick={() => setTool('eraser')} className={`p-2 rounded-lg flex flex-col items-center gap-1 min-w-[50px] ${tool === 'eraser' ? 'bg-pink-100 text-pink-700 border border-pink-300' : 'text-gray-600 hover:bg-gray-100'}`}>
+                        <span className="material-icons text-sm">healing</span><span className="text-[10px] font-medium">{t.eraser}</span>
+                      </button>
+                      <button onClick={() => setTool('pan')} className={`p-2 rounded-lg flex flex-col items-center gap-1 min-w-[50px] ${tool === 'pan' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' : 'text-gray-600 hover:bg-gray-100'}`}>
+                        <span className="material-icons text-sm">pan_tool</span><span className="text-[10px] font-medium">{t.pan}</span>
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
+                      <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-6 h-6 rounded cursor-pointer border-0 p-0" />
+                      <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value))} className="w-20 accent-blue-500" />
+                    </div>
+
+                    <div className="flex gap-2 border-l border-gray-200 pl-4">
+                      <button onClick={exportAsJpg} className="px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded text-sm hover:bg-yellow-200 font-medium flex items-center gap-1 border border-yellow-300 shadow-sm">
+                        <span className="material-icons text-sm">image</span> {t.exportJpg}
+                      </button>
+                      <button onClick={exportAsPdf} className="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded text-sm hover:bg-emerald-200 font-medium flex items-center gap-1 border border-emerald-300 shadow-sm">
+                        <span className="material-icons text-sm">picture_as_pdf</span> {t.exportPdf}
+                      </button>
+                      <button onClick={clearCanvas} className="px-3 py-1.5 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors ml-1 border border-gray-300 rounded text-sm flex items-center gap-1">
+                        <span className="material-icons text-sm">delete_outline</span> {t.clear}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex-1 overflow-auto p-4 flex flex-col items-center bg-[#e2e8f0]" ref={containerRef}>
+                  {!pdfDoc && !isLoading && (
+                    <div className="text-center text-gray-400 mt-20">
+                      <span className="material-icons text-6xl mb-4 block text-gray-300">cloud_done</span>
+                      <p className="text-lg mb-2 text-gray-600">디지털 페이퍼 구동 준비 완료!</p>
+                      <p className="text-sm">상단의 [구글 로그인] 후 활동지(PDF)를 선택해주세요.</p>
+                    </div>
+                  )}
+
+                  {pdfDoc && (
+                    <div className="relative shadow-xl border border-gray-300 bg-white mb-6" style={{ touchAction: tool === 'pan' ? 'auto' : 'none' }}>
+                      <canvas ref={pdfCanvasRef} className="block" />
+                      <canvas 
+                        ref={drawCanvasRef} 
+                        className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
+                        onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
+                        onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing} onTouchCancel={stopDrawing}
+                      />
+                      
+                      <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur px-4 py-2 rounded-full shadow-md border border-gray-200 flex items-center gap-4 z-20">
+                        <button onClick={() => changePage(-1)} disabled={currentPage <= 1} className="text-gray-600 disabled:text-gray-300 hover:text-blue-600 p-1"><span className="material-icons">chevron_left</span></button>
+                        <span className="text-sm font-medium text-gray-700 min-w-[80px] text-center">{t.page} {currentPage} / {totalPages}</span>
+                        <button onClick={() => changePage(1)} disabled={currentPage >= totalPages} className="text-gray-600 disabled:text-gray-300 hover:text-blue-600 p-1"><span className="material-icons">chevron_right</span></button>
+                      </div>
+                    </div>
+                  )}
+
+                  {activePadlet && pdfDoc && (
+                    <div className="w-full max-w-4xl mt-12 mb-8 flex flex-col items-center animate-fade-in">
+                      <div className="bg-pink-100 text-pink-800 font-bold px-6 py-3 rounded-t-xl border border-pink-200 shadow-sm flex items-center gap-2">
+                        <span className="material-icons">upload_file</span>
+                        {t.submitGuide}
+                      </div>
+                      <iframe 
+                        src={activePadlet} 
+                        className="w-full h-[600px] border-2 border-pink-200 shadow-lg rounded-b-xl rounded-t-none bg-white"
+                        allow="camera;microphone;geolocation"
+                        title="Submission Area"
+                      />
+                    </div>
+                  )}
+                </div>
+              </main>
+
+              <footer className="bg-white border-t border-gray-200 py-2 text-center shrink-0 z-10">
+                <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600 text-xs font-medium transition-colors inline-block">
+                  Created by. 교육뮤지컬 꿈꾸는 치수쌤
+                </a>
+              </footer>
+
+              {showHelpModal && (
+                <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+                  <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+                    
+                    <div className="bg-blue-50 border-b border-blue-100 px-6 py-4 flex items-center justify-between shrink-0">
+                      <h2 className="text-xl font-bold text-blue-800 flex items-center gap-2">
+                        <span className="material-icons">menu_book</span> 
+                        디지털 페이퍼 사용법 및 안전성
+                      </h2>
+                      <button onClick={() => setShowHelpModal(false)} className="text-gray-400 hover:text-gray-700 transition-colors p-1">
+                        <span className="material-icons">close</span>
+                      </button>
+                    </div>
+
+                    <div className="p-6 overflow-y-auto space-y-8 flex-1">
+                      
+                      <section>
+                        <h3 className="text-lg font-bold text-blue-700 bg-blue-100/50 px-3 py-1.5 rounded-md inline-flex items-center gap-2 mb-3">
+                          👨‍🏫 선생님은 이렇게 쓰세요!
+                        </h3>
+                        <ol className="list-decimal list-inside space-y-2 text-gray-700 text-[15px] ml-1">
+                          <li>상단의 <strong>[구글 로그인]</strong> 버튼을 눌러 계정을 연결합니다.</li>
+                          <li><strong>[드라이브 파일 선택]</strong>을 눌러 배부할 활동지(PDF)를 고릅니다. <br/>
+                            <span className="text-sm text-red-500 bg-red-50 px-2 py-1 rounded inline-block mt-1 ml-5">
+                              *주의: 학생이 보려면 해당 파일이 드라이브에서 '링크가 있는 모든 사용자 보기' 권한이어야 합니다.
+                            </span>
+                          </li>
+                          <li>(선택) 학생들이 과제를 제출할 <strong>패들렛이나 띵커벨 보드 주소</strong>를 우측 칸에 넣습니다.</li>
+                          <li><strong>[공유 링크 복사]</strong>를 눌러 학생들(클래스팅, 카톡 등)에게 링크를 전달합니다.</li>
+                        </ol>
+                      </section>
+
+                      <section>
+                        <h3 className="text-lg font-bold text-green-700 bg-green-100/50 px-3 py-1.5 rounded-md inline-flex items-center gap-2 mb-3">
+                          👦👧 학생들은 이렇게 써요!
+                        </h3>
+                        <ol className="list-decimal list-inside space-y-2 text-gray-700 text-[15px] ml-1">
+                          <li>선생님이 주신 링크를 누르면 별도의 <strong>로그인 없이 활동지가 즉시</strong> 열립니다.</li>
+                          <li>화면 상단의 <strong>펜과 지우개</strong> 도구를 이용해 화면에 직접 풀고 그립니다. (두 손가락으로 화면 이동 및 확대/축소 가능)</li>
+                          <li>다 풀면 상단의 <strong>[JPG 저장]</strong> 버튼을 눌러 내 태블릿이나 PC에 사진으로 저장합니다.</li>
+                          <li>화면 스크롤을 내려 <strong>제출함(패들렛, 띵커벨 등)</strong>에 방금 저장한 사진을 올려 제출합니다.</li>
+                        </ol>
+                      </section>
+
+                      <hr className="border-gray-200" />
+
+                      <section className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2 mb-3">
+                          <span className="material-icons text-purple-600">verified_user</span> 
+                          개인정보 처리방침 (보안 및 안전성)
+                        </h3>
+                        <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                          디지털 페이퍼는 학생들과 선생님의 소중한 데이터를 철저히 보호하며, 교육 현장의 보안 지침을 준수합니다.
+                        </p>
+                        <ul className="space-y-3 text-[14px] text-gray-700">
+                          <li className="flex items-start gap-2">
+                            <span className="material-icons text-green-500 text-lg mt-0.5">check_circle</span>
+                            <div>
+                              <strong>서버 없는 100% 안전한 도구:</strong> 이 앱은 별도의 데이터베이스나 서버를 운영하지 않습니다. 모든 통신은 선생님의 기기와 구글 서버 사이에서 직접 안전하게 이루어집니다.
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="material-icons text-green-500 text-lg mt-0.5">check_circle</span>
+                            <div>
+                              <strong>개인정보 및 활동 데이터 수집 제로 (0):</strong> 구글 로그인 정보, 학생들의 필기 내용, 업로드한 활동지 파일 등 어떠한 정보도 제3자에게 전송되거나 수집되지 않습니다. 필기한 내용은 오직 사용 중인 기기 메모리 내에서만 처리됩니다.
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="material-icons text-green-500 text-lg mt-0.5">check_circle</span>
+                            <div>
+                              <strong>학생 회원가입 및 로그인 불필요:</strong> 학생들은 별도의 계정 생성이나 개인정보 식별 정보 입력 없이, 선생님이 공유한 링크만으로 즉시 안전하게 활동에 참여할 수 있습니다.
+                            </div>
+                          </li>
+                        </ul>
+                      </section>
+
+                    </div>
+                    
+                    <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex justify-end shrink-0">
+                      <button onClick={() => setShowHelpModal(false)} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold transition-colors shadow-sm">
+                        확인했습니다
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html><script>function showAlert(){
+  const box = document.createElement('div');
+  box.textContent = '버튼이 클릭되었습니다! ' + new Date().toLocaleTimeString();
+  box.style.cssText = 'margin-top:20px;padding:12px;border:1px solid #93c5fd;background:#dbeafe;border-radius:10px;color:#1e40af';
+  document.body.appendChild(box);
+}
+console.log('콘솔 테스트: 정상 동작');</script></body></html>
