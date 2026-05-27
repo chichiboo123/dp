@@ -153,6 +153,7 @@
 
     const [tool, setTool] = useState('pen');
     const [userZoom, setUserZoom] = useState(1);
+    const [baseDims, setBaseDims] = useState({ w: 0, h: 0 });
     const [penColor, setPenColor] = useState('#000000');
     const [penWidth, setPenWidth] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -423,7 +424,6 @@
     };
 
     const handleZoom = (delta) => {
-      if (drawCanvasRef.current) drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
       setUserZoom(prev => delta === 0 ? 1 : Math.max(0.5, Math.min(4, prev + delta)));
     };
 
@@ -438,26 +438,34 @@
 
     useEffect(() => {
       if (!pdfDoc) return;
+      let cancelled = false;
       const renderPage = async () => {
         const page = await pdfDoc.getPage(currentPage).catch(err => {
           console.error('[DigitalPaper] getPage error', err);
           throw err;
         });
+        if (cancelled) return;
         const unscaledViewport = page.getViewport({ scale: 1 });
         let baseScale = 1;
 
         if (containerRef.current) {
+          // Reserve space for the bottom toolbar (~160px pb-40) and top pagination chip (~48px when present).
+          const reserveTop = totalPages > 1 ? 48 : 0;
           const containerW = containerRef.current.clientWidth - 32;
-          const containerH = containerRef.current.clientHeight * 0.8 - 32;
+          const containerH = containerRef.current.clientHeight - 160 - reserveTop;
           const fitW = containerW / unscaledViewport.width;
-          const fitH = containerH / unscaledViewport.height;
-          baseScale = Math.min(fitW, fitH) * 0.98;
+          const fitH = Math.max(120, containerH) / unscaledViewport.height;
+          baseScale = Math.max(0.1, Math.min(fitW, fitH));
         }
 
-        const finalScale = baseScale * userZoom;
-        const viewport = page.getViewport({ scale: finalScale });
         const devicePixelRatio = window.devicePixelRatio || 1;
-        scaleRef.current = devicePixelRatio;
+        // Render at base scale × renderBoost so the bitmap still looks crisp
+        // when the user zooms in via CSS transform. Lower on high-DPR devices
+        // to keep memory in check on mobile.
+        const renderBoost = devicePixelRatio >= 2 ? 1.25 : 1.75;
+        const finalScale = baseScale * renderBoost;
+        const viewport = page.getViewport({ scale: finalScale });
+        scaleRef.current = devicePixelRatio * renderBoost;
 
         const pdfCanvas = pdfCanvasRef.current;
         const drawCanvas = drawCanvasRef.current;
@@ -466,32 +474,39 @@
         const ctx = pdfCanvas.getContext('2d');
         const dCtx = drawCanvas.getContext('2d');
 
+        const cssW = Math.floor(viewport.width / renderBoost);
+        const cssH = Math.floor(viewport.height / renderBoost);
+
         [pdfCanvas, drawCanvas].forEach(canvas => {
           canvas.width = Math.floor(viewport.width * devicePixelRatio);
           canvas.height = Math.floor(viewport.height * devicePixelRatio);
-          canvas.style.width = `${Math.floor(viewport.width)}px`;
-          canvas.style.height = `${Math.floor(viewport.height)}px`;
+          canvas.style.width = `${cssW}px`;
+          canvas.style.height = `${cssH}px`;
         });
 
+        setBaseDims({ w: cssW, h: cssH });
+
         dCtx.setTransform(1, 0, 0, 1, 0, 0);
-        dCtx.scale(devicePixelRatio, devicePixelRatio);
+        dCtx.scale(devicePixelRatio * renderBoost, devicePixelRatio * renderBoost);
 
         const renderContext = { canvasContext: ctx, transform: [devicePixelRatio, 0, 0, devicePixelRatio, 0, 0], viewport };
         await page.render(renderContext).promise.catch(err => {
           console.error('[DigitalPaper] render error', err);
           throw err;
         });
+        if (cancelled) return;
 
-        dCtx.clearRect(0, 0, viewport.width, viewport.height);
+        dCtx.clearRect(0, 0, cssW, cssH);
         const savedDataURL = drawingsRef.current[currentPage];
         if (savedDataURL) {
           const img = new Image();
-          img.onload = () => dCtx.drawImage(img, 0, 0, viewport.width, viewport.height);
+          img.onload = () => { if (!cancelled) dCtx.drawImage(img, 0, 0, cssW, cssH); };
           img.src = savedDataURL;
         }
       };
       renderPage().catch(err => console.error('[DigitalPaper] renderPage chain error', err));
-    }, [pdfDoc, currentPage, userZoom]);
+      return () => { cancelled = true; };
+    }, [pdfDoc, currentPage]);
 
     const ensureHistory = (pageNumber) => {
       if (!historyRef.current[pageNumber]) {
@@ -975,15 +990,30 @@
             )}
 
             {pdfDoc && (
-              <div className="relative flex-shrink-0 mb-8">
-                <div className="relative shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
-                  <canvas ref={pdfCanvasRef} className="block" />
-                  <canvas
-                    ref={drawCanvasRef}
-                    className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
-                    onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
-                    onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={handleCanvasTouchEnd} onTouchCancel={handleCanvasTouchEnd}
-                  />
+              <div
+                className="relative flex-shrink-0 mb-8"
+                style={{
+                  width: baseDims.w ? `${baseDims.w * userZoom}px` : undefined,
+                  height: baseDims.h ? `${baseDims.h * userZoom}px` : undefined,
+                }}
+              >
+                <div
+                  style={{
+                    width: baseDims.w ? `${baseDims.w}px` : undefined,
+                    height: baseDims.h ? `${baseDims.h}px` : undefined,
+                    transform: `scale(${userZoom})`,
+                    transformOrigin: 'top left',
+                  }}
+                >
+                  <div className="relative shadow-[0_10px_30px_-8px_rgba(99,102,241,0.25)] border border-pink-100 bg-white rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
+                    <canvas ref={pdfCanvasRef} className="block" />
+                    <canvas
+                      ref={drawCanvasRef}
+                      className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
+                      onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
+                      onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={handleCanvasTouchEnd} onTouchCancel={handleCanvasTouchEnd}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -1026,9 +1056,12 @@
                       <button title={t.pen} onClick={() => setTool('pen')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pen' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">draw</span></button>
                       <button title={t.eraser} onClick={() => setTool('eraser')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'eraser' ? 'bg-pink-100 text-pink-800 border-pink-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">cleaning_services</span></button>
                       <button title={t.pan} onClick={() => setTool('pan')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pan' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">back_hand</span></button>
-                      <div className="hidden md:flex items-center gap-2 px-2 border-l border-slate-200">
+                      <div className="hidden sm:flex items-center gap-2 px-2 border-l border-slate-200">
                         <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-8 h-8 rounded-md cursor-pointer border-0 p-0"/>
-                        <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="w-24 accent-blue-500"/>
+                        <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="w-20 md:w-24 accent-blue-500"/>
+                      </div>
+                      <div className="flex sm:hidden items-center gap-1.5 px-1 border-l border-slate-200">
+                        <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} className="w-7 h-7 rounded-md cursor-pointer border-0 p-0"/>
                       </div>
                       <div className="hidden sm:block w-px h-6 bg-slate-200 shrink-0"/>
                       <button onClick={undoDrawing} disabled={!canUndo} className="h-9 w-9 sm:h-11 sm:w-11 rounded-xl border border-gray-200 bg-white text-gray-700 disabled:opacity-35 flex items-center justify-center shrink-0" title={t.undo}><span className="material-icons text-[18px] sm:text-[20px]">undo</span></button>
@@ -1052,7 +1085,7 @@
                 <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl px-1.5 sm:px-2 py-1.5 sm:py-2 flex flex-col items-center gap-1.5 sm:gap-2">
                   <button onClick={() => handleZoom(0.1)} title="Zoom in" className="h-9 w-9 sm:h-11 sm:w-11 rounded-xl border border-gray-200 text-lg sm:text-xl font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center">+</button>
                   <button onClick={() => handleZoom(-0.1)} title="Zoom out" className="h-9 w-9 sm:h-11 sm:w-11 rounded-xl border border-gray-200 text-lg sm:text-xl font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center">-</button>
-                  <button onClick={() => handleZoom(0)} className="h-8 sm:h-9 min-w-[36px] sm:min-w-[44px] px-1.5 sm:px-2 rounded-xl border border-indigo-200 text-[11px] sm:text-xs font-bold text-indigo-700 bg-indigo-50">{t.fit}</button>
+                  <button onClick={() => handleZoom(0)} title={t.fit} className="h-8 sm:h-9 min-w-[44px] sm:min-w-[52px] px-1.5 sm:px-2 rounded-xl border border-indigo-200 text-[11px] sm:text-xs font-bold text-indigo-700 bg-indigo-50">{Math.round(userZoom * 100)}%</button>
                 </div>
               </div>
 
