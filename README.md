@@ -144,14 +144,7 @@ Canvas API, Fetch API, localStorage를 지원하는 최신 브라우저 권장�
 
 ## 개발자 정보
 
-| 항목 | 내용 |
-|------|------|
-| 개발자 | chichiboo123 |
-| 이메일 | chichiboo@kakao.com |
-| GitHub | [github.com/chichiboo123](https://github.com/chichiboo123) |
-| 저장소 | [github.com/chichiboo123/dp](https://github.com/chichiboo123/dp) |
-
-버그 리포트나 기능 제안은 [Issues](https://github.com/chichiboo123/dp/issues)에 남겨주세요.
+교육뮤지컬 꿈꾸는 치수쌤
 
 ---
 
