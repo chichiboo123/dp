@@ -73,6 +73,7 @@
     ko: {
       title: '디지털 페이퍼', subtitle: 'PDF를 불러와 필기하고, JPG/PDF로 저장해 제출하세요.', login: '구글 로그인', logout: '로그아웃', select: '불러오기',
       padletPlaceholder: '제출 링크 URL을 입력하세요', share: '공유', submitLink: '제출링크', submitLinkTitle: '제출 링크 설정', submitLinkDesc: '학생이 결과물을 업로드할 제출함 URL을 입력해주세요. 입력 후 [공유]를 누르면 학생에게 함께 전달됩니다.', save: '저장', cancel: '취소', remove: '삭제',
+      studentTextLabel: '학생도 텍스트 상자 만들기 허용', studentTextDesc: '켜면 학생이 공유 링크에서 직접 텍스트 상자를 만들어 입력할 수 있어요. 끄면 교사가 만든 칸만 채울 수 있어요.',
       guide: '사용법', language: '언어', applyLink: '삽입', canvaBlocked: 'Canva 편집/업로드는 보안 정책(CSP)으로 iframe에서 제한됩니다.', openLink: 'Canva에서 수정하기', tryEmbed: '임베드 보기 시도',
       pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', undo: '실행취소', redo: '다시실행', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤',
       selectTool: '선택', textTool: '글상자', checkboxTool: '체크박스',
@@ -92,6 +93,7 @@
     en: {
       title: 'Digital Paper', subtitle: 'Load PDF worksheets, annotate, and submit as JPG/PDF.', login: 'Sign in with Google', logout: 'Sign out', select: 'Open',
       padletPlaceholder: 'Enter submission link URL', share: 'Share', submitLink: 'Submission', submitLinkTitle: 'Set submission link', submitLinkDesc: 'Enter the URL where students will upload their finished worksheet. It will be shared with students when you click [Share].', save: 'Save', cancel: 'Cancel', remove: 'Remove',
+      studentTextLabel: 'Let students add text boxes', studentTextDesc: 'When on, students can create their own text boxes in the shared link. When off, they can only fill the boxes you made.',
       guide: 'Guide', language: 'Language', applyLink: 'Insert', canvaBlocked: 'Canva editing/upload is restricted in iframes by CSP.', openLink: 'Open Canva editor', tryEmbed: 'Try embed view',
       pen: 'Pen', eraser: 'Eraser', pan: 'Pan', clear: 'Clear', undo: 'Undo', redo: 'Redo', exportJpg: 'Save JPG', exportPdf: 'Save PDF', page: 'Page', fit: 'Fit',
       selectTool: 'Select', textTool: 'Text box', checkboxTool: 'Checkbox',
@@ -111,6 +113,7 @@
     ja: {
       title: 'デジタルペーパー', subtitle: 'PDFを読み込み、書き込み後にJPG/PDFで保存して提出できます。', login: 'Googleでログイン', logout: 'ログアウト', select: '開く',
       padletPlaceholder: '提出リンクのURLを入力', share: '共有', submitLink: '提出リンク', submitLinkTitle: '提出リンクを設定', submitLinkDesc: '生徒が成果物をアップロードする提出先URLを入力してください。[共有]を押すと生徒にも一緒に届きます。', save: '保存', cancel: 'キャンセル', remove: '削除',
+      studentTextLabel: '生徒のテキストボックス作成を許可', studentTextDesc: 'オンにすると、生徒が共有リンクで自分でテキストボックスを作成して入力できます。オフの場合は教師が作った欄のみ記入できます。',
       guide: '使い方', language: '言語', applyLink: '挿入', canvaBlocked: 'Canvaの編集/アップロードはCSPによりiframeで制限されます。', openLink: 'Canvaで編集', tryEmbed: '埋め込み表示を試す',
       pen: 'ペン', eraser: '消しゴム', pan: '移動', clear: 'リセット', undo: '元に戻す', redo: 'やり直し', exportJpg: 'JPG保存', exportPdf: 'PDF保存', page: 'ページ', fit: 'フィット',
       selectTool: '選択', textTool: 'テキスト', checkboxTool: 'チェックボックス',
@@ -460,7 +463,11 @@
     const [isLoading, setIsLoading] = useState(false);
     const [isToolbarMinimized, setIsToolbarMinimized] = useState(false);
     const [isSharedView, setIsSharedView] = useState(() => new URLSearchParams(window.location.search).has('id'));
+    const [allowStudentText, setAllowStudentText] = useState(() => new URLSearchParams(window.location.search).get('st') === '1');
     const canEdit = !isSharedView; // teachers (non-shared view) create/move/delete; students only fill
+    // Students may author (create/move/resize/delete) text boxes only when the teacher
+    // turned the option on for the shared link. Checkboxes stay teacher-only.
+    const canAuthorText = canEdit || (isSharedView && allowStudentText);
 
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [showSubmitLinkModal, setShowSubmitLinkModal] = useState(false);
@@ -956,7 +963,7 @@
     const removeElement = (id) => { setElements(prev => prev.filter(el => el.id !== id)); setSelectedIds(prev => prev.filter(x => x !== id)); };
     const removeElements = (ids) => { const set = new Set(ids); setElements(prev => prev.filter(el => !set.has(el.id))); setSelectedIds([]); };
 
-    const DEFAULT_FONT_SIZE = 12;
+    const DEFAULT_FONT_SIZE = 16;
     const addTextBox = (x, y, w, h) => {
       const fw = clamp(w, 0.08, 1);
       const fh = clamp(h, 0.04, 1);
@@ -984,10 +991,11 @@
       return null;
     };
 
-    // Move / resize a selected field (teacher only). Uses pointer events so mouse
+    // Move / resize a selected field. Text boxes follow canAuthorText (teacher, or
+    // student when allowed); checkboxes stay teacher-only. Pointer events so mouse
     // and touch share one path.
     const beginElementDrag = (e, el, mode) => {
-      if (!canEdit) return;
+      if (el.type === 'checkbox' ? !canEdit : !canAuthorText) return;
       e.preventDefault();
       e.stopPropagation();
       const start = getFrac(e.clientX, e.clientY);
@@ -1231,6 +1239,8 @@
       const encodedEls = serializeElements(elements);
       if (encodedEls) currentUrl.searchParams.set('el', encodedEls);
       else currentUrl.searchParams.delete('el');
+      if (allowStudentText) currentUrl.searchParams.set('st', '1');
+      else currentUrl.searchParams.delete('st');
       if (padletInput.trim()) {
         currentUrl.searchParams.set('padlet', encodeURIComponent(padletInput.trim()));
         setActivePadlet(padletInput.trim());
@@ -1418,7 +1428,7 @@
         }
       : null;
     const drawActive = tool === 'pen' || tool === 'eraser' || tool === 'pan';
-    const showCreateOverlay = canEdit && (tool === 'text' || tool === 'checkbox');
+    const showCreateOverlay = (tool === 'text' && canAuthorText) || (tool === 'checkbox' && canEdit);
     const toggleCheckbox = (el) => {
       if (canEdit) {
         if (!(selectedIds.length === 1 && selectedIds[0] === el.id)) { setSelectedIds([el.id]); return; }
@@ -1611,10 +1621,10 @@
                             placeholder={t.textPlaceholder}
                             readOnly={tool !== 'select'}
                             spellCheck={false}
-                            className="relative w-full h-full resize-none outline-none bg-transparent overflow-hidden placeholder-slate-400/70"
-                            style={{ fontFamily: el.fontFamily, fontSize: `${Math.max(6, el.fontSize * baseScale)}px`, lineHeight: TEXT_LINE_HEIGHT, color: el.color, fontWeight: el.bold ? 700 : 400, textAlign: el.align, padding: `${el.fontSize * baseScale * 0.2}px`, caretColor: el.color }}
+                            className="relative w-full h-full resize-none outline-none bg-transparent overflow-y-auto placeholder-slate-400/70"
+                            style={{ fontFamily: el.fontFamily, fontSize: `${Math.max(6, el.fontSize * baseScale)}px`, lineHeight: TEXT_LINE_HEIGHT, color: el.color, fontWeight: el.bold ? 700 : 400, textAlign: el.align, padding: `${el.fontSize * baseScale * 0.2}px`, caretColor: el.color, touchAction: 'pan-y' }}
                           />
-                          {single && canEdit && (
+                          {single && canAuthorText && (
                             <>
                               <button title={t.deleteField} onPointerDown={(e) => { e.stopPropagation(); e.preventDefault(); }} onClick={(e) => { e.stopPropagation(); removeElement(el.id); }} className="absolute -right-3 -top-3 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md z-10"><span className="material-icons" style={{ fontSize: '15px' }}>close</span></button>
                               <span title={t.pan} onPointerDown={(e) => beginElementDrag(e, el, 'move')} className="absolute left-1/2 -top-3.5 -translate-x-1/2 h-6 px-2 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md cursor-move touch-none"><span className="material-icons" style={{ fontSize: '16px' }}>open_with</span></span>
@@ -1687,7 +1697,7 @@
             <TextFormatToolbar
               el={selectedEl}
               t={t}
-              canDelete={canEdit}
+              canDelete={canAuthorText}
               onChange={(patch) => updateElement(selectedEl.id, patch)}
               onDelete={() => removeElement(selectedEl.id)}
               onClose={() => { const ta = document.getElementById('ta-' + selectedEl.id); if (ta) ta.blur(); setSelectedIds([]); }}
@@ -1725,7 +1735,7 @@
                       <div className="flex items-center gap-0.5 sm:gap-1.5 w-max mx-auto px-0.5">
                       <button title={t.pen} onClick={() => setTool(prev => prev === 'pen' ? 'select' : 'pen')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pen' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">draw</span></button>
                       <button title={t.eraser} onClick={() => setTool(prev => prev === 'eraser' ? 'select' : 'eraser')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'eraser' ? 'bg-pink-100 text-pink-800 border-pink-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">cleaning_services</span></button>
-                      {canEdit && <button title={t.textTool} onClick={() => setTool(prev => prev === 'text' ? 'select' : 'text')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'text' ? 'bg-sky-100 text-sky-800 border-sky-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">text_fields</span></button>}
+                      {canAuthorText && <button title={t.textTool} onClick={() => setTool(prev => prev === 'text' ? 'select' : 'text')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'text' ? 'bg-sky-100 text-sky-800 border-sky-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">text_fields</span></button>}
                       {canEdit && <button title={t.checkboxTool} onClick={() => setTool(prev => prev === 'checkbox' ? 'select' : 'checkbox')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'checkbox' ? 'bg-teal-100 text-teal-800 border-teal-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">check_box</span></button>}
                       <button title={t.pan} onClick={() => setTool(prev => prev === 'pan' ? 'select' : 'pan')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pan' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">back_hand</span></button>
                       {(tool === 'pen' || tool === 'eraser') && (
@@ -1825,6 +1835,20 @@
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-gray-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
                   autoFocus
                 />
+                <div
+                  onClick={() => setAllowStudentText(v => !v)}
+                  role="switch"
+                  aria-checked={allowStudentText}
+                  className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 cursor-pointer select-none hover:bg-slate-100 transition-colors"
+                >
+                  <span className={`mt-0.5 relative shrink-0 w-11 h-6 rounded-full transition-colors ${allowStudentText ? 'bg-blue-600' : 'bg-slate-300'}`}>
+                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${allowStudentText ? 'translate-x-5' : ''}`} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold text-gray-800">{t.studentTextLabel}</span>
+                    <span className="block text-xs text-gray-500 leading-relaxed mt-0.5">{t.studentTextDesc}</span>
+                  </span>
+                </div>
               </div>
               <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex flex-wrap justify-end gap-2">
                 {padletInput && (
