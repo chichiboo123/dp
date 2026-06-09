@@ -85,7 +85,7 @@
       padletLabel: '제출 링크', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '닫기',
       teacherGuide: '선생님은 이렇게 쓰세요!', studentGuide: '학생들은 이렇게 써요!', securityTitle: '개인정보 및 안전성',
       teacherSteps: ['상단의 [구글 로그인] 버튼을 눌러 계정을 연결합니다.', '[불러오기]를 눌러 배부할 활동지(PDF)를 고릅니다.', '[글상자] 도구로 드래그해 답을 쓸 칸을, [체크박스] 도구로 클릭해 선택 칸을 만듭니다.', '(선택) [제출링크]를 눌러 제출함 주소를 입력합니다.', '[공유]를 눌러 학생들에게 링크를 전달합니다. 만든 칸도 함께 전달돼요.'],
-      studentSteps: ['선생님 링크를 열면 활동지가 바로 열립니다.', '[선택] 도구에서 글상자를 눌러 답을 쓰고, 네모를 눌러 체크합니다. 글꼴·크기·색도 바꿀 수 있어요.', '[펜] 도구로 자유롭게 필기하고, 손가락 두 개로 확대/축소합니다.', '완성 후 JPG/PDF로 저장합니다. 여러 쪽 문서는 PDF로 한 번에 저장돼요.', '제출함에 파일을 업로드합니다.'],
+      studentSteps: ['선생님 링크를 열면 활동지가 바로 열립니다.', '글상자를 눌러 답을 쓰고, 네모를 눌러 체크합니다. 글꼴·크기·색도 바꿀 수 있어요.', '[펜] 도구로 자유롭게 필기하고, 손가락 두 개로 확대/축소합니다. 다시 입력하려면 펜을 한 번 더 눌러 끕니다.', '완성 후 JPG/PDF로 저장합니다. 여러 쪽 문서는 PDF로 한 번에 저장돼요.', '제출함에 파일을 업로드합니다.'],
       securitySteps: ['서버 저장 없이 브라우저와 구글 서버 간 직접 통신합니다.', '학생 필기 데이터와 개인정보를 별도로 수집하지 않습니다.', '학생 로그인 없이 공유 링크로 참여 가능합니다.']
     },
     en: {
@@ -104,7 +104,7 @@
       padletLabel: 'Submission link', helpTitle: 'How to use & safety', confirm: 'Close',
       teacherGuide: 'For Teachers', studentGuide: 'For Students', securityTitle: 'Privacy & Security',
       teacherSteps: ['Click [Sign in with Google] to connect your account.', 'Click [Open] and pick a PDF file.', 'Use the [Text box] tool (drag) to add answer fields and the [Checkbox] tool (click) to add choices.', '(Optional) Click [Submission] to enter your submission board URL.', 'Click [Share] and send the link to students. Your fields are included.'],
-      studentSteps: ['Open the shared link from your teacher.', 'In [Select] mode, tap a text box to write and tap a box to check. You can change font, size and color.', 'Use the [Pen] tool to write freely, and pinch with two fingers to zoom.', 'Save your work as JPG/PDF. Multi-page worksheets are saved as a single PDF.', 'Upload the saved file to the submission board.'],
+      studentSteps: ['Open the shared link from your teacher.', 'Tap a text box to write and tap a box to check. You can change font, size and color.', 'Use the [Pen] tool to write freely, and pinch with two fingers to zoom. Tap the pen again to turn it off and type.', 'Save your work as JPG/PDF. Multi-page worksheets are saved as a single PDF.', 'Upload the saved file to the submission board.'],
       securitySteps: ['No separate app server stores your worksheet data.', 'Personal data and handwriting are not collected by this app.', 'Students can participate without creating a new account.']
     },
     ja: {
@@ -123,7 +123,7 @@
       padletLabel: '提出リンク', helpTitle: '使い方と安全性', confirm: '閉じる',
       teacherGuide: '先生向けガイド', studentGuide: '生徒向けガイド', securityTitle: '個人情報と安全性',
       teacherSteps: ['上部の[Googleでログイン]でアカウントを連携します。', '[開く]からPDF教材を選択します。', '[テキスト]ツール（ドラッグ）で記入欄を、[チェックボックス]ツール（クリック）で選択欄を作成します。', '（任意）[提出リンク]を押して提出先URLを入力します。', '[共有]で生徒にリンクを配布します。作った欄も一緒に届きます。'],
-      studentSteps: ['先生から受け取ったリンクを開きます。', '[選択]モードでテキストボックスをタップして記入、四角をタップしてチェックします。フォント・サイズ・色も変更できます。', '[ペン]ツールで自由に書き込み、指2本で拡大・縮小します。', '完了したらJPG/PDFで保存します。複数ページの文書は1つのPDFにまとめて保存されます。', '提出先に保存したファイルをアップロードします。'],
+      studentSteps: ['先生から受け取ったリンクを開きます。', 'テキストボックスをタップして記入、四角をタップしてチェックします。フォント・サイズ・色も変更できます。', '[ペン]ツールで自由に書き込み、指2本で拡大・縮小します。入力に戻るにはペンをもう一度押してオフにします。', '完了したらJPG/PDFで保存します。複数ページの文書は1つのPDFにまとめて保存されます。', '提出先に保存したファイルをアップロードします。'],
       securitySteps: ['専用サーバーに学習データを保存しません。', '個人情報や手書き内容を収集しません。', '生徒は新規アカウント作成なしで利用できます。']
     }
   };
@@ -306,6 +306,8 @@
 
   // Canva-style floating toolbar for the selected text field. Rendered fixed near
   // the top so it never covers the field being edited. Used by both teacher & student.
+  // Pop-up panels (font/size/color) render BELOW the row — outside the horizontal
+  // scroller — so the long font list is easy to scroll on phones.
   function TextFormatToolbar({ el, onChange, onDelete, canDelete, onClose, t }) {
     const [menu, setMenu] = useState(''); // '', 'font', 'size', 'color'
     const toggle = (m) => setMenu((prev) => (prev === m ? '' : m));
@@ -313,99 +315,103 @@
     const btn = 'h-10 min-w-[40px] px-2 rounded-xl border flex items-center justify-center gap-1 text-sm font-semibold transition-colors shrink-0';
     const plain = 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50';
     const active = 'bg-blue-100 border-blue-300 text-blue-800';
+    const curSize = Math.round(el.fontSize);
     return (
       <div className="fixed top-[58px] sm:top-[64px] left-1/2 -translate-x-1/2 z-[70] w-[calc(100%-1rem)] sm:w-auto max-w-[calc(100vw-1rem)]" onPointerDown={(e) => e.stopPropagation()}>
-        <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl px-1.5 py-1.5 flex items-center gap-1 overflow-x-auto flex-nowrap">
-          {/* Font family */}
-          <div className="relative shrink-0">
-            <button className={`${btn} ${plain}`} onClick={() => toggle('font')} title={t.font} style={{ fontFamily: el.fontFamily }}>
+        <div className="relative">
+          <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl px-1.5 py-1.5 flex items-center gap-1 overflow-x-auto flex-nowrap">
+            {/* Font family */}
+            <button className={`${btn} ${menu === 'font' ? active : plain}`} onClick={() => toggle('font')} title={t.font} style={menu === 'font' ? undefined : { fontFamily: el.fontFamily }}>
               <span className="material-icons text-[18px]">font_download</span>
-              <span className="hidden sm:inline max-w-[88px] truncate">{curFont.label}</span>
+              <span className="max-w-[84px] sm:max-w-[110px] truncate">{curFont.label}</span>
               <span className="material-icons text-[16px] text-slate-400">expand_more</span>
             </button>
-            {menu === 'font' && (
-              <div className="absolute left-0 top-full mt-1.5 w-56 max-h-[50vh] overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-2xl p-1 z-10">
-                {FONT_OPTIONS.map((f) => (
-                  <button key={f.name} onClick={() => { onChange({ fontFamily: f.name }); setMenu(''); }}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-[17px] flex items-center justify-between gap-2 ${f.name === el.fontFamily ? 'bg-blue-50 text-blue-700' : 'hover:bg-slate-50 text-slate-700'}`}
-                    style={{ fontFamily: f.name }}>
-                    <span>{f.label}</span>
-                    {f.name === el.fontFamily && <span className="material-icons text-[18px]">check</span>}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* Font size */}
-          <div className="flex items-center gap-0.5 shrink-0">
-            <button className={`${btn} ${plain} !min-w-0 !px-0 w-9`} title={t.sizeDown} onClick={() => onChange({ fontSize: clamp(el.fontSize - 2, 6, 200) })}><span className="material-icons text-[18px]">remove</span></button>
-            <div className="relative">
-              <button className={`${btn} ${plain} !px-2`} onClick={() => toggle('size')} title={t.size}>
-                <span className="tabular-nums">{Math.round(el.fontSize)}</span>
-              </button>
-              {menu === 'size' && (
-                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-20 max-h-[50vh] overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-2xl p-1 z-10">
-                  {FONT_SIZE_PRESETS.map((s) => (
-                    <button key={s} onClick={() => { onChange({ fontSize: s }); setMenu(''); }}
-                      className={`w-full text-center px-2 py-1.5 rounded-lg text-sm tabular-nums ${s === Math.round(el.fontSize) ? 'bg-blue-50 text-blue-700 font-bold' : 'hover:bg-slate-50 text-slate-700'}`}>{s}</button>
-                  ))}
-                </div>
-              )}
+            {/* Font size */}
+            <div className="flex items-center gap-0.5 shrink-0">
+              <button className={`${btn} ${plain} !min-w-0 !px-0 w-9`} title={t.sizeDown} onClick={() => onChange({ fontSize: clamp(curSize - 1, 6, 200) })}><span className="material-icons text-[18px]">remove</span></button>
+              <button className={`${btn} ${menu === 'size' ? active : plain} !px-2`} onClick={() => toggle('size')} title={t.size}><span className="tabular-nums">{curSize}</span></button>
+              <button className={`${btn} ${plain} !min-w-0 !px-0 w-9`} title={t.sizeUp} onClick={() => onChange({ fontSize: clamp(curSize + 1, 6, 200) })}><span className="material-icons text-[18px]">add</span></button>
             </div>
-            <button className={`${btn} ${plain} !min-w-0 !px-0 w-9`} title={t.sizeUp} onClick={() => onChange({ fontSize: clamp(el.fontSize + 2, 6, 200) })}><span className="material-icons text-[18px]">add</span></button>
-          </div>
 
-          <div className="w-px h-6 bg-slate-200 shrink-0" />
+            <div className="w-px h-6 bg-slate-200 shrink-0" />
 
-          {/* Color */}
-          <div className="relative shrink-0">
-            <button className={`${btn} ${plain} !min-w-0 !px-2`} onClick={() => toggle('color')} title={t.color}>
+            {/* Color */}
+            <button className={`${btn} ${menu === 'color' ? active : plain} !min-w-0 !px-2`} onClick={() => toggle('color')} title={t.color}>
               <span className="material-icons text-[18px]">format_color_text</span>
               <span className="w-4 h-4 rounded-full border border-slate-300 shadow-inner" style={{ background: el.color }} />
             </button>
-            {menu === 'color' && (
-              <div className="absolute left-0 top-full mt-1.5 w-[188px] rounded-xl border border-slate-200 bg-white shadow-2xl p-2.5 z-10">
-                <div className="grid grid-cols-5 gap-1.5">
-                  {TEXT_COLOR_PRESETS.map((c) => (
-                    <button key={c} onClick={() => { onChange({ color: c }); setMenu(''); }}
-                      className={`w-7 h-7 rounded-full border ${c === el.color ? 'ring-2 ring-blue-400 ring-offset-1' : 'border-slate-200'}`}
-                      style={{ background: c }} aria-label={c} />
-                  ))}
-                </div>
-                <label className="mt-2.5 flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
-                  <input type="color" value={el.color} onChange={(e) => onChange({ color: e.target.value })} className="w-7 h-7 rounded-md cursor-pointer border-0 p-0" />
-                  {t.customColor}
-                </label>
-              </div>
+
+            {/* Bold */}
+            <button className={`${btn} ${el.bold ? active : plain} !min-w-0 w-10`} title={t.bold} onClick={() => onChange({ bold: !el.bold })}>
+              <span className="material-icons text-[18px]">format_bold</span>
+            </button>
+
+            <div className="w-px h-6 bg-slate-200 shrink-0" />
+
+            {/* Align */}
+            {[['left', 'format_align_left'], ['center', 'format_align_center'], ['right', 'format_align_right']].map(([a, icon]) => (
+              <button key={a} className={`${btn} ${el.align === a ? active : plain} !min-w-0 w-10`} title={t['align_' + a]} onClick={() => onChange({ align: a })}>
+                <span className="material-icons text-[18px]">{icon}</span>
+              </button>
+            ))}
+
+            <div className="w-px h-6 bg-slate-200 shrink-0" />
+
+            {canDelete && (
+              <button className={`${btn} bg-white border-red-200 text-red-600 hover:bg-red-50 !min-w-0 w-10`} title={t.deleteField} onClick={onDelete}>
+                <span className="material-icons text-[18px]">delete</span>
+              </button>
             )}
+            <button className={`${btn} bg-slate-800 border-slate-800 text-white hover:bg-slate-900`} title={t.done} onClick={onClose}>
+              <span className="material-icons text-[18px]">check</span>
+              <span className="hidden sm:inline">{t.done}</span>
+            </button>
           </div>
 
-          {/* Bold */}
-          <button className={`${btn} ${el.bold ? active : plain} !min-w-0 w-10`} title={t.bold} onClick={() => onChange({ bold: !el.bold })}>
-            <span className="material-icons text-[18px]">format_bold</span>
-          </button>
-
-          <div className="w-px h-6 bg-slate-200 shrink-0" />
-
-          {/* Align */}
-          {[['left', 'format_align_left'], ['center', 'format_align_center'], ['right', 'format_align_right']].map(([a, icon]) => (
-            <button key={a} className={`${btn} ${el.align === a ? active : plain} !min-w-0 w-10`} title={t['align_' + a]} onClick={() => onChange({ align: a })}>
-              <span className="material-icons text-[18px]">{icon}</span>
-            </button>
-          ))}
-
-          <div className="w-px h-6 bg-slate-200 shrink-0" />
-
-          {canDelete && (
-            <button className={`${btn} bg-white border-red-200 text-red-600 hover:bg-red-50 !min-w-0 w-10`} title={t.deleteField} onClick={onDelete}>
-              <span className="material-icons text-[18px]">delete</span>
-            </button>
+          {/* Pop-up panels rendered below the row (not clipped by the scroller). */}
+          {menu === 'font' && (
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(94vw,440px)] rounded-2xl border border-slate-200 bg-white shadow-2xl p-2 z-10">
+              <div className="px-1.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">{t.font}</div>
+              <div className="max-h-[52vh] overflow-y-auto grid grid-cols-2 gap-1.5 overscroll-contain">
+                {FONT_OPTIONS.map((f) => (
+                  <button key={f.name} onClick={() => { onChange({ fontFamily: f.name }); setMenu(''); }}
+                    className={`px-3 py-3 rounded-xl border text-[19px] leading-tight flex items-center justify-between gap-1 ${f.name === el.fontFamily ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                    style={{ fontFamily: f.name }}>
+                    <span className="truncate">{f.label}</span>
+                    {f.name === el.fontFamily && <span className="material-icons text-[18px] shrink-0">check</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
-          <button className={`${btn} bg-slate-800 border-slate-800 text-white hover:bg-slate-900`} title={t.done} onClick={onClose}>
-            <span className="material-icons text-[18px]">check</span>
-            <span className="hidden sm:inline">{t.done}</span>
-          </button>
+          {menu === 'size' && (
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(92vw,320px)] rounded-2xl border border-slate-200 bg-white shadow-2xl p-2 z-10">
+              <div className="px-1.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">{t.size}</div>
+              <div className="grid grid-cols-4 gap-1.5">
+                {FONT_SIZE_PRESETS.map((s) => (
+                  <button key={s} onClick={() => { onChange({ fontSize: s }); setMenu(''); }}
+                    className={`h-11 rounded-xl border text-sm font-semibold tabular-nums ${s === curSize ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          )}
+          {menu === 'color' && (
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(92vw,300px)] rounded-2xl border border-slate-200 bg-white shadow-2xl p-3 z-10">
+              <div className="px-0.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">{t.color}</div>
+              <div className="grid grid-cols-5 gap-2">
+                {TEXT_COLOR_PRESETS.map((c) => (
+                  <button key={c} onClick={() => { onChange({ color: c }); setMenu(''); }}
+                    className={`w-9 h-9 rounded-full border ${c === el.color ? 'ring-2 ring-blue-400 ring-offset-2' : 'border-slate-200'}`}
+                    style={{ background: c }} aria-label={c} />
+                ))}
+              </div>
+              <label className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600 cursor-pointer">
+                <input type="color" value={el.color} onChange={(e) => onChange({ color: e.target.value })} className="w-9 h-9 rounded-md cursor-pointer border-0 p-0" />
+                {t.customColor}
+              </label>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -447,8 +453,9 @@
     // Text boxes & checkboxes placed on the page. Geometry is stored as fractions
     // (0..1) of the page so it survives zoom, resize and different devices.
     const [elements, setElements] = useState([]);
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
     const [creatingRect, setCreatingRect] = useState(null);
+    const [marqueeRect, setMarqueeRect] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isToolbarMinimized, setIsToolbarMinimized] = useState(false);
     const [isSharedView, setIsSharedView] = useState(() => new URLSearchParams(window.location.search).has('id'));
@@ -476,6 +483,7 @@
     const pageMetaRef = useRef({});            // { [page]: { uw, uh } } unscaled PDF dimensions
     const dragRef = useRef(null);              // active move/resize gesture on a field
     const createRef = useRef(null);            // active drag-to-create gesture
+    const marqueeRef = useRef(null);           // active marquee (drag-select) gesture
 
     useEffect(() => {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -621,7 +629,7 @@
       historyRef.current = {};
       pageMetaRef.current = {};
       setElements([]);
-      setSelectedId(null);
+      setSelectedIds([]);
       try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch (_) {}
       if (tokenToRevoke && window.google?.accounts?.oauth2?.revoke) {
         try { window.google.accounts.oauth2.revoke(tokenToRevoke, () => {}); } catch (_) {}
@@ -638,7 +646,7 @@
       historyRef.current = {};
       pageMetaRef.current = {};
       setElements([]);
-      setSelectedId(null);
+      setSelectedIds([]);
       setHistoryTick(prev => prev + 1);
     };
 
@@ -685,7 +693,7 @@
       historyRef.current = {};
       pageMetaRef.current = {};
       setElements(presetElements || []);
-      setSelectedId(null);
+      setSelectedIds([]);
       setHistoryTick(prev => prev + 1);
       setActivePadlet(padletUrl);
       setEmbedMeta(getEmbeddedUrl(padletUrl));
@@ -737,7 +745,7 @@
     };
 
     const changePage = useCallback((delta) => {
-      setSelectedId(null);
+      setSelectedIds([]);
       setCurrentPage(prev => {
         const newPage = prev + delta;
         if (newPage < 1 || newPage > totalPages) return prev;
@@ -748,7 +756,7 @@
 
     // Leaving select mode clears any field selection and in-progress creation.
     useEffect(() => {
-      if (tool !== 'select') setSelectedId(null);
+      if (tool !== 'select') { setSelectedIds([]); setMarqueeRect(null); marqueeRef.current = null; }
       if (tool !== 'text' && tool !== 'checkbox') { setCreatingRect(null); createRef.current = null; }
     }, [tool]);
 
@@ -944,17 +952,17 @@
 
     const addElement = (el) => setElements(prev => [...prev, el]);
     const updateElement = (id, patch) => setElements(prev => prev.map(el => (el.id === id ? { ...el, ...patch } : el)));
-    const removeElement = (id) => { setElements(prev => prev.filter(el => el.id !== id)); setSelectedId(prev => (prev === id ? null : prev)); };
+    const removeElement = (id) => { setElements(prev => prev.filter(el => el.id !== id)); setSelectedIds(prev => prev.filter(x => x !== id)); };
+    const removeElements = (ids) => { const set = new Set(ids); setElements(prev => prev.filter(el => !set.has(el.id))); setSelectedIds([]); };
 
+    const DEFAULT_FONT_SIZE = 12;
     const addTextBox = (x, y, w, h) => {
-      const meta = pageMetaRef.current[currentPage] || { uh: 800 };
-      const defFont = clamp(Math.round((meta.uh || 800) * 0.028), 12, 48);
       const fw = clamp(w, 0.08, 1);
       const fh = clamp(h, 0.04, 1);
       const id = genId('t');
-      addElement({ id, page: currentPage, type: 'text', x: clamp(x, 0, 1 - fw), y: clamp(y, 0, 1 - fh), w: fw, h: fh, text: '', fontFamily: FONT_OPTIONS[0].name, fontSize: defFont, color: DEFAULT_TEXT_COLOR, bold: false, align: 'left' });
+      addElement({ id, page: currentPage, type: 'text', x: clamp(x, 0, 1 - fw), y: clamp(y, 0, 1 - fh), w: fw, h: fh, text: '', fontFamily: FONT_OPTIONS[0].name, fontSize: DEFAULT_FONT_SIZE, color: DEFAULT_TEXT_COLOR, bold: false, align: 'left' });
       setTool('select');
-      setSelectedId(id);
+      setSelectedIds([id]);
       setTimeout(() => { const ta = document.getElementById('ta-' + id); if (ta) ta.focus(); }, 60);
     };
 
@@ -964,6 +972,15 @@
       const hFrac = wFrac * ((meta.uw || 1) / (meta.uh || 1)); // square in pixels
       const id = genId('c');
       addElement({ id, page: currentPage, type: 'checkbox', x: clamp(cx - wFrac / 2, 0, 1 - wFrac), y: clamp(cy - hFrac / 2, 0, 1 - hFrac), w: wFrac, h: hFrac, checked: false });
+    };
+
+    // In checkbox-create mode, clicking an existing checkbox removes it.
+    const checkboxAtPoint = (px, py) => {
+      for (let i = elements.length - 1; i >= 0; i--) {
+        const el = elements[i];
+        if (el.type === 'checkbox' && el.page === currentPage && px >= el.x && px <= el.x + el.w && py >= el.y && py <= el.y + el.h) return el;
+      }
+      return null;
     };
 
     // Move / resize a selected field (teacher only). Uses pointer events so mouse
@@ -1008,7 +1025,12 @@
     const handleCreatePointerDown = (e) => {
       e.preventDefault();
       const p = getFrac(e.clientX, e.clientY);
-      if (tool === 'checkbox') { addCheckboxAt(p.x, p.y); return; }
+      if (tool === 'checkbox') {
+        const hit = checkboxAtPoint(p.x, p.y);
+        if (hit) removeElement(hit.id);   // click an existing checkbox again to remove it
+        else addCheckboxAt(p.x, p.y);
+        return;
+      }
       createRef.current = { sx: p.x, sy: p.y, rect: { x: p.x, y: p.y, w: 0, h: 0 } };
       setCreatingRect({ x: p.x, y: p.y, w: 0, h: 0 });
       try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
@@ -1030,6 +1052,65 @@
       if (r && r.w > 0.03 && r.h > 0.02) addTextBox(r.x, r.y, r.w, r.h);
       else addTextBox(clamp(data.sx - 0.15, 0, 0.7), clamp(data.sy - 0.03, 0, 0.92), 0.3, 0.07);
     };
+
+    // Marquee (drag-select) on empty page area — teacher only. A plain click clears.
+    const beginMarquee = (e) => {
+      const start = getFrac(e.clientX, e.clientY);
+      marqueeRef.current = { sx: start.x, sy: start.y, rect: { x: start.x, y: start.y, w: 0, h: 0 } };
+      setMarqueeRect({ x: start.x, y: start.y, w: 0, h: 0 });
+      const onMove = (ev) => {
+        const m = marqueeRef.current;
+        if (!m) return;
+        const p = getFrac(ev.clientX, ev.clientY);
+        const rect = { x: Math.min(m.sx, p.x), y: Math.min(m.sy, p.y), w: Math.abs(p.x - m.sx), h: Math.abs(p.y - m.sy) };
+        m.rect = rect;
+        setMarqueeRect(rect);
+      };
+      const onUp = () => {
+        const m = marqueeRef.current;
+        marqueeRef.current = null;
+        setMarqueeRect(null);
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        if (!m) return;
+        const r = m.rect;
+        if (r.w < 0.012 && r.h < 0.012) { setSelectedIds([]); return; }
+        const ids = elements.filter(el => el.page === currentPage && !(el.x + el.w < r.x || el.x > r.x + r.w || el.y + el.h < r.y || el.y > r.y + r.h)).map(el => el.id);
+        setSelectedIds(ids);
+      };
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    };
+
+    // Move every selected field together (teacher). Delta is clamped by the group bbox.
+    const beginGroupDrag = (e) => {
+      if (!canEdit) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const start = getFrac(e.clientX, e.clientY);
+      const sel = elements.filter(el => selectedIds.includes(el.id) && el.page === currentPage).map(el => ({ id: el.id, x: el.x, y: el.y, w: el.w, h: el.h }));
+      if (!sel.length) return;
+      const minX = Math.min(...sel.map(s => s.x));
+      const minY = Math.min(...sel.map(s => s.y));
+      const maxX = Math.max(...sel.map(s => s.x + s.w));
+      const maxY = Math.max(...sel.map(s => s.y + s.h));
+      const ids = new Set(sel.map(s => s.id));
+      const onMove = (ev) => {
+        const p = getFrac(ev.clientX, ev.clientY);
+        const dx = clamp(p.x - start.x, -minX, 1 - maxX);
+        const dy = clamp(p.y - start.y, -minY, 1 - maxY);
+        setElements(prev => prev.map(el => {
+          if (!ids.has(el.id)) return el;
+          const s = sel.find(o => o.id === el.id);
+          return { ...el, x: s.x + dx, y: s.y + dy };
+        }));
+      };
+      const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); };
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    };
+
+    const deleteSelected = () => { if (selectedIds.length) removeElements(selectedIds); };
 
     // Two-finger pinch zoom, centralized on the scroll container so it works in
     // every tool mode (the draw canvas only handles single-finger gestures).
@@ -1165,10 +1246,14 @@
 
     const clearCanvas = () => {
       const canvas = drawCanvasRef.current;
-      if (!canvas) return;
-      pushUndoSnapshot();
-      canvas.getContext('2d').clearRect(0, 0, canvas.width / scaleRef.current, canvas.height / scaleRef.current);
-      delete drawingsRef.current[currentPage];
+      if (canvas) {
+        pushUndoSnapshot();
+        canvas.getContext('2d').clearRect(0, 0, canvas.width / scaleRef.current, canvas.height / scaleRef.current);
+        delete drawingsRef.current[currentPage];
+      }
+      // Also remove the text boxes & checkboxes placed on this page.
+      setElements(prev => prev.filter(el => el.page !== currentPage));
+      setSelectedIds([]);
     };
 
     const undoDrawing = () => {
@@ -1321,12 +1406,25 @@
     const curMeta = pageMetaRef.current[currentPage];
     const baseScale = (curMeta && curMeta.uh && baseDims.h) ? (baseDims.h / curMeta.uh) : 1;
     const pageElements = elements.filter(el => el.page === currentPage);
-    const selectedEl = pageElements.find(el => el.id === selectedId) || null;
+    const selectedEls = pageElements.filter(el => selectedIds.includes(el.id));
+    const selectedEl = selectedEls.length === 1 ? selectedEls[0] : null; // single selection
+    const groupBBox = (tool === 'select' && canEdit && selectedEls.length > 1)
+      ? {
+          x: Math.min(...selectedEls.map(s => s.x)),
+          y: Math.min(...selectedEls.map(s => s.y)),
+          x2: Math.max(...selectedEls.map(s => s.x + s.w)),
+          y2: Math.max(...selectedEls.map(s => s.y + s.h)),
+        }
+      : null;
     const drawActive = tool === 'pen' || tool === 'eraser' || tool === 'pan';
     const showCreateOverlay = canEdit && (tool === 'text' || tool === 'checkbox');
     const toggleCheckbox = (el) => {
-      if (canEdit && selectedId !== el.id) { setSelectedId(el.id); return; }
-      updateElement(el.id, { checked: !el.checked });
+      if (canEdit) {
+        if (!(selectedIds.length === 1 && selectedIds[0] === el.id)) { setSelectedIds([el.id]); return; }
+        updateElement(el.id, { checked: !el.checked });
+      } else {
+        updateElement(el.id, { checked: !el.checked });
+      }
     };
 
     return (
@@ -1472,11 +1570,12 @@
                   {/* Interactive text boxes & checkboxes (not clipped, so handles can overflow). */}
                   <div
                     className="absolute inset-0"
-                    style={{ pointerEvents: tool === 'select' ? 'auto' : 'none' }}
-                    onPointerDown={() => { if (tool === 'select') setSelectedId(null); }}
+                    style={{ pointerEvents: tool === 'select' ? 'auto' : 'none', touchAction: (canEdit && tool === 'select') ? 'none' : 'auto' }}
+                    onPointerDown={(e) => { if (tool === 'select') { if (canEdit) beginMarquee(e); else setSelectedIds([]); } }}
                   >
                     {pageElements.map((el) => {
-                      const isSel = selectedId === el.id && tool === 'select';
+                      const isSel = selectedIds.includes(el.id) && tool === 'select';
+                      const single = isSel && selectedEls.length === 1; // per-item handles only for single selection
                       const posStyle = { left: `${el.x * 100}%`, top: `${el.y * 100}%`, width: `${el.w * 100}%`, height: `${el.h * 100}%`, pointerEvents: tool === 'select' ? 'auto' : 'none' };
                       if (el.type === 'checkbox') {
                         return (
@@ -1487,9 +1586,9 @@
                             <div className={`w-full h-full rounded-[18%] border-2 flex items-center justify-center transition-colors ${el.checked ? 'bg-green-100 border-green-500' : 'bg-white/85 border-slate-400'} ${tool === 'select' ? 'cursor-pointer' : ''}`} style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}>
                               {el.checked && <span className="material-icons text-green-600" style={{ fontSize: `${Math.max(12, el.w * baseDims.w * 0.8)}px`, lineHeight: 1 }}>check</span>}
                             </div>
-                            {isSel && canEdit && (
+                            {isSel && <span className="absolute -inset-1 rounded-[18%] ring-2 ring-blue-400 pointer-events-none" />}
+                            {single && canEdit && (
                               <>
-                                <span className="absolute -inset-1 rounded-[18%] ring-2 ring-blue-400 pointer-events-none" />
                                 <button title={t.deleteField} onPointerDown={(e) => { e.stopPropagation(); e.preventDefault(); }} onClick={(e) => { e.stopPropagation(); removeElement(el.id); }} className="absolute -right-3 -top-3 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md z-10"><span className="material-icons" style={{ fontSize: '15px' }}>close</span></button>
                                 <span title={t.pan} onPointerDown={(e) => beginElementDrag(e, el, 'move')} onClick={(e) => e.stopPropagation()} className="absolute left-1/2 -top-4 -translate-x-1/2 h-6 px-2 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md cursor-move touch-none z-10"><span className="material-icons" style={{ fontSize: '16px' }}>open_with</span></span>
                                 <span onPointerDown={(e) => beginElementDrag(e, el, 'resize')} onClick={(e) => e.stopPropagation()} className="absolute -right-2 -bottom-2 w-5 h-5 rounded-sm bg-white border-2 border-blue-400 cursor-nwse-resize touch-none z-10" />
@@ -1500,21 +1599,21 @@
                       }
                       return (
                         <div key={el.id} className="absolute" style={posStyle}
-                          onPointerDown={(e) => { if (tool === 'select') { e.stopPropagation(); setSelectedId(el.id); } }}
+                          onPointerDown={(e) => { if (tool === 'select') { e.stopPropagation(); setSelectedIds([el.id]); } }}
                         >
                           <div className={`absolute inset-0 rounded-md pointer-events-none transition-colors ${isSel ? 'border-2 border-blue-400 bg-blue-50/30' : 'border border-dashed border-blue-300/70 ' + (el.text ? '' : 'bg-blue-50/20')}`} />
                           <textarea
                             id={'ta-' + el.id}
                             value={el.text}
                             onChange={(e) => updateElement(el.id, { text: e.target.value })}
-                            onFocus={() => { if (tool === 'select') setSelectedId(el.id); }}
+                            onFocus={() => { if (tool === 'select') setSelectedIds([el.id]); }}
                             placeholder={t.textPlaceholder}
                             readOnly={tool !== 'select'}
                             spellCheck={false}
                             className="relative w-full h-full resize-none outline-none bg-transparent overflow-hidden placeholder-slate-400/70"
                             style={{ fontFamily: el.fontFamily, fontSize: `${Math.max(6, el.fontSize * baseScale)}px`, lineHeight: TEXT_LINE_HEIGHT, color: el.color, fontWeight: el.bold ? 700 : 400, textAlign: el.align, padding: `${el.fontSize * baseScale * 0.2}px`, caretColor: el.color }}
                           />
-                          {isSel && canEdit && (
+                          {single && canEdit && (
                             <>
                               <button title={t.deleteField} onPointerDown={(e) => { e.stopPropagation(); e.preventDefault(); }} onClick={(e) => { e.stopPropagation(); removeElement(el.id); }} className="absolute -right-3 -top-3 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md z-10"><span className="material-icons" style={{ fontSize: '15px' }}>close</span></button>
                               <span title={t.pan} onPointerDown={(e) => beginElementDrag(e, el, 'move')} className="absolute left-1/2 -top-3.5 -translate-x-1/2 h-6 px-2 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md cursor-move touch-none"><span className="material-icons" style={{ fontSize: '16px' }}>open_with</span></span>
@@ -1524,6 +1623,20 @@
                         </div>
                       );
                     })}
+
+                    {/* Group selection box for moving / deleting several fields at once (teacher). */}
+                    {groupBBox && (
+                      <div className="absolute" style={{ left: `${groupBBox.x * 100}%`, top: `${groupBBox.y * 100}%`, width: `${(groupBBox.x2 - groupBBox.x) * 100}%`, height: `${(groupBBox.y2 - groupBBox.y) * 100}%`, pointerEvents: 'none' }}>
+                        <div className="absolute -inset-1 rounded-md ring-2 ring-blue-500 bg-blue-400/5" />
+                        <button title={t.deleteField} onPointerDown={(e) => { e.stopPropagation(); e.preventDefault(); }} onClick={(e) => { e.stopPropagation(); deleteSelected(); }} className="absolute -right-3 -top-3 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md z-10" style={{ pointerEvents: 'auto' }}><span className="material-icons" style={{ fontSize: '16px' }}>delete</span></button>
+                        <span title={t.pan} onPointerDown={beginGroupDrag} className="absolute left-1/2 -top-4 -translate-x-1/2 h-7 px-2.5 rounded-full bg-blue-600 text-white flex items-center justify-center gap-1 shadow-md cursor-move touch-none z-10" style={{ pointerEvents: 'auto' }}><span className="material-icons" style={{ fontSize: '16px' }}>open_with</span><span className="text-xs font-bold tabular-nums">{selectedEls.length}</span></span>
+                      </div>
+                    )}
+
+                    {/* Marquee (drag-select) rectangle. */}
+                    {marqueeRect && (
+                      <div className="absolute border-2 border-dashed border-indigo-500 bg-indigo-300/15 rounded pointer-events-none" style={{ left: `${marqueeRect.x * 100}%`, top: `${marqueeRect.y * 100}%`, width: `${marqueeRect.w * 100}%`, height: `${marqueeRect.h * 100}%` }} />
+                    )}
                   </div>
 
                   {/* Teacher create overlay: drag → text box, click → checkbox. */}
@@ -1576,7 +1689,7 @@
               canDelete={canEdit}
               onChange={(patch) => updateElement(selectedEl.id, patch)}
               onDelete={() => removeElement(selectedEl.id)}
-              onClose={() => { const ta = document.getElementById('ta-' + selectedEl.id); if (ta) ta.blur(); setSelectedId(null); }}
+              onClose={() => { const ta = document.getElementById('ta-' + selectedEl.id); if (ta) ta.blur(); setSelectedIds([]); }}
             />
           )}
 
@@ -1590,7 +1703,7 @@
             </div>
           )}
           {/* Gentle hint for students when fillable fields exist. */}
-          {pdfDoc && isSharedView && pageElements.length > 0 && tool === 'select' && !selectedEl && (
+          {pdfDoc && isSharedView && pageElements.length > 0 && tool === 'select' && !selectedEls.length && (
             <div className="fixed top-[58px] sm:top-[64px] left-1/2 -translate-x-1/2 z-[55] pointer-events-none">
               <div className="rounded-full bg-blue-600/90 text-white text-xs sm:text-sm font-semibold px-4 py-2 shadow-lg flex items-center gap-1.5">
                 <span className="material-icons text-[16px]">touch_app</span>{t.fillHint}
@@ -1609,12 +1722,11 @@
                   {!isToolbarMinimized && (
                     <div className="flex-1 min-w-0 overflow-x-auto">
                       <div className="flex items-center gap-0.5 sm:gap-1.5 w-max mx-auto px-0.5">
-                      <button title={t.selectTool} onClick={() => setTool('select')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'select' ? 'bg-indigo-100 text-indigo-800 border-indigo-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">ads_click</span></button>
-                      <button title={t.pen} onClick={() => setTool('pen')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pen' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">draw</span></button>
-                      <button title={t.eraser} onClick={() => setTool('eraser')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'eraser' ? 'bg-pink-100 text-pink-800 border-pink-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">cleaning_services</span></button>
-                      {canEdit && <button title={t.textTool} onClick={() => setTool('text')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'text' ? 'bg-sky-100 text-sky-800 border-sky-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">text_fields</span></button>}
-                      {canEdit && <button title={t.checkboxTool} onClick={() => setTool('checkbox')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'checkbox' ? 'bg-teal-100 text-teal-800 border-teal-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">check_box</span></button>}
-                      <button title={t.pan} onClick={() => setTool('pan')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pan' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">back_hand</span></button>
+                      <button title={t.pen} onClick={() => setTool(prev => prev === 'pen' ? 'select' : 'pen')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pen' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">draw</span></button>
+                      <button title={t.eraser} onClick={() => setTool(prev => prev === 'eraser' ? 'select' : 'eraser')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'eraser' ? 'bg-pink-100 text-pink-800 border-pink-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">cleaning_services</span></button>
+                      {canEdit && <button title={t.textTool} onClick={() => setTool(prev => prev === 'text' ? 'select' : 'text')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'text' ? 'bg-sky-100 text-sky-800 border-sky-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">text_fields</span></button>}
+                      {canEdit && <button title={t.checkboxTool} onClick={() => setTool(prev => prev === 'checkbox' ? 'select' : 'checkbox')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'checkbox' ? 'bg-teal-100 text-teal-800 border-teal-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">check_box</span></button>}
+                      <button title={t.pan} onClick={() => setTool(prev => prev === 'pan' ? 'select' : 'pan')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pan' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">back_hand</span></button>
                       {(tool === 'pen' || tool === 'eraser') && (
                         <div className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 ml-0.5 border-l border-slate-200 shrink-0">
                           <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} title={t.color} className="w-7 h-7 sm:w-8 sm:h-8 rounded-md cursor-pointer border-0 p-0 disabled:opacity-40"/>
