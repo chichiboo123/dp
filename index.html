@@ -1611,8 +1611,8 @@
                             placeholder={t.textPlaceholder}
                             readOnly={tool !== 'select'}
                             spellCheck={false}
-                            className="relative w-full h-full resize-none outline-none bg-transparent overflow-hidden placeholder-slate-400/70"
-                            style={{ fontFamily: el.fontFamily, fontSize: `${Math.max(6, el.fontSize * baseScale)}px`, lineHeight: TEXT_LINE_HEIGHT, color: el.color, fontWeight: el.bold ? 700 : 400, textAlign: el.align, padding: `${el.fontSize * baseScale * 0.2}px`, caretColor: el.color }}
+                            className="relative w-full h-full resize-none outline-none bg-transparent overflow-y-auto placeholder-slate-400/70"
+                            style={{ fontFamily: el.fontFamily, fontSize: `${Math.max(6, el.fontSize * baseScale)}px`, lineHeight: TEXT_LINE_HEIGHT, color: el.color, fontWeight: el.bold ? 700 : 400, textAlign: el.align, padding: `${el.fontSize * baseScale * 0.2}px`, caretColor: el.color, touchAction: 'pan-y' }}
                           />
                           {single && canEdit && (
                             <>
