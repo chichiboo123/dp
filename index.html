@@ -76,7 +76,7 @@
       studentTextLabel: '학생도 텍스트 상자 만들기 허용', studentTextDesc: '켜면 학생이 공유 링크에서 직접 텍스트 상자를 만들어 입력할 수 있어요. 끄면 교사가 만든 칸만 채울 수 있어요.',
       shareTitle: '공유 링크 만들기', shareModalDesc: '아래 옵션을 확인한 뒤 [링크 복사]를 눌러 학생에게 전달하세요.', copyLink: '링크 복사',
       guide: '사용법', language: '언어', applyLink: '삽입', canvaBlocked: 'Canva 편집/업로드는 보안 정책(CSP)으로 iframe에서 제한됩니다.', openLink: 'Canva에서 수정하기', tryEmbed: '임베드 보기 시도',
-      pen: '펜', eraser: '지우개', pan: '이동', clear: '초기화', undo: '실행취소', redo: '다시실행', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤',
+      pen: '펜', highlighter: '형광펜', eraser: '지우개', pan: '이동', clear: '초기화', clearConfirm: '현재 페이지의 필기와 입력 칸을 모두 지울까요?', undo: '실행취소', redo: '다시실행', exportJpg: 'JPG 저장', exportPdf: 'PDF 저장', page: '페이지', fit: '맞춤',
       selectTool: '선택', textTool: '글상자', checkboxTool: '체크박스',
       font: '글꼴', size: '크기', sizeUp: '크게', sizeDown: '작게', color: '글자색', customColor: '직접 선택', bold: '굵게', align_left: '왼쪽 정렬', align_center: '가운데 정렬', align_right: '오른쪽 정렬', done: '완료', deleteField: '삭제',
       textHint: '드래그해서 글상자를 만들어요', checkboxHint: '원하는 곳을 눌러 체크박스를 놓아요', textPlaceholder: '여기에 입력하세요',
@@ -97,7 +97,7 @@
       studentTextLabel: 'Let students add text boxes', studentTextDesc: 'When on, students can create their own text boxes in the shared link. When off, they can only fill the boxes you made.',
       shareTitle: 'Create share link', shareModalDesc: 'Review the options below, then click [Copy link] to share with students.', copyLink: 'Copy link',
       guide: 'Guide', language: 'Language', applyLink: 'Insert', canvaBlocked: 'Canva editing/upload is restricted in iframes by CSP.', openLink: 'Open Canva editor', tryEmbed: 'Try embed view',
-      pen: 'Pen', eraser: 'Eraser', pan: 'Pan', clear: 'Clear', undo: 'Undo', redo: 'Redo', exportJpg: 'Save JPG', exportPdf: 'Save PDF', page: 'Page', fit: 'Fit',
+      pen: 'Pen', highlighter: 'Highlighter', eraser: 'Eraser', pan: 'Pan', clear: 'Clear', clearConfirm: 'Clear all writing and fields on this page?', undo: 'Undo', redo: 'Redo', exportJpg: 'Save JPG', exportPdf: 'Save PDF', page: 'Page', fit: 'Fit',
       selectTool: 'Select', textTool: 'Text box', checkboxTool: 'Checkbox',
       font: 'Font', size: 'Size', sizeUp: 'Bigger', sizeDown: 'Smaller', color: 'Text color', customColor: 'Custom', bold: 'Bold', align_left: 'Align left', align_center: 'Align center', align_right: 'Align right', done: 'Done', deleteField: 'Delete',
       textHint: 'Drag to create a text box', checkboxHint: 'Tap where you want a checkbox', textPlaceholder: 'Type here',
@@ -118,7 +118,7 @@
       studentTextLabel: '生徒のテキストボックス作成を許可', studentTextDesc: 'オンにすると、生徒が共有リンクで自分でテキストボックスを作成して入力できます。オフの場合は教師が作った欄のみ記入できます。',
       shareTitle: '共有リンクを作成', shareModalDesc: '下のオプションを確認してから[リンクをコピー]を押して生徒に渡してください。', copyLink: 'リンクをコピー',
       guide: '使い方', language: '言語', applyLink: '挿入', canvaBlocked: 'Canvaの編集/アップロードはCSPによりiframeで制限されます。', openLink: 'Canvaで編集', tryEmbed: '埋め込み表示を試す',
-      pen: 'ペン', eraser: '消しゴム', pan: '移動', clear: 'リセット', undo: '元に戻す', redo: 'やり直し', exportJpg: 'JPG保存', exportPdf: 'PDF保存', page: 'ページ', fit: 'フィット',
+      pen: 'ペン', highlighter: '蛍光ペン', eraser: '消しゴム', pan: '移動', clear: 'リセット', clearConfirm: 'このページの書き込みと入力欄をすべて消しますか？', undo: '元に戻す', redo: 'やり直し', exportJpg: 'JPG保存', exportPdf: 'PDF保存', page: 'ページ', fit: 'フィット',
       selectTool: '選択', textTool: 'テキスト', checkboxTool: 'チェックボックス',
       font: 'フォント', size: 'サイズ', sizeUp: '大きく', sizeDown: '小さく', color: '文字色', customColor: 'カスタム', bold: '太字', align_left: '左揃え', align_center: '中央揃え', align_right: '右揃え', done: '完了', deleteField: '削除',
       textHint: 'ドラッグしてテキストボックスを作成', checkboxHint: '置きたい場所をタップ', textPlaceholder: 'ここに入力',
@@ -163,6 +163,8 @@
   ];
   const FONT_SIZE_PRESETS = [12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 56, 64];
   const TEXT_COLOR_PRESETS = ['#111827', '#EF4444', '#F97316', '#F59E0B', '#16A34A', '#0EA5E9', '#2563EB', '#7C3AED', '#DB2777', '#FFFFFF'];
+  const PEN_COLOR_PRESETS = ['#000000', '#EF4444', '#2563EB', '#16A34A', '#F59E0B', '#7C3AED'];
+  const HIGHLIGHT_COLOR_PRESETS = ['#FDE047', '#86EFAC', '#F9A8D4', '#93C5FD', '#FDBA74'];
   const TEXT_LINE_HEIGHT = 1.3;
   const DEFAULT_TEXT_COLOR = '#111827';
 
@@ -483,7 +485,9 @@
     const [userZoom, setUserZoom] = useState(1);
     const [baseDims, setBaseDims] = useState({ w: 0, h: 0 });
     const [penColor, setPenColor] = useState('#000000');
-    const [penWidth, setPenWidth] = useState(1);
+    const [penWidth, setPenWidth] = useState(3);
+    const [hlColor, setHlColor] = useState('#FDE047');
+    const [toast, setToast] = useState('');
 
     // Text boxes & checkboxes placed on the page. Geometry is stored as fractions
     // (0..1) of the page so it survives zoom, resize and different devices.
@@ -515,7 +519,10 @@
     const moreMenuRef = useRef(null);
     const drawingsRef = useRef({});
     const historyRef = useRef({});
-    const isDrawing = useRef(false);
+    const strokeRef = useRef(null);       // in-flight freehand stroke (points + base snapshot)
+    const penRecentRef = useRef(-1e9);    // last stylus event time — palm rejection window
+    const eraserCursorRef = useRef(null); // size-preview circle that follows the eraser
+    const toastTimerRef = useRef(null);
     const scaleRef = useRef(1);
     const panState = useRef({ active: false, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 });
     const pinchState = useRef({ active: false, initialDist: 0, initialZoom: 1 });
@@ -906,6 +913,40 @@
       return () => container.removeEventListener('wheel', onWheel);
     }, [pdfDoc]);
 
+    // Desktop keyboard shortcuts: undo/redo, delete selection, escape, page turn.
+    useEffect(() => {
+      const onKeyDown = (e) => {
+        const tag = (document.activeElement && document.activeElement.tagName) || '';
+        const typing = tag === 'TEXTAREA' || tag === 'INPUT';
+        const mod = e.ctrlKey || e.metaKey;
+        if (mod && !typing && (e.key === 'z' || e.key === 'Z')) {
+          e.preventDefault();
+          if (e.shiftKey) redoDrawing(); else undoDrawing();
+        } else if (mod && !typing && (e.key === 'y' || e.key === 'Y')) {
+          e.preventDefault();
+          redoDrawing();
+        } else if (!typing && (e.key === 'Delete' || e.key === 'Backspace')) {
+          if (selectedIds.length) { e.preventDefault(); deleteSelected(); }
+        } else if (e.key === 'Escape') {
+          if (typing) document.activeElement.blur();
+          setSelectedIds([]);
+          if (tool !== 'select') setTool('select');
+        } else if (!typing && e.key === 'ArrowLeft') {
+          changePage(-1);
+        } else if (!typing && e.key === 'ArrowRight') {
+          changePage(1);
+        }
+      };
+      window.addEventListener('keydown', onKeyDown);
+      return () => window.removeEventListener('keydown', onKeyDown);
+    }, [tool, selectedIds, currentPage, totalPages, changePage]);
+
+    const showToast = (msg) => {
+      setToast(msg);
+      clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = setTimeout(() => setToast(''), 2400);
+    };
+
     const ensureHistory = (pageNumber) => {
       if (!historyRef.current[pageNumber]) {
         historyRef.current[pageNumber] = { undo: [], redo: [] };
@@ -947,47 +988,211 @@
       setHistoryTick(prev => prev + 1);
     };
 
-    const getPointerPos = (e) => {
+    const getPointerPos = (clientX, clientY) => {
       const canvas = drawCanvasRef.current;
       const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const scaleX = (canvas.width / scaleRef.current) / rect.width;
       const scaleY = (canvas.height / scaleRef.current) / rect.height;
       return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
     };
 
-    const startDrawing = (e) => {
-      if (tool === 'pan') return;
-      pushUndoSnapshot();
-      isDrawing.current = true;
-      const ctx = drawCanvasRef.current.getContext('2d');
-      const pos = getPointerPos(e);
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
+    // ── Freehand stroke engine ─────────────────────────────────────────────
+    // Pointer-event based so stylus / mouse / finger share one code path. Points
+    // (with pressure) are collected and the whole stroke is re-rendered each frame
+    // on top of a snapshot taken at stroke start, which enables:
+    //  • midpoint-quadratic smoothing (no polyline jaggies)
+    //  • pressure (stylus) / velocity (mouse·finger) based variable width
+    //  • uniform-alpha highlighter (no dark overlaps inside one stroke)
+    //  • clean cancellation when a second finger turns the gesture into a pinch
+    const STROKE_POS_SMOOTH = 0.55; // raw-input weight; lower = smoother but laggier
+    const STROKE_MIN_DIST = 0.35;   // css px; drop sensor jitter below this
+    const eraserWidth = () => Math.max(12, penWidth * 5);
+    const highlighterWidth = () => Math.max(14, penWidth * 4);
+
+    const strokeWidthFor = (s, dist, dt, pressure) => {
+      if (s.tool !== 'pen') return s.baseWidth;
+      if (s.pointerType === 'pen' && pressure > 0) {
+        s.pEma = s.pEma == null ? pressure : s.pEma + (pressure - s.pEma) * 0.3;
+        return s.baseWidth * (0.3 + s.pEma * 1.4);
+      }
+      const v = dt > 0 ? dist / dt : 0; // css px per ms
+      s.vEma = s.vEma == null ? v : s.vEma + (v - s.vEma) * 0.2;
+      return s.baseWidth * clamp(1.15 - s.vEma * 0.12, 0.72, 1.15);
+    };
+
+    const drawStrokePath = (ctx, s) => {
+      const pts = s.points;
+      if (!pts.length) return;
+      ctx.save();
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
-      ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : penColor;
-      ctx.lineWidth = tool === 'eraser' ? penWidth * 5 : penWidth;
-      ctx.lineTo(pos.x, pos.y + 0.1);
-      ctx.stroke();
+      if (s.tool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.strokeStyle = ctx.fillStyle = 'rgba(0,0,0,1)';
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = ctx.fillStyle = s.color;
+        if (s.tool === 'highlighter') ctx.globalAlpha = 0.4;
+      }
+      if (pts.length === 1) {
+        ctx.beginPath();
+        ctx.arc(pts[0].x, pts[0].y, pts[0].w / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (s.tool === 'pen') {
+        // Variable width: stroke each midpoint-quadratic segment with its own width.
+        let m0 = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+        ctx.beginPath();
+        ctx.lineWidth = pts[0].w;
+        ctx.moveTo(pts[0].x, pts[0].y);
+        ctx.lineTo(m0.x, m0.y);
+        ctx.stroke();
+        for (let i = 1; i < pts.length - 1; i++) {
+          const m1 = { x: (pts[i].x + pts[i + 1].x) / 2, y: (pts[i].y + pts[i + 1].y) / 2 };
+          ctx.beginPath();
+          ctx.lineWidth = pts[i].w;
+          ctx.moveTo(m0.x, m0.y);
+          ctx.quadraticCurveTo(pts[i].x, pts[i].y, m1.x, m1.y);
+          ctx.stroke();
+          m0 = m1;
+        }
+        const last = pts[pts.length - 1];
+        ctx.beginPath();
+        ctx.lineWidth = last.w;
+        ctx.moveTo(m0.x, m0.y);
+        ctx.lineTo(last.x, last.y);
+        ctx.stroke();
+      } else {
+        // Constant width (highlighter / eraser): one smooth path, one stroke call.
+        ctx.lineWidth = pts[0].w;
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 1; i < pts.length - 1; i++) {
+          ctx.quadraticCurveTo(pts[i].x, pts[i].y, (pts[i].x + pts[i + 1].x) / 2, (pts[i].y + pts[i + 1].y) / 2);
+        }
+        const last = pts[pts.length - 1];
+        ctx.lineTo(last.x, last.y);
+        ctx.stroke();
+      }
+      ctx.restore();
     };
 
-    const draw = (e) => {
-      if (!isDrawing.current || tool === 'pan') return;
-      const ctx = drawCanvasRef.current.getContext('2d');
-      const pos = getPointerPos(e);
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
+    const restoreStrokeBase = (s) => {
+      const canvas = drawCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(s.base, 0, 0);
+      ctx.restore();
     };
 
-    const stopDrawing = () => {
-      if (!isDrawing.current) return;
-      isDrawing.current = false;
-      drawCanvasRef.current.getContext('2d').closePath();
+    const renderStrokeFrame = () => {
+      const s = strokeRef.current;
+      if (!s || !drawCanvasRef.current) return;
+      s.raf = 0;
+      restoreStrokeBase(s);
+      drawStrokePath(drawCanvasRef.current.getContext('2d'), s);
+      // Bake very long strokes into the base so the per-frame redraw stays cheap.
+      if (s.points.length > 1500) {
+        const bctx = s.base.getContext('2d');
+        bctx.clearRect(0, 0, s.base.width, s.base.height);
+        bctx.drawImage(drawCanvasRef.current, 0, 0);
+        s.points = s.points.slice(-2);
+      }
+    };
+
+    const scheduleStrokeRender = () => {
+      const s = strokeRef.current;
+      if (s && !s.raf) s.raf = requestAnimationFrame(renderStrokeFrame);
+    };
+
+    const appendStrokePoints = (e, final = false) => {
+      const s = strokeRef.current;
+      if (!s || e.pointerId !== s.pointerId) return;
+      const native = e.nativeEvent || e;
+      let list = (!final && native.getCoalescedEvents) ? native.getCoalescedEvents() : null;
+      if (!list || !list.length) list = [e];
+      for (const ev of list) {
+        const pos = getPointerPos(ev.clientX, ev.clientY);
+        const prev = s.points[s.points.length - 1];
+        let x = pos.x, y = pos.y;
+        if (prev && !final) {
+          x = prev.x + (x - prev.x) * STROKE_POS_SMOOTH;
+          y = prev.y + (y - prev.y) * STROKE_POS_SMOOTH;
+        }
+        if (prev) {
+          const dist = Math.hypot(x - prev.x, y - prev.y);
+          if (!final && dist < STROKE_MIN_DIST) continue;
+          const ts = ev.timeStamp || e.timeStamp;
+          const dt = Math.max(1, ts - s.lastT);
+          s.lastT = ts;
+          s.points.push({ x, y, w: strokeWidthFor(s, dist, dt, ev.pressure) });
+        } else {
+          s.points.push({ x, y, w: strokeWidthFor(s, 0, 0, ev.pressure) });
+        }
+      }
+      scheduleStrokeRender();
+    };
+
+    const beginStroke = (e) => {
+      if (strokeRef.current || !drawCanvasRef.current) return;
+      if (e.pointerType === 'touch') {
+        if (pinchState.current.active) return;
+        // Palm rejection: ignore finger input while / shortly after the stylus is in use.
+        if (e.timeStamp - penRecentRef.current < 2500) return;
+      }
+      pushUndoSnapshot();
+      const canvas = drawCanvasRef.current;
+      const base = document.createElement('canvas');
+      base.width = canvas.width;
+      base.height = canvas.height;
+      base.getContext('2d').drawImage(canvas, 0, 0);
+      const baseWidth = tool === 'eraser' ? eraserWidth() : tool === 'highlighter' ? highlighterWidth() : penWidth;
+      strokeRef.current = {
+        pointerId: e.pointerId, pointerType: e.pointerType, tool,
+        color: tool === 'highlighter' ? hlColor : penColor,
+        baseWidth, base, points: [], raf: 0, pEma: null, vEma: null, lastT: e.timeStamp
+      };
+      try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+      appendStrokePoints(e);
+    };
+
+    const endStroke = (e) => {
+      const s = strokeRef.current;
+      if (!s || (e && e.pointerId !== s.pointerId)) return;
+      if (e && e.clientX != null) appendStrokePoints(e, true);
+      if (s.raf) { cancelAnimationFrame(s.raf); s.raf = 0; }
+      renderStrokeFrame();
+      strokeRef.current = null;
       drawingsRef.current[currentPage] = getCanvasSnapshot();
       setHistoryTick(prev => prev + 1);
+    };
+
+    // Abort the in-flight stroke and roll back its undo entry — used when a second
+    // finger turns the gesture into a pinch zoom, so no stray mark is left behind.
+    const cancelActiveStroke = () => {
+      const s = strokeRef.current;
+      if (!s) return;
+      if (s.raf) { cancelAnimationFrame(s.raf); s.raf = 0; }
+      restoreStrokeBase(s);
+      strokeRef.current = null;
+      const history = ensureHistory(currentPage);
+      history.undo.pop();
+      setHistoryTick(prev => prev + 1);
+    };
+
+    const updateEraserCursor = (e) => {
+      const el = eraserCursorRef.current;
+      if (!el) return;
+      const pos = getPointerPos(e.clientX, e.clientY);
+      const d = eraserWidth();
+      el.style.display = 'block';
+      el.style.width = el.style.height = `${d}px`;
+      el.style.left = `${pos.x - d / 2}px`;
+      el.style.top = `${pos.y - d / 2}px`;
+    };
+    const hideEraserCursor = () => {
+      if (eraserCursorRef.current) eraserCursorRef.current.style.display = 'none';
     };
 
     const startPan = (clientX, clientY) => {
@@ -1190,6 +1395,9 @@
     // every tool mode (the draw canvas only handles single-finger gestures).
     const handleContainerTouchStart = (e) => {
       if (e.touches && e.touches.length >= 2) {
+        const s = strokeRef.current;
+        if (s && s.pointerType === 'pen') return; // palm landed while writing with a stylus — keep the stroke
+        if (s) cancelActiveStroke();              // finger stroke becomes a pinch — drop the stray mark
         pinchState.current = { active: true, initialDist: getTouchDistance(e.touches), initialZoom: userZoom };
       }
     };
@@ -1206,70 +1414,44 @@
       if (pinchState.current.active && (!e.touches || e.touches.length < 2)) pinchState.current.active = false;
     };
 
-    const handleCanvasMouseDown = (e) => {
-      if (tool === 'pan') {
-        e.preventDefault();
-        startPan(e.clientX, e.clientY);
-        return;
-      }
-      startDrawing(e);
-    };
-
-    const handleCanvasMouseMove = (e) => {
-      if (tool === 'pan') {
-        movePan(e.clientX, e.clientY);
-        return;
-      }
-      draw(e);
-    };
-
     const getTouchDistance = (touches) => {
       const dx = touches[0].clientX - touches[1].clientX;
       const dy = touches[0].clientY - touches[1].clientY;
       return Math.sqrt(dx * dx + dy * dy);
     };
 
-    const handleCanvasTouchStart = (e) => {
-      if (!e.touches || !e.touches.length) return;
-      if (e.touches.length >= 2) {
-        // Two-finger gesture → cancel any stroke; the scroll container handles pinch zoom.
-        if (isDrawing.current) {
-          isDrawing.current = false;
-          drawCanvasRef.current?.getContext('2d').closePath();
-        }
-        if (drawCanvasRef.current) drawingsRef.current[currentPage] = drawCanvasRef.current.toDataURL();
-        return;
-      }
-      if (tool === 'pan') {
-        startPan(e.touches[0].clientX, e.touches[0].clientY);
-        return;
-      }
-      startDrawing(e);
-    };
-
-    const handleCanvasTouchMove = (e) => {
-      if (!e.touches || !e.touches.length) return;
-      if (e.touches.length >= 2) return; // pinch handled by the scroll container
+    // Unified pointer handlers for the draw canvas (stylus / mouse / finger).
+    const handleDrawPointerDown = (e) => {
+      if (e.pointerType === 'pen') penRecentRef.current = e.timeStamp;
       if (tool === 'pan') {
         e.preventDefault();
-        movePan(e.touches[0].clientX, e.touches[0].clientY);
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+        startPan(e.clientX, e.clientY);
         return;
       }
-      draw(e);
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      e.preventDefault();
+      beginStroke(e);
     };
 
-    const handleCanvasTouchEnd = (e) => {
-      if (pinchState.current.active) {
-        if (!e.touches || e.touches.length < 2) {
-          pinchState.current.active = false;
-        }
-        return;
-      }
+    const handleDrawPointerMove = (e) => {
+      if (e.pointerType === 'pen') penRecentRef.current = e.timeStamp;
+      if (tool === 'eraser') updateEraserCursor(e);
       if (tool === 'pan') {
-        endPan();
+        movePan(e.clientX, e.clientY);
         return;
       }
-      stopDrawing();
+      appendStrokePoints(e);
+    };
+
+    const handleDrawPointerUp = (e) => {
+      if (tool === 'pan') { endPan(); return; }
+      endStroke(e);
+    };
+
+    const handleDrawPointerCancel = () => {
+      if (tool === 'pan') { endPan(); return; }
+      cancelActiveStroke();
     };
 
     const handleApplySubmissionLink = () => {
@@ -1308,11 +1490,12 @@
         currentUrl.searchParams.delete('padlet');
       }
       navigator.clipboard.writeText(currentUrl.toString())
-        .then(() => alert(t.shareSuccess))
+        .then(() => showToast(t.shareSuccess))
         .catch((err) => console.error('[DigitalPaper] share copy error', err));
     };
 
     const clearCanvas = () => {
+      if (!window.confirm(t.clearConfirm)) return;
       const canvas = drawCanvasRef.current;
       if (canvas) {
         pushUndoSnapshot();
@@ -1484,7 +1667,7 @@
           y2: Math.max(...selectedEls.map(s => s.y + s.h)),
         }
       : null;
-    const drawActive = tool === 'pen' || tool === 'eraser' || tool === 'pan';
+    const drawActive = tool === 'pen' || tool === 'highlighter' || tool === 'eraser' || tool === 'pan';
     const showCreateOverlay = (tool === 'text' && canAuthorText) || (tool === 'checkbox' && canEdit);
     const toggleCheckbox = (el) => {
       if (canEdit) {
@@ -1629,10 +1812,15 @@
                     <canvas
                       ref={drawCanvasRef}
                       className={`absolute top-0 left-0 ${tool === 'pan' ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'}`}
-                      style={{ pointerEvents: drawActive ? 'auto' : 'none' }}
-                      onMouseDown={handleCanvasMouseDown} onMouseMove={handleCanvasMouseMove} onMouseUp={tool === 'pan' ? endPan : stopDrawing} onMouseLeave={tool === 'pan' ? endPan : stopDrawing}
-                      onTouchStart={handleCanvasTouchStart} onTouchMove={handleCanvasTouchMove} onTouchEnd={handleCanvasTouchEnd} onTouchCancel={handleCanvasTouchEnd}
+                      style={{ pointerEvents: drawActive ? 'auto' : 'none', touchAction: 'none' }}
+                      onPointerDown={handleDrawPointerDown} onPointerMove={handleDrawPointerMove}
+                      onPointerUp={handleDrawPointerUp} onPointerCancel={handleDrawPointerCancel}
+                      onPointerLeave={hideEraserCursor}
                     />
+                    {/* Eraser size preview — positioned in page coords so it scales with zoom. */}
+                    {tool === 'eraser' && (
+                      <div ref={eraserCursorRef} className="absolute rounded-full border-2 border-slate-500/80 bg-white/40 pointer-events-none" style={{ display: 'none' }} />
+                    )}
                   </div>
 
                   {/* Interactive text boxes & checkboxes (not clipped, so handles can overflow). */}
@@ -1791,14 +1979,25 @@
                     <div className="flex-1 min-w-0 overflow-x-auto">
                       <div className="flex items-center gap-0.5 sm:gap-1.5 w-max mx-auto px-0.5">
                       <button title={t.pen} onClick={() => setTool(prev => prev === 'pen' ? 'select' : 'pen')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pen' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">draw</span></button>
+                      <button title={t.highlighter} onClick={() => setTool(prev => prev === 'highlighter' ? 'select' : 'highlighter')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'highlighter' ? 'bg-yellow-100 text-yellow-700 border-yellow-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">border_color</span></button>
                       <button title={t.eraser} onClick={() => setTool(prev => prev === 'eraser' ? 'select' : 'eraser')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'eraser' ? 'bg-pink-100 text-pink-800 border-pink-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">cleaning_services</span></button>
                       {canAuthorText && <button title={t.textTool} onClick={() => setTool(prev => prev === 'text' ? 'select' : 'text')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'text' ? 'bg-sky-100 text-sky-800 border-sky-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">text_fields</span></button>}
                       {canEdit && <button title={t.checkboxTool} onClick={() => setTool(prev => prev === 'checkbox' ? 'select' : 'checkbox')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'checkbox' ? 'bg-teal-100 text-teal-800 border-teal-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">check_box</span></button>}
                       <button title={t.pan} onClick={() => setTool(prev => prev === 'pan' ? 'select' : 'pan')} className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center shrink-0 ${tool === 'pan' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-white text-gray-600 border-gray-200'}`}><span className="material-icons text-[18px] sm:text-[20px]">back_hand</span></button>
-                      {(tool === 'pen' || tool === 'eraser') && (
-                        <div className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 ml-0.5 border-l border-slate-200 shrink-0">
-                          <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} disabled={tool !== 'pen'} title={t.color} className="w-7 h-7 sm:w-8 sm:h-8 rounded-md cursor-pointer border-0 p-0 disabled:opacity-40"/>
-                          <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="w-16 sm:w-20 md:w-24 accent-blue-500"/>
+                      {(tool === 'pen' || tool === 'highlighter' || tool === 'eraser') && (
+                        <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 ml-0.5 border-l border-slate-200 shrink-0">
+                          {tool !== 'eraser' && (tool === 'pen' ? PEN_COLOR_PRESETS : HIGHLIGHT_COLOR_PRESETS).map((c) => {
+                            const cur = tool === 'pen' ? penColor : hlColor;
+                            return (
+                              <button key={c} title={c} onClick={() => (tool === 'pen' ? setPenColor(c) : setHlColor(c))}
+                                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full shrink-0 border ${cur.toLowerCase() === c.toLowerCase() ? 'ring-2 ring-blue-400 ring-offset-1 border-transparent' : 'border-slate-300'}`}
+                                style={{ background: c }} aria-label={c} />
+                            );
+                          })}
+                          {tool === 'pen' && (
+                            <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)} title={t.color} className="w-7 h-7 sm:w-8 sm:h-8 rounded-md cursor-pointer border-0 p-0 shrink-0"/>
+                          )}
+                          <input type="range" min="1" max="20" value={penWidth} onChange={(e) => setPenWidth(parseInt(e.target.value, 10))} className="w-16 sm:w-20 md:w-24 accent-blue-500 shrink-0"/>
                         </div>
                       )}
                       <div className="w-px h-6 bg-slate-200 shrink-0 mx-0.5"/>
@@ -1829,6 +2028,12 @@
               </div>
 
             </>
+          )}
+
+          {toast && (
+            <div className="fixed left-1/2 -translate-x-1/2 bottom-24 z-[90] rounded-full bg-slate-900/90 text-white text-sm font-semibold px-5 py-2.5 shadow-xl pointer-events-none">
+              {toast}
+            </div>
           )}
         </main>
 
