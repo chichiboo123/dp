@@ -83,8 +83,11 @@
       fillHint: '글상자를 눌러 답을 쓰고, 네모를 눌러 체크해요',
       googleLoading: '구글 라이브러리 로딩 중...', apiReady: 'API 설정 완료', apiMissing: 'API 미설정',
       shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', exporting: '저장 준비 중입니다...',
+      openLocal: '로컬에서 열기', openLocalHint: '구글 로그인 없이 내 기기의 PDF·JPG·PNG 파일을 바로 열어요.',
+      localFileTypeError: 'PDF, JPG, PNG 파일만 열 수 있어요.',
+      localShareError: '로컬에서 연 파일은 공유 링크를 만들 수 없어요. 학생에게는 [JPG 저장]/[PDF 저장]으로 전달하거나, 구글 드라이브에 올린 뒤 [구글 로그인]으로 불러와 공유해주세요.',
       submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇',
-      emptyTitle: '디지털 페이퍼 구동 준비 완료!', emptyDesc: '상단의 [구글 로그인] 후 활동지(PDF·JPG·PNG)를 선택해주세요.',
+      emptyTitle: '디지털 페이퍼 구동 준비 완료!', emptyDesc: '[로컬에서 열기]로 내 기기의 파일을 바로 열거나, 상단의 [구글 로그인] 후 활동지(PDF·JPG·PNG)를 선택해주세요.',
       padletLabel: '제출 링크', helpTitle: '디지털 페이퍼 사용법 및 안전성', confirm: '닫기',
       teacherGuide: '선생님은 이렇게 쓰세요!', studentGuide: '학생들은 이렇게 써요!', securityTitle: '개인정보 및 안전성',
       teacherSteps: ['상단의 [구글 로그인] 버튼을 눌러 계정을 연결합니다.', '[불러오기]를 눌러 배부할 활동지(PDF·JPG·PNG)를 고릅니다.', '[글상자] 도구로 드래그해 답을 쓸 칸을, [체크박스] 도구로 클릭해 선택 칸을 만듭니다.', '(선택) [제출링크]를 눌러 제출함 주소를 입력합니다.', '[공유]를 눌러 학생들에게 링크를 전달합니다. 만든 칸도 함께 전달돼요.'],
@@ -104,8 +107,11 @@
       fillHint: 'Tap a text box to write, tap a box to check',
       googleLoading: 'Loading Google libraries...', apiReady: 'API configured', apiMissing: 'API not configured',
       shareSuccess: 'Share link copied.', shareError: 'Please select a file first.', exporting: 'Preparing export...',
+      openLocal: 'Open local file', openLocalHint: 'Open a PDF, JPG, or PNG from your device directly — no Google sign-in needed.',
+      localFileTypeError: 'Only PDF, JPG, and PNG files can be opened.',
+      localShareError: 'Files opened locally can\'t be turned into a share link. Send students a saved JPG/PDF instead, or upload the file to Google Drive and reopen it with [Sign in with Google] to share it.',
       submitGuide: '👇 Save your worksheet as JPG and submit below 👇',
-      emptyTitle: 'Digital Paper is ready!', emptyDesc: 'Sign in with Google and choose a worksheet (PDF, JPG, or PNG).',
+      emptyTitle: 'Digital Paper is ready!', emptyDesc: 'Click [Open local file] to open a file from your device, or sign in with Google and choose a worksheet (PDF, JPG, or PNG).',
       padletLabel: 'Submission link', helpTitle: 'How to use & safety', confirm: 'Close',
       teacherGuide: 'For Teachers', studentGuide: 'For Students', securityTitle: 'Privacy & Security',
       teacherSteps: ['Click [Sign in with Google] to connect your account.', 'Click [Open] and pick a PDF, JPG, or PNG file.', 'Use the [Text box] tool (drag) to add answer fields and the [Checkbox] tool (click) to add choices.', '(Optional) Click [Submission] to enter your submission board URL.', 'Click [Share] and send the link to students. Your fields are included.'],
@@ -125,8 +131,11 @@
       fillHint: 'テキストボックスをタップして記入、四角をタップしてチェック',
       googleLoading: 'Googleライブラリを読み込み中...', apiReady: 'API設定済み', apiMissing: 'API未設定',
       shareSuccess: '共有リンクをコピーしました。', shareError: '先にファイルを選択してください。', exporting: '保存の準備中...',
+      openLocal: 'ローカルで開く', openLocalHint: 'Googleログイン不要で、端末内のPDF・JPG・PNGファイルを直接開きます。',
+      localFileTypeError: 'PDF・JPG・PNGファイルのみ開けます。',
+      localShareError: 'ローカルで開いたファイルは共有リンクを作成できません。生徒には[JPG保存]/[PDF保存]で渡すか、Googleドライブにアップロードしてから[Googleでログイン]で開いて共有してください。',
       submitGuide: '👇 作成したワークシートをJPG保存して下から提出してください 👇',
-      emptyTitle: 'デジタルペーパーの準備完了！', emptyDesc: '上部のGoogleログイン後、ワークシート（PDF・JPG・PNG）を選択してください。',
+      emptyTitle: 'デジタルペーパーの準備完了！', emptyDesc: '[ローカルで開く]で端末内のファイルをすぐ開くか、上部のGoogleログイン後、ワークシート（PDF・JPG・PNG）を選択してください。',
       padletLabel: '提出リンク', helpTitle: '使い方と安全性', confirm: '閉じる',
       teacherGuide: '先生向けガイド', studentGuide: '生徒向けガイド', securityTitle: '個人情報と安全性',
       teacherSteps: ['上部の[Googleでログイン]でアカウントを連携します。', '[開く]からPDF・画像教材を選択します。', '[テキスト]ツール（ドラッグ）で記入欄を、[チェックボックス]ツール（クリック）で選択欄を作成します。', '（任意）[提出リンク]を押して提出先URLを入力します。', '[共有]で生徒にリンクを配布します。作った欄も一緒に届きます。'],
@@ -470,6 +479,7 @@
     const [loadError, setLoadError] = useState('');
 
     const [loadedFileId, setLoadedFileId] = useState('');
+    const [isLocalDoc, setIsLocalDoc] = useState(false); // true when the open document came from a local file (offline mode), not Google Drive
     const [padletInput, setPadletInput] = useState('');
     const [activePadlet, setActivePadlet] = useState('');
     const [embedMeta, setEmbedMeta] = useState({ type: '', url: '', fallbackUrl: '' });
@@ -514,6 +524,7 @@
     const TOKEN_STORAGE_KEY = 'dp_google_token_v1';
 
     const pdfCanvasRef = useRef(null);
+    const localFileInputRef = useRef(null);
     const drawCanvasRef = useRef(null);
     const containerRef = useRef(null);
     const moreMenuRef = useRef(null);
@@ -685,6 +696,7 @@
 
     const clearLoadedPdf = () => {
       setLoadedFileId('');
+      setIsLocalDoc(false);
       setPdfDoc(null);
       setTotalPages(0);
       setCurrentPage(1);
@@ -730,8 +742,9 @@
       }
     };
 
-    const loadPdfFromDriveAPI = async (fileId, targetPage = 1, padletUrl = padletInput, presetElements = null) => {
-      if (!window.pdfjsLib) return;
+    // Shared reset step before swapping in a new document, regardless of source
+    // (Google Drive fetch or a local file picked in offline mode).
+    const resetDocState = (presetElements, padletUrl) => {
       setIsLoading(true);
       setPdfDoc(null);
       setUserZoom(1);
@@ -745,6 +758,40 @@
       setEmbedMeta(getEmbeddedUrl(padletUrl));
       setEmbedFailed(false);
       setCanvaEmbedAttempt(false);
+    };
+
+    // Parses a PDF/JPG/PNG ArrayBuffer (from Drive or a local file) and loads it
+    // as the active document.
+    const applyDocumentBuffer = async (arrayBuffer, fileId, targetPage) => {
+      if (detectDocKind(arrayBuffer) === 'image') {
+        const url = URL.createObjectURL(new Blob([arrayBuffer]));
+        const img = await new Promise((resolve, reject) => {
+          const im = new Image();
+          im.onload = () => { URL.revokeObjectURL(url); resolve(im); };
+          im.onerror = () => { URL.revokeObjectURL(url); reject(new Error('이미지를 불러올 수 없습니다.')); };
+          im.src = url;
+        });
+        setPdfDoc(makeImageDoc(img));
+        setTotalPages(1);
+        setCurrentPage(1);
+        setLoadedFileId(fileId);
+      } else {
+        const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+        const doc = await loadingTask.promise.catch(err => {
+          console.error('[DigitalPaper] PDF parse error', err);
+          throw err;
+        });
+        setPdfDoc(doc);
+        setTotalPages(doc.numPages);
+        setCurrentPage(targetPage);
+        setLoadedFileId(fileId);
+      }
+    };
+
+    const loadPdfFromDriveAPI = async (fileId, targetPage = 1, padletUrl = padletInput, presetElements = null) => {
+      if (!window.pdfjsLib) return;
+      resetDocState(presetElements, padletUrl);
+      setIsLocalDoc(false);
 
       try {
         const fetchUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
@@ -767,32 +814,35 @@
         }
 
         const arrayBuffer = await response.arrayBuffer();
-
-        if (detectDocKind(arrayBuffer) === 'image') {
-          const url = URL.createObjectURL(new Blob([arrayBuffer]));
-          const img = await new Promise((resolve, reject) => {
-            const im = new Image();
-            im.onload = () => { URL.revokeObjectURL(url); resolve(im); };
-            im.onerror = () => { URL.revokeObjectURL(url); reject(new Error('이미지를 불러올 수 없습니다.')); };
-            im.src = url;
-          });
-          setPdfDoc(makeImageDoc(img));
-          setTotalPages(1);
-          setCurrentPage(1);
-          setLoadedFileId(fileId);
-        } else {
-          const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
-          const doc = await loadingTask.promise.catch(err => {
-            console.error('[DigitalPaper] PDF parse error', err);
-            throw err;
-          });
-          setPdfDoc(doc);
-          setTotalPages(doc.numPages);
-          setCurrentPage(targetPage);
-          setLoadedFileId(fileId);
-        }
+        await applyDocumentBuffer(arrayBuffer, fileId, targetPage);
       } catch (error) {
         console.error('[DigitalPaper] loadPdfFromDriveAPI error', error);
+        alert('문서 로드 실패: ' + error.message);
+        setLoadedFileId('');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Offline mode: open a PDF/JPG/PNG straight from the user's device, with no
+    // Google login or network access required. Editing, drawing and JPG/PDF
+    // export all work exactly as with a Drive file; only the link-based [Share]
+    // feature is unavailable, since there is no cloud copy for a shared URL to
+    // point students at.
+    const loadLocalFile = async (file) => {
+      if (!file || !window.pdfjsLib) return;
+      const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+      const isImage = file.type.startsWith('image/') || /\.(jpe?g|png)$/i.test(file.name);
+      if (!isPdf && !isImage) { alert(t.localFileTypeError); return; }
+
+      resetDocState(null, '');
+      setIsLocalDoc(true);
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        await applyDocumentBuffer(arrayBuffer, `local:${file.name}`, 1);
+      } catch (error) {
+        console.error('[DigitalPaper] loadLocalFile error', error);
         alert('문서 로드 실패: ' + error.message);
         setLoadedFileId('');
       } finally {
@@ -1472,6 +1522,7 @@
 
     const handleShare = () => {
       if (!loadedFileId) return alert(t.shareError);
+      if (isLocalDoc) return alert(t.localShareError);
       const currentUrl = new URL(window.location.href);
       currentUrl.searchParams.set('id', loadedFileId);
       currentUrl.searchParams.set('s', currentPage.toString());
@@ -1684,27 +1735,44 @@
           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
             <span className="material-icons text-pastelBlueText text-xl sm:text-2xl shrink-0">edit_document</span>
             <button onClick={() => window.location.reload()} className="text-[14px] sm:text-[18px] leading-tight font-bold tracking-[-0.02em] text-gray-900 mr-auto min-w-0 truncate text-left hover:text-blue-700 transition-colors">{t.title}</button>
+            {!isSharedView && (
+              <>
+                <input
+                  type="file"
+                  ref={localFileInputRef}
+                  accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (file) loadLocalFile(file);
+                    e.target.value = '';
+                  }}
+                />
+                <button onClick={() => localFileInputRef.current && localFileInputRef.current.click()} title={t.openLocalHint} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white border border-[#6D28D9] flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
+                  <span className="material-icons text-base">upload_file</span>
+                  <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.openLocal}</span>
+                </button>
+              </>
+            )}
             {!isSharedView && (!accessToken ? (
               <button onClick={handleAuth} disabled={!isGisLoaded} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white border border-[#1E40AF] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
                 <GoogleIcon />
                 <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.login}</span>
               </button>
             ) : (
-              <>
-                <button onClick={openPicker} disabled={!isApiLoaded} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#047857] hover:bg-[#065F46] text-white border border-[#065F46] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
-                  <span className="material-icons text-base">folder_open</span>
-                  <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.select}</span>
-                </button>
-                {loadedFileId && (
-                  <button onClick={clearLoadedPdf} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-white hover:bg-red-50 text-red-700 border border-red-200 flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
-                    <span className="material-icons text-base">delete</span>
-                    <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.remove}</span>
-                  </button>
-                )}
-              </>
+              <button onClick={openPicker} disabled={!isApiLoaded} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#047857] hover:bg-[#065F46] text-white border border-[#065F46] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
+                <span className="material-icons text-base">folder_open</span>
+                <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.select}</span>
+              </button>
             ))}
+            {!isSharedView && loadedFileId && (
+              <button onClick={clearLoadedPdf} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-white hover:bg-red-50 text-red-700 border border-red-200 flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
+                <span className="material-icons text-base">delete</span>
+                <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.remove}</span>
+              </button>
+            )}
             {!isSharedView && (
-              <button onClick={() => { if (!loadedFileId) return alert(t.shareError); setShowShareModal(true); }} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#374151] hover:bg-[#1F2937] text-white border border-[#111827] flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
+              <button onClick={() => { if (!loadedFileId) return alert(t.shareError); if (isLocalDoc) return alert(t.localShareError); setShowShareModal(true); }} className="h-9 w-9 sm:h-10 sm:w-auto sm:px-3 rounded-xl bg-[#374151] hover:bg-[#1F2937] text-white border border-[#111827] flex items-center justify-center gap-1.5 shrink-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
                 <span className="material-icons text-base">ios_share</span>
                 <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">{t.share}</span>
               </button>
