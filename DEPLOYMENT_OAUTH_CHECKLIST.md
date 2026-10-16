@@ -18,6 +18,8 @@ Google 로그인 팝업의 `access_denied`는 대부분 아래 중 하나입니�
   - Publishing status: 가능하면 **In production**
   - Testing 상태라면 Test users에 실제 로그인 계정 추가
   - Authorized domain에 `chichiboo.link` 추가
+  - App privacy policy link: `https://dp.chichiboo.link/privacy.html`
+  - App terms of service link: `https://dp.chichiboo.link/terms.html`
 - API & Services:
   - Google Drive API 활성화
   - Google Picker API 활성화
