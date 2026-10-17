@@ -85,6 +85,13 @@
       shareSuccess: '공유 링크가 복사되었습니다.', shareError: '파일을 먼저 선택해주세요.', exporting: '저장 준비 중입니다...',
       openLocal: '로컬에서 열기', openLocalHint: '구글 로그인 없이 내 기기의 PDF·JPG·PNG 파일을 바로 열어요.',
       localFileTypeError: 'PDF, JPG, PNG 파일만 열 수 있어요.',
+      authErrorTitle: '구글 로그인 오류', authErrorCode: '오류 코드',
+      authInApp: '{app} 앱 안의 브라우저에서는 구글이 로그인을 막습니다(403 disallowed_useragent). 크롬·사파리·엣지 등 기본 브라우저에서 이 주소를 열어 다시 로그인해주세요.',
+      authInAppOpen: '기본 브라우저로 열기', authCopyUrl: '주소 복사', authUrlCopied: '주소가 복사되었습니다. 기본 브라우저에 붙여넣어 열어주세요.',
+      authPopupBlocked: '로그인 팝업이 차단되었습니다. 브라우저 주소창의 팝업 차단 아이콘을 눌러 이 사이트의 팝업을 허용한 뒤 다시 시도해주세요.',
+      authPopupClosed: '로그인 창이 닫혀 로그인이 완료되지 않았습니다. 다시 시도해주세요.',
+      authAccessDenied: '구글이 로그인을 거부했습니다(access_denied). 권한 동의를 취소했거나, 앱이 테스트 모드라 이 계정이 테스트 사용자로 등록되지 않은 경우입니다. 관리자는 Google Cloud Console → OAuth 동의 화면에서 앱을 \'프로덕션\'으로 게시하거나 이 계정을 테스트 사용자에 추가해주세요.',
+      authUnknown: '로그인 처리 중 오류가 발생했습니다. 새로고침 후 다시 시도해주세요.',
       localShareError: '로컬에서 연 파일은 공유 링크를 만들 수 없어요. 학생에게는 [JPG 저장]/[PDF 저장]으로 전달하거나, 구글 드라이브에 올린 뒤 [구글 로그인]으로 불러와 공유해주세요.',
       submitGuide: '👇 작성한 활동지를 [JPG 저장] 후 아래에 제출해주세요 👇',
       emptyTitle: '디지털 페이퍼 구동 준비 완료!', emptyDesc: '[로컬에서 열기]로 내 기기의 파일을 바로 열거나, 상단의 [구글 로그인] 후 활동지(PDF·JPG·PNG)를 선택해주세요.',
@@ -109,6 +116,13 @@
       shareSuccess: 'Share link copied.', shareError: 'Please select a file first.', exporting: 'Preparing export...',
       openLocal: 'Open local file', openLocalHint: 'Open a PDF, JPG, or PNG from your device directly — no Google sign-in needed.',
       localFileTypeError: 'Only PDF, JPG, and PNG files can be opened.',
+      authErrorTitle: 'Google sign-in error', authErrorCode: 'Error code',
+      authInApp: 'Google blocks sign-in inside the {app} in-app browser (403 disallowed_useragent). Open this address in Chrome, Safari, or Edge and sign in again.',
+      authInAppOpen: 'Open in browser', authCopyUrl: 'Copy address', authUrlCopied: 'Address copied. Paste it into your browser.',
+      authPopupBlocked: 'The sign-in popup was blocked. Allow popups for this site (icon in the address bar) and try again.',
+      authPopupClosed: 'The sign-in window was closed before finishing. Please try again.',
+      authAccessDenied: 'Google denied sign-in (access_denied). Either consent was cancelled, or the app is in Testing mode and this account is not a test user. Admin: publish the app to Production or add this account as a test user in Google Cloud Console → OAuth consent screen.',
+      authUnknown: 'Something went wrong while signing in. Refresh the page and try again.',
       localShareError: 'Files opened locally can\'t be turned into a share link. Send students a saved JPG/PDF instead, or upload the file to Google Drive and reopen it with [Sign in with Google] to share it.',
       submitGuide: '👇 Save your worksheet as JPG and submit below 👇',
       emptyTitle: 'Digital Paper is ready!', emptyDesc: 'Click [Open local file] to open a file from your device, or sign in with Google and choose a worksheet (PDF, JPG, or PNG).',
@@ -133,6 +147,13 @@
       shareSuccess: '共有リンクをコピーしました。', shareError: '先にファイルを選択してください。', exporting: '保存の準備中...',
       openLocal: 'ローカルで開く', openLocalHint: 'Googleログイン不要で、端末内のPDF・JPG・PNGファイルを直接開きます。',
       localFileTypeError: 'PDF・JPG・PNGファイルのみ開けます。',
+      authErrorTitle: 'Googleログインエラー', authErrorCode: 'エラーコード',
+      authInApp: '{app}のアプリ内ブラウザではGoogleがログインをブロックします（403 disallowed_useragent）。Chrome・Safari・Edgeなどでこのアドレスを開いて再度ログインしてください。',
+      authInAppOpen: 'ブラウザで開く', authCopyUrl: 'アドレスをコピー', authUrlCopied: 'アドレスをコピーしました。ブラウザに貼り付けて開いてください。',
+      authPopupBlocked: 'ログインのポップアップがブロックされました。アドレスバーのアイコンからこのサイトのポップアップを許可して再試行してください。',
+      authPopupClosed: 'ログイン画面が閉じられたため、ログインが完了しませんでした。もう一度お試しください。',
+      authAccessDenied: 'Googleがログインを拒否しました（access_denied）。同意をキャンセルしたか、アプリがテストモードでこのアカウントがテストユーザーに登録されていません。管理者はGoogle Cloud Console → OAuth同意画面でアプリを本番公開するか、テストユーザーに追加してください。',
+      authUnknown: 'ログイン処理中にエラーが発生しました。再読み込みしてもう一度お試しください。',
       localShareError: 'ローカルで開いたファイルは共有リンクを作成できません。生徒には[JPG保存]/[PDF保存]で渡すか、Googleドライブにアップロードしてから[Googleでログイン]で開いて共有してください。',
       submitGuide: '👇 作成したワークシートをJPG保存して下から提出してください 👇',
       emptyTitle: 'デジタルペーパーの準備完了！', emptyDesc: '[ローカルで開く]で端末内のファイルをすぐ開くか、上部のGoogleログイン後、ワークシート（PDF・JPG・PNG）を選択してください。',
@@ -463,6 +484,31 @@
     );
   }
 
+  // Google blocks OAuth inside embedded in-app browsers (KakaoTalk, Naver, Instagram…)
+  // with "403 disallowed_useragent", so detect them and send the user to a real browser.
+  const IN_APP_BROWSERS = [
+    [/KAKAOTALK/i, '카카오톡'], [/NAVER\(inapp/i, '네이버'], [/Instagram/i, 'Instagram'],
+    [/FBAN|FBAV|FB_IAB/i, 'Facebook'], [/\bLine\//i, 'LINE'], [/BAND\//i, 'BAND'],
+    [/DaumApps/i, 'Daum'], [/everytimeApp/i, '에브리타임'], [/whale\/.*inapp/i, 'Whale'],
+  ];
+  function detectInAppBrowser() {
+    const ua = navigator.userAgent || '';
+    for (const [re, name] of IN_APP_BROWSERS) if (re.test(ua)) return name;
+    if (/Android/i.test(ua) && /; wv\)/.test(ua)) return 'WebView';
+    return '';
+  }
+  function openInExternalBrowser() {
+    const url = window.location.href;
+    const ua = navigator.userAgent || '';
+    if (/KAKAOTALK/i.test(ua)) {
+      window.location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+    } else if (/Android/i.test(ua)) {
+      window.location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+
   function App() {
     const browserLang = (navigator.language || 'ko').slice(0, 2);
     const [lang, setLang] = useState(i18n[browserLang] ? browserLang : 'ko');
@@ -628,15 +674,33 @@
 
     const handleAuth = () => {
       if (!CLIENT_ID || !API_KEY) return alert('관리자가 API 설정을 완료해야 합니다.');
+
+      const inApp = detectInAppBrowser();
+      if (inApp) {
+        setAuthError({ message: t.authInApp.replace('{app}', inApp), code: 'disallowed_useragent', inApp: true });
+        return;
+      }
       if (!isGisLoaded) return alert('구글 로그인 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.');
 
       try {
         const tokenClient = window.google.accounts.oauth2.initTokenClient({
           client_id: CLIENT_ID,
           scope: SCOPES,
+          // Popup problems (blocked / closed) never reach `callback`; without this the
+          // button silently does nothing.
+          error_callback: (err) => {
+            console.warn('[DigitalPaper] auth popup error', err);
+            const type = err && err.type;
+            if (type === 'popup_failed_to_open') setAuthError({ message: t.authPopupBlocked, code: type });
+            else if (type === 'popup_closed') setAuthError({ message: t.authPopupClosed, code: type });
+            else setAuthError({ message: t.authUnknown, code: type || 'unknown' });
+          },
           callback: (response) => {
             if (response.error) {
-              setAuthError(response.error_description || response.error || 'access_denied');
+              console.warn('[DigitalPaper] auth error response', response);
+              const code = response.error;
+              const message = code === 'access_denied' ? t.authAccessDenied : (response.error_description || t.authUnknown);
+              setAuthError({ message, code });
               return;
             }
             if (response.access_token) {
@@ -657,7 +721,7 @@
         tokenClient.requestAccessToken();
       } catch (err) {
         console.error('[DigitalPaper] auth error', err);
-        setAuthError('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+        setAuthError({ message: t.authUnknown, code: (err && err.message) || 'exception' });
       }
     };
 
@@ -1825,9 +1889,19 @@
 
         <main className="flex-1 flex flex-col bg-[#f7f5ff] relative overflow-hidden">
           {authError && (
-            <div className="mx-4 mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-              <p className="font-semibold mb-1">구글 로그인 설정 오류</p>
-              <p>현재 오류: {authError}</p>
+            <div className="relative mx-4 mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 pr-10 text-sm text-red-800">
+              <button onClick={() => setAuthError('')} aria-label={t.confirm} className="absolute top-2 right-2 text-red-400 hover:text-red-700">
+                <span className="material-icons text-[18px]">close</span>
+              </button>
+              <p className="font-semibold mb-1">{t.authErrorTitle}</p>
+              <p>{authError.message}</p>
+              {authError.code && <p className="mt-1 text-xs text-red-500">{t.authErrorCode}: {authError.code}</p>}
+              {authError.inApp && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button onClick={openInExternalBrowser} className="rounded-lg bg-red-600 hover:bg-red-700 px-3 py-1.5 text-xs font-semibold text-white">{t.authInAppOpen}</button>
+                  <button onClick={() => { const url = window.location.href; const fallback = () => prompt(t.authCopyUrl, url); if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => alert(t.authUrlCopied), fallback); else fallback(); }} className="rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700">{t.authCopyUrl}</button>
+                </div>
+              )}
             </div>
           )}
 

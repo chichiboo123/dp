@@ -8,6 +8,11 @@ Google 로그인 팝업의 `access_denied`는 대부분 아래 중 하나입니�
 3. OAuth 동의화면의 **Authorized domains**에 `chichiboo.link` 미등록
 4. Google Drive API 또는 Google Picker API 미활성화
 5. API Key HTTP referrer 제한값에 `dp.chichiboo.link` 누락
+6. **카카오톡·네이버·인스타그램 등 앱 내부 브라우저**에서 로그인 시도 → `403 disallowed_useragent`
+   (앱이 자동 감지해 [기본 브라우저로 열기] 버튼을 보여줌)
+7. 브라우저 **팝업 차단** → 앱에 `popup_failed_to_open` 안내 표시
+
+> 로그인 실패 시 화면의 빨간 안내창에 **오류 코드**가 표시됩니다. 이 코드로 위 원인을 구분하세요.
 
 ## 2) Google Cloud Console 권장 설정
 - OAuth Client type: **Web application**
